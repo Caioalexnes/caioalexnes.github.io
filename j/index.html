@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convite do Synova</title>
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:36rem; margin:0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 .3rem; }
+  .sub { color:var(--muted); margin:0 0 1.6rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px; margin-bottom:16px; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+         font-size:.78rem; word-break:break-all; display:block; line-height:1.45; }
+  button, .btn { font:inherit; font-weight:600; border-radius:9px; padding:11px 16px;
+          border:1px solid var(--accent); cursor:pointer; display:block; width:100%;
+          text-align:center; text-decoration:none; margin-top:10px; }
+  .primary { background:var(--accent); color:var(--bg); }
+  .ghost { background:transparent; color:var(--accent); }
+  .kind { font-size:.8rem; color:var(--muted); text-transform:uppercase;
+          letter-spacing:.06em; margin-bottom:.5rem; }
+  ol { padding-left:1.15rem; } li { margin-bottom:.45rem; }
+  .hide { display:none; }
+  footer { color:var(--muted); font-size:.83rem; margin-top:28px; text-align:center; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Convite do Synova</h1>
+  <p class="sub" id="sub">Abrindo no aplicativo…</p>
+
+  <div class="card" id="codeCard">
+    <div class="kind" id="kind">Código</div>
+    <code id="code">—</code>
+    <button class="primary" id="copy">Copiar o código</button>
+    <a class="btn ghost" id="open" href="#">Abrir no Synova</a>
+  </div>
+
+  <div class="card" id="help">
+    <strong>Ainda não tem o Synova?</strong>
+    <ol>
+      <li>Instale o aplicativo no aparelho.</li>
+      <li>Volte aqui e toque em <em>Copiar o código</em>.</li>
+      <li>No Synova, toque em <em>Colar código</em> na tela de eventos.</li>
+    </ol>
+  </div>
+
+  <div class="card hide" id="empty">
+    <strong>Não há nenhum código neste link.</strong>
+    <p>Peça a quem convidou para mandar o link outra vez — ele precisa vir
+       inteiro, incluindo a parte depois do <code>#</code>.</p>
+  </div>
+
+  <footer>
+    O código fica depois do <code>#</code> e <strong>nunca é enviado a este
+    site</strong> — ele existe só no seu aparelho.
+  </footer>
+</main>
+
+<script>
+(function () {
+  var NAMES = {
+    SYNMAG1:   'Convite para um evento',
+    SYNREQ1:   'Pedido de entrada',
+    SYNREQ2:   'Pedido de entrada',
+    SYNGRANT1: 'Resposta do organizador',
+    SYNPAIR1:  'Código de pareamento'
+  };
+
+  var el = function (id) { return document.getElementById(id); };
+
+  // O código em exibição. Fica FORA do render porque o botão de copiar é
+  // ligado uma vez só — religá-lo a cada render faria a segunda cópia
+  // disparar duas vezes.
+  var current = '';
+
+  function render() {
+    // O payload vem no fragmento: o navegador NÃO o envia ao servidor.
+    var raw = '';
+    try {
+      raw = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+    } catch (e) {
+      raw = (location.hash || '').replace(/^#/, '').trim();
+    }
+
+    var prefix = raw.split('.')[0];
+    var known = Object.prototype.hasOwnProperty.call(NAMES, prefix);
+    current = known ? raw : '';
+
+    el('codeCard').classList.toggle('hide', !known);
+    el('help').classList.toggle('hide', !known);
+    el('empty').classList.toggle('hide', known);
+
+    if (!known) {
+      el('sub').textContent = 'Este link não traz um código do Synova.';
+      return;
+    }
+
+    el('kind').textContent = NAMES[prefix];
+    el('code').textContent = raw;
+    el('sub').textContent =
+      'Se o aplicativo estiver instalado, ele abre sozinho. Se não abriu, use o código abaixo.';
+    // Esquema próprio: inútil numa conversa (não vira link), útil AQUI, onde o
+    // navegador sabe entregá-lo ao aplicativo.
+    el('open').href = 'synova://code#' + encodeURIComponent(raw);
+  }
+
+  el('copy').addEventListener('click', function () {
+    if (!current) return;
+    var btn = this;
+    var done = function () {
+      btn.textContent = 'Copiado';
+      setTimeout(function () { btn.textContent = 'Copiar o código'; }, 1800);
+    };
+    var fallback = function () {
+      var ta = document.createElement('textarea');
+      ta.value = current;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { /* copia à mão */ }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(current).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+
+  render();
+  // Abrir outro convite na MESMA aba muda só o fragmento, e trocar fragmento
+  // não recarrega a página: sem isto, o segundo link mostraria o código do
+  // primeiro. Apareceu testando dois códigos seguidos.
+  window.addEventListener('hashchange', render);
+})();
+</script>
+</body>
+</html>

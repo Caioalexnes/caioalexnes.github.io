@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.caioalexnes.synova",
+      "sha256_cert_fingerprints": [
+        "AA:D3:D3:68:39:E4:3E:74:4B:AE:F2:4E:02:6E:91:7F:18:BC:13:76:C3:8F:E0:E5:C4:13:ED:D6:52:98:31:D9"
+      ]
+    }
+  }
+]
