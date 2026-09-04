@@ -55,9 +55,9 @@
   </div>
 
   <div class="card hide" id="empty">
-    <strong>Não há nenhum código neste link.</strong>
-    <p>Peça a quem convidou para mandar o link outra vez — ele precisa vir
-       inteiro, incluindo a parte depois do <code>#</code>.</p>
+    <strong id="emptyTitle">Não há nenhum código neste link.</strong>
+    <p id="emptyBody">Peça a quem convidou para mandar o link outra vez: ele
+       precisa vir inteiro, incluindo a parte depois do <code>#</code>.</p>
   </div>
 
   <footer>
@@ -68,12 +68,17 @@
 
 <script>
 (function () {
-  var NAMES = {
-    SYNMAG1:   'Convite para um evento',
-    SYNREQ1:   'Pedido de entrada',
-    SYNREQ2:   'Pedido de entrada',
-    SYNGRANT1: 'Resposta do organizador',
-    SYNPAIR1:  'Código de pareamento'
+  // Nome e NUMERO DE CAMPOS de cada formato. A contagem espelha o
+  // `SynCodeDetector` do aplicativo (campos separados por ponto, o prefixo
+  // contando como o primeiro). Sem ela, `#SYNMAG1` sozinho era anunciado como
+  // um convite e a pessoa copiava um código que o app ia recusar — apareceu
+  // no primeiro teste depois de publicar.
+  var FORMATS = {
+    SYNMAG1:   { name: 'Convite para um evento',   fields: 4 },
+    SYNREQ1:   { name: 'Pedido de entrada',        fields: 3 },
+    SYNREQ2:   { name: 'Pedido de entrada',        fields: 3 },
+    SYNGRANT1: { name: 'Resposta do organizador',  fields: 5 },
+    SYNPAIR1:  { name: 'Código de pareamento',     fields: 6 }
   };
 
   var el = function (id) { return document.getElementById(id); };
@@ -92,20 +97,34 @@
       raw = (location.hash || '').replace(/^#/, '').trim();
     }
 
-    var prefix = raw.split('.')[0];
-    var known = Object.prototype.hasOwnProperty.call(NAMES, prefix);
-    current = known ? raw : '';
+    var parts = raw.split('.');
+    var format = Object.prototype.hasOwnProperty.call(FORMATS, parts[0])
+      ? FORMATS[parts[0]] : null;
+    // Campos de menos = link que chegou cortado. Vale dizer isso com todas as
+    // letras: é acionável (peça de novo) e é o defeito mais provável, porque
+    // aplicativo de conversa às vezes quebra link comprido.
+    var truncated = format !== null && parts.length < format.fields;
+    var ok = format !== null && !truncated;
+    current = ok ? raw : '';
 
-    el('codeCard').classList.toggle('hide', !known);
-    el('help').classList.toggle('hide', !known);
-    el('empty').classList.toggle('hide', known);
+    el('codeCard').classList.toggle('hide', !ok);
+    el('help').classList.toggle('hide', !ok);
+    el('empty').classList.toggle('hide', ok);
 
-    if (!known) {
-      el('sub').textContent = 'Este link não traz um código do Synova.';
+    if (!ok) {
+      el('emptyTitle').textContent = truncated
+        ? 'Este link chegou incompleto.'
+        : 'Não há nenhum código neste link.';
+      el('emptyBody').textContent = truncated
+        ? 'Faltam pedaços do código. Peça a quem convidou para mandar o link outra vez — alguns aplicativos de conversa cortam links compridos.'
+        : 'Peça a quem convidou para mandar o link outra vez: ele precisa vir inteiro, incluindo a parte depois do #.';
+      el('sub').textContent = truncated
+        ? 'Não dá para usar este link como está.'
+        : 'Este link não traz um código do Synova.';
       return;
     }
 
-    el('kind').textContent = NAMES[prefix];
+    el('kind').textContent = format.name;
     el('code').textContent = raw;
     el('sub').textContent =
       'Se o aplicativo estiver instalado, ele abre sozinho. Se não abriu, use o código abaixo.';
