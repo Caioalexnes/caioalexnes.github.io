@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidade — Synova</title>
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:32px 16px 64px; background:var(--bg); color:var(--ink);
+         font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:44rem; margin:0 auto; }
+  h1 { font-size:1.6rem; margin:0 0 .2rem; }
+  h2 { font-size:1.1rem; margin:2rem 0 .6rem; }
+  .sub { color:var(--muted); margin:0 0 2rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px 18px; margin:16px 0; }
+  ul { padding-left:1.2rem; } li { margin-bottom:.5rem; }
+  a { color:var(--accent); }
+  strong { font-weight:650; }
+  footer { color:var(--muted); font-size:.85rem; margin-top:40px;
+           border-top:1px solid var(--line); padding-top:16px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Política de privacidade do Synova</h1>
+  <p class="sub">Atualizada em 4 de setembro de 2026.</p>
+
+  <div class="card">
+    <strong>O resumo:</strong> o Synova não tem servidor. Quem escreveu o aplicativo não recebe,
+    não guarda e não consegue ver nada do que você registra nele. A lista de convidados fica
+    cifrada no seu aparelho.
+  </div>
+
+  <h2>O que o aplicativo guarda, e onde</h2>
+  <p>
+    Tudo que você cria no Synova — eventos, lista de convidados, registros de entrada e saída —
+    fica <strong>no seu próprio aparelho</strong>, cifrado com uma chave derivada da senha do
+    evento. Nada disso é enviado para o autor do aplicativo, porque não existe servidor para onde
+    enviar.
+  </p>
+  <p>
+    Se você desinstalar o aplicativo, esses dados são apagados junto. Não há cópia em lugar nenhum,
+    e não há como recuperá-los — nem por nós.
+  </p>
+
+  <h2>As permissões que o aplicativo pede</h2>
+  <ul>
+    <li><strong>Câmera</strong> — para ler o QR do crachá na porta do evento e o código de
+        pareamento entre aparelhos. As imagens não são gravadas nem enviadas.</li>
+    <li><strong>Internet</strong> — para sincronizar com outro aparelho na mesma rede local e,
+        se você ativar, publicar no seu Google Drive. O aplicativo funciona inteiro sem
+        internet.</li>
+    <li><strong>Estado da rede</strong> — para saber se há conexão antes de tentar sincronizar.</li>
+  </ul>
+  <p>
+    Fotos e arquivos são acessados apenas quando <em>você</em> escolhe um, pela tela do próprio
+    sistema Android. O aplicativo não varre a sua galeria nem os seus arquivos.
+  </p>
+
+  <h2>Leitura de listas por foto e por PDF</h2>
+  <p>
+    Quando você importa uma lista fotografando um papel ou abrindo um PDF, o reconhecimento de
+    texto acontece <strong>dentro do seu aparelho</strong>, por uma biblioteca que roda localmente.
+    A imagem e o texto reconhecido não são enviados para lugar nenhum.
+  </p>
+
+  <h2>Google Drive (opcional)</h2>
+  <p>
+    Você pode ativar a sincronização pelo Google Drive. Quando ativa:
+  </p>
+  <ul>
+    <li>O aplicativo publica <strong>no seu próprio Drive</strong>, em um arquivo criado por ele.</li>
+    <li>O conteúdo desse arquivo é <strong>cifrado</strong>. O Google armazena, mas não consegue
+        ler: a chave é derivada da senha do evento e nunca sai dos aparelhos autorizados.</li>
+    <li>O aplicativo usa a permissão mais restrita disponível
+        (<code>drive.file</code>), que dá acesso <strong>apenas aos arquivos que ele mesmo
+        criou</strong>. Ele não enxerga o resto do seu Drive.</li>
+    <li>Você pode apagar esse arquivo a qualquer momento, pelo próprio Drive.</li>
+  </ul>
+  <p>
+    Se você não ativar, nenhuma conta Google é pedida e nada é publicado.
+  </p>
+
+  <h2>O que sai do aparelho sem ser por sua conta</h2>
+  <div class="card">
+    <p>
+      Uma ressalva que preferimos escrever do que omitir: a biblioteca de reconhecimento de texto
+      do Google (ML Kit), usada para ler listas por foto, <strong>envia dados próprios de
+      diagnóstico para o Google</strong> — informações técnicas sobre o funcionamento dela, não o
+      conteúdo do que foi lido. Isso é comportamento da biblioteca, não do Synova, e acontece mesmo
+      sem você ativar o Drive.
+    </p>
+    <p>
+      Não temos como afirmar exatamente o que essa telemetria contém, porque ela é do Google.
+      O que podemos afirmar é que <strong>o texto reconhecido e as imagens não saem do
+      aparelho</strong>.
+    </p>
+  </div>
+
+  <h2>O que não existe aqui</h2>
+  <ul>
+    <li>Não há publicidade.</li>
+    <li>Não há rastreamento de uso, medição de audiência nem perfil de usuário.</li>
+    <li>Não há cadastro, login nem conta no Synova.</li>
+    <li>Não há venda nem compartilhamento de dados com terceiros — não temos os dados.</li>
+  </ul>
+
+  <h2>Dados de outras pessoas</h2>
+  <p>
+    Uma lista de convidados contém dados de outras pessoas. Quem organiza o evento é quem responde
+    por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. O autor
+    do aplicativo não tem acesso a essa lista e não tem como intervir nela.
+  </p>
+
+  <h2>Código aberto</h2>
+  <p>
+    O Synova é software livre, sob licença MIT. Tudo que está escrito aqui pode ser conferido no
+    código: <a href="https://github.com/caioalexnes">github.com/caioalexnes</a>.
+  </p>
+
+  <h2>Contato</h2>
+  <p>
+    Dúvidas sobre esta política: <a href="mailto:caioalex.nes@gmail.com">caioalex.nes@gmail.com</a>.
+  </p>
+
+  <footer>
+    Synova — registro de presença em eventos, offline-first.
+    <a href="/">Início</a> · <a href="/termos/">Termos de uso</a>
+  </footer>
+</main>
+</body>
+</html>

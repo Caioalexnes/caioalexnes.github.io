@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synova</title>
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:48px 16px 64px; background:var(--bg); color:var(--ink);
+         font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:40rem; margin:0 auto; }
+  h1 { font-size:2rem; margin:0 0 .3rem; letter-spacing:-.02em; }
+  .sub { color:var(--muted); font-size:1.1rem; margin:0 0 2rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:18px; margin:14px 0; }
+  .card h2 { font-size:1rem; margin:0 0 .4rem; }
+  .card p { margin:0; color:var(--muted); font-size:.95rem; }
+  a { color:var(--accent); }
+  footer { color:var(--muted); font-size:.85rem; margin-top:40px;
+           border-top:1px solid var(--line); padding-top:16px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Synova</h1>
+  <p class="sub">Registro de presença em eventos, offline-first e sem servidor.</p>
+
+  <div class="card">
+    <h2>Funciona sem internet</h2>
+    <p>A lista fica no aparelho, cifrada. Na porta do evento, o Synova não depende de sinal,
+       de rede nem de nuvem para deixar alguém entrar.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sem servidor, sem conta</h2>
+    <p>Não há cadastro e não há para onde os seus dados irem. Quem escreveu o aplicativo não
+       recebe nem consegue ver nada do que você registra.</p>
+  </div>
+
+  <div class="card">
+    <h2>Vários aparelhos, uma lista só</h2>
+    <p>Duas portas, dois celulares, a mesma lista. Os aparelhos se acertam por rede local,
+       por arquivo trocado numa conversa ou pelo seu próprio Drive — o que estiver disponível.</p>
+  </div>
+
+  <div class="card">
+    <h2>Código aberto</h2>
+    <p>Licença MIT. Tudo que está escrito aqui pode ser conferido no código:
+       <a href="https://github.com/caioalexnes">github.com/caioalexnes</a>.</p>
+  </div>
+
+  <footer>
+    <a href="/privacidade/">Privacidade</a> · <a href="/termos/">Termos de uso</a>
+  </footer>
+</main>
+</body>
+</html>
