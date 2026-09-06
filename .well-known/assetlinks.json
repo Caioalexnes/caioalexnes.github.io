@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.caioalexnes.synova",
       "sha256_cert_fingerprints": [
-        "AA:D3:D3:68:39:E4:3E:74:4B:AE:F2:4E:02:6E:91:7F:18:BC:13:76:C3:8F:E0:E5:C4:13:ED:D6:52:98:31:D9"
+        "AA:D3:D3:68:39:E4:3E:74:4B:AE:F2:4E:02:6E:91:7F:18:BC:13:76:C3:8F:E0:E5:C4:13:ED:D6:52:98:31:D9",
+        "CC:DC:D5:A0:F2:C6:53:DE:F2:B6:7A:94:E0:50:F3:71:7E:48:19:6F:00:63:0D:8D:D2:73:8E:6E:42:58:FE:68"
       ]
     }
   }
