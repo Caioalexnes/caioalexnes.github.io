@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Vitrine do evento</title>
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; --warn:#8a6100;
+          --warnbg:#fff3cd; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; --warn:#f0c96b; --warnbg:#2b2415; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:36rem; margin:0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 .3rem; }
+  h2 { font-size:1.05rem; margin:0 0 .6rem; }
+  .sub { color:var(--muted); margin:0 0 1.6rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px; margin-bottom:16px; }
+  .warn { background:var(--warnbg); border-color:var(--warn); color:var(--warn); }
+  input { font:inherit; width:100%; padding:11px 12px; border-radius:9px;
+          border:1px solid var(--line); background:var(--bg); color:var(--ink); }
+  button { font:inherit; font-weight:600; border-radius:9px; padding:11px 16px;
+           border:1px solid var(--accent); background:var(--accent); color:var(--bg);
+           cursor:pointer; display:block; width:100%; margin-top:10px; }
+  table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);
+           vertical-align:top; }
+  th { color:var(--muted); font-weight:600; font-size:.8rem; text-transform:uppercase;
+       letter-spacing:.05em; }
+  .sess { display:flex; justify-content:space-between; gap:12px; padding:7px 0;
+          border-bottom:1px solid var(--line); }
+  .sess:last-child { border-bottom:0; }
+  .when { color:var(--muted); font-size:.85rem; white-space:nowrap; }
+  .yes { color:var(--accent); font-weight:600; }
+  .no { color:var(--muted); }
+  .aviso { padding:8px 0; border-bottom:1px solid var(--line); }
+  .aviso:last-child { border-bottom:0; }
+  .aviso .when { display:block; }
+  .hide { display:none; }
+  footer { color:var(--muted); font-size:.83rem; margin-top:28px; text-align:center; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="titulo">Vitrine do evento</h1>
+  <p class="sub" id="sub">Carregando…</p>
+
+  <div class="card warn hide" id="erro"></div>
+
+  <div class="card hide" id="cSessoes">
+    <h2>Programação</h2>
+    <div id="sessoes"></div>
+  </div>
+
+  <div class="card hide" id="cAvisos">
+    <h2>Avisos</h2>
+    <div id="avisos"></div>
+  </div>
+
+  <div class="card hide" id="cEu">
+    <h2>A sua presença</h2>
+    <p class="sub" style="margin:0 0 .8rem">
+      Cole o conteúdo do QR do seu crachá, ou o identificador que aparece nele.
+      Qualquer aplicativo de câmera lê um QR e mostra o texto.
+    </p>
+    <input id="cracha" placeholder="SYN1.…  ou o identificador" autocomplete="off">
+    <button id="ver">Ver a minha presença</button>
+    <div id="eu" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card hide" id="cTabela">
+    <h2>Convidados</h2>
+    <div style="overflow-x:auto"><table id="tabela"></table></div>
+  </div>
+
+  <footer>
+    Página só de leitura. Ela não guarda nada e não manda nada para lugar nenhum:
+    tudo o que você digita fica neste navegador.
+  </footer>
+</main>
+
+<script>
+// ============================================================================
+// A VITRINE DO CONVIDADO (§15.5). Só leitura, sem servidor e sem conta.
+//
+// O ID DO ARQUIVO VEM NO FRAGMENTO (#), que NUNCA é enviado a servidor nenhum:
+// nem o GitHub Pages que hospeda esta página sabe de que evento é o link.
+//
+// POR QUE A LEITURA É PELA API E NÃO PELO LINK DIRETO DO DRIVE: medido em
+// 09/09/2026 a partir desta mesma origem. `drive.google.com/uc?export=download`
+// e `drive.usercontent.google.com/download` falham com "Failed to fetch" —
+// eles não mandam cabeçalho de CORS. Só `www.googleapis.com/drive/v3` responde
+// de dentro do navegador, e ele exige uma chave de API.
+//
+// A CHAVE DE API É PÚBLICA POR DESENHO, como o client ID do OAuth: ela viaja
+// nesta página, aparece no tráfego, e não autoriza nada sozinha. Quem a protege
+// é a restrição por referenciador (HTTP referrer) no console, e o fato de o
+// escopo dela ser só a API do Drive para arquivos JÁ públicos.
+// ============================================================================
+// Criada em 09/09/2026, restrita a `https://caioalexnes.github.io/*` e à
+// Google Drive API. Ver docs/google-cloud-setup.md.
+const API_KEY = 'AIzaSyBw1prW0nnUqEXBxBQ3GRGchTRd6CBKqcg';
+const FORMATO = 1;
+
+const $ = (id) => document.getElementById(id);
+
+function erro(texto) {
+  $('erro').textContent = texto;
+  $('erro').classList.remove('hide');
+  $('sub').textContent = '';
+}
+
+function doisDigitos(n) { return String(n).padStart(2, '0'); }
+
+function quando(ms) {
+  if (typeof ms !== 'number') return '';
+  const d = new Date(ms);
+  return doisDigitos(d.getDate()) + '/' + doisDigitos(d.getMonth() + 1) + ' ' +
+         doisDigitos(d.getHours()) + ':' + doisDigitos(d.getMinutes());
+}
+
+function dia(ms) {
+  const d = new Date(ms);
+  return doisDigitos(d.getDate()) + '/' + doisDigitos(d.getMonth() + 1) + '/' + d.getFullYear();
+}
+
+/// O identificador do convidado, tanto do QR inteiro quanto colado sozinho.
+///
+/// O QR é `SYN1.<eventShort>.<guestId>.<mac>` e o `guestId` viaja em claro nele
+/// — é por isso que a vitrine indexa por ele e nenhum crachá já impresso fica
+/// de fora. O MAC que vem junto NÃO é usado aqui e não precisa ser.
+function identificador(texto) {
+  const t = (texto || '').trim();
+  if (!t) return '';
+  const partes = t.split('.');
+  if (partes.length >= 3 && partes[0].toUpperCase().startsWith('SYN')) return partes[2];
+  return t;
+}
+
+let dados = null;
+
+async function carregar() {
+  const id = (location.hash || '').replace(/^#/, '').trim();
+  if (!id) return erro('Este link está incompleto: falta a parte depois do #. ' +
+                       'Aplicativo de conversa às vezes corta link comprido — ' +
+                       'peça o link de novo, de preferência colado como texto.');
+
+  let r;
+  try {
+    r = await fetch('https://www.googleapis.com/drive/v3/files/' +
+                    encodeURIComponent(id) + '?alt=media&key=' + API_KEY +
+                    '&t=' + Date.now(), { cache: 'no-store' });
+  } catch (e) {
+    return erro('Não foi possível buscar a vitrine. Confira a sua conexão e tente de novo.');
+  }
+  if (r.status === 404 || r.status === 403) {
+    return erro('Esta vitrine não está mais disponível. Ela pode ter saído do ar, ' +
+                'ou o link pode estar errado.');
+  }
+  if (!r.ok) return erro('A vitrine não respondeu (erro ' + r.status + ').');
+
+  try {
+    dados = await r.json();
+  } catch (e) {
+    return erro('O que veio deste link não é uma vitrine do Synova.');
+  }
+
+  if (!dados || dados.kind !== 'synova-showcase') {
+    return erro('O que veio deste link não é uma vitrine do Synova.');
+  }
+  // Recusa o que não conhece em vez de desenhar meio errado.
+  if (dados.v > FORMATO) {
+    return erro('Esta vitrine foi publicada por uma versão mais nova do Synova, ' +
+                'e esta página ainda não sabe mostrá-la.');
+  }
+  // O prazo é respeitado AQUI também, e não só pelo app que apaga o arquivo:
+  // se o dono nunca mais abrir o app, o arquivo continua no Drive, e a data
+  // dentro dele é a única coisa que ainda vale.
+  if (typeof dados.expiresAt === 'number' && Date.now() > dados.expiresAt) {
+    return erro('Esta vitrine saiu do ar em ' + dia(dados.expiresAt) + '.');
+  }
+
+  desenhar();
+}
+
+function desenhar() {
+  document.title = dados.event || 'Vitrine do evento';
+  $('titulo').textContent = dados.event || 'Vitrine do evento';
+  $('sub').textContent = typeof dados.publishedAt === 'number'
+      ? 'Conteúdo de ' + quando(dados.publishedAt)
+      : '';
+
+  const sessoes = Array.isArray(dados.sessions) ? dados.sessions : [];
+  if (sessoes.length) {
+    $('sessoes').innerHTML = '';
+    for (const s of sessoes) {
+      const linha = document.createElement('div');
+      linha.className = 'sess';
+      const nome = document.createElement('span');
+      nome.textContent = s.name || '';
+      const hora = document.createElement('span');
+      hora.className = 'when';
+      hora.textContent = s.from ? quando(s.from) + (s.to ? ' → ' + quando(s.to) : '') : '';
+      linha.append(nome, hora);
+      $('sessoes').append(linha);
+    }
+    $('cSessoes').classList.remove('hide');
+  }
+
+  const avisos = Array.isArray(dados.announcements) ? dados.announcements : [];
+  if (avisos.length) {
+    $('avisos').innerHTML = '';
+    // Do mais novo para o mais velho: quem abre no meio do evento quer o que
+    // acabou de acontecer.
+    for (const a of avisos.slice().reverse()) {
+      const bloco = document.createElement('div');
+      bloco.className = 'aviso';
+      const texto = document.createElement('span');
+      texto.textContent = a.text || '';
+      const hora = document.createElement('span');
+      hora.className = 'when';
+      hora.textContent = quando(a.at);
+      bloco.append(texto, hora);
+      $('avisos').append(bloco);
+    }
+    $('cAvisos').classList.remove('hide');
+  }
+
+  $('cEu').classList.remove('hide');
+
+  const colunas = Array.isArray(dados.columns) ? dados.columns : [];
+  const convidados = Array.isArray(dados.guests) ? dados.guests : [];
+  if (colunas.length && convidados.length) desenharTabela(colunas, convidados, sessoes);
+}
+
+function desenharTabela(colunas, convidados, sessoes) {
+  const t = $('tabela');
+  t.innerHTML = '';
+  const cabeca = t.insertRow();
+  for (const c of colunas) {
+    const th = document.createElement('th');
+    th.textContent = c.name || '';
+    cabeca.append(th);
+  }
+  for (const s of sessoes) {
+    const th = document.createElement('th');
+    th.textContent = s.name || '';
+    cabeca.append(th);
+  }
+  for (const g of convidados) {
+    const linha = t.insertRow();
+    for (const c of colunas) {
+      linha.insertCell().textContent = (g.cells && g.cells[c.id]) || '';
+    }
+    for (const s of sessoes) {
+      const td = linha.insertCell();
+      const veio = Array.isArray(g.at) && g.at.includes(s.id);
+      td.textContent = veio ? '✓' : '·';
+      td.className = veio ? 'yes' : 'no';
+    }
+  }
+  $('cTabela').classList.remove('hide');
+}
+
+function minhaPresenca() {
+  const id = identificador($('cracha').value);
+  const alvo = document.getElementById('eu');
+  alvo.innerHTML = '';
+  if (!id) return;
+
+  const g = (dados.guests || []).find((x) => x.id === id);
+  if (!g) {
+    alvo.textContent = 'Não achamos este identificador nesta vitrine. ' +
+        'Confira se o crachá é deste evento.';
+    return;
+  }
+  const sessoes = Array.isArray(dados.sessions) ? dados.sessions : [];
+  if (!sessoes.length) {
+    alvo.textContent = 'Este evento não tem sessões.';
+    return;
+  }
+  for (const s of sessoes) {
+    const linha = document.createElement('div');
+    linha.className = 'sess';
+    const nome = document.createElement('span');
+    nome.textContent = s.name || '';
+    const marca = document.createElement('span');
+    const veio = Array.isArray(g.at) && g.at.includes(s.id);
+    marca.textContent = veio ? 'compareceu' : '—';
+    marca.className = veio ? 'yes' : 'no';
+    linha.append(nome, marca);
+    alvo.append(linha);
+  }
+}
+
+// O listener fica FORA do desenho: religá-lo a cada render faria o clique
+// disparar em duplicata (o defeito que a página de convite já teve).
+$('ver').addEventListener('click', minhaPresenca);
+$('cracha').addEventListener('keydown', (e) => { if (e.key === 'Enter') minhaPresenca(); });
+
+// Trocar só o fragmento NÃO recarrega a página — a outra lição da página de
+// convite, onde o segundo link mostrava o código do primeiro.
+window.addEventListener('hashchange', carregar);
+carregar();
+</script>
+</body>
+</html>
