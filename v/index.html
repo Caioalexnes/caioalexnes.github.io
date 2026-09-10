@@ -63,6 +63,19 @@
     <div id="avisos"></div>
   </div>
 
+  <div class="card hide" id="cCracha">
+    <h2>O seu crachá</h2>
+    <p class="sub" style="margin:0 0 .8rem">
+      Digite o código pessoal que a organização mandou para você. O QR aparece
+      aqui e é ele que a entrada lê — basta mostrar a tela.
+    </p>
+    <input id="codigo" placeholder="Ex.: 4KP29-TXQM7" autocomplete="off"
+           autocapitalize="characters" spellcheck="false">
+    <button id="abrir">Mostrar o meu QR</button>
+    <div id="qr" style="margin-top:14px"></div>
+    <p class="sub" id="qrAviso" style="margin:.6rem 0 0"></p>
+  </div>
+
   <div class="card hide" id="cEu">
     <h2>A sua presença</h2>
     <p class="sub" style="margin:0 0 .8rem">
@@ -232,6 +245,19 @@ function desenhar() {
     $('cAvisos').classList.remove('hide');
   }
 
+  // O CRACHÁ SÓ APARECE quando o arquivo traz blocos. Um campo pedindo código
+  // numa vitrine sem crachás faria a pessoa procurar um código que ninguém
+  // mandou.
+  if (dados.badges && Object.keys(dados.badges).length) {
+    $('cCracha').classList.remove('hide');
+    // O código volta preenchido de quem já abriu neste navegador — na porta
+    // pode não haver sinal nem paciência para digitar dez caracteres de novo.
+    try {
+      const salvo = localStorage.getItem('synova-codigo-' + (dados.eventId || ''));
+      if (salvo && !$('codigo').value) $('codigo').value = salvo;
+    } catch (e) {}
+  }
+
   $('cEu').classList.remove('hide');
 
   const colunas = Array.isArray(dados.columns) ? dados.columns : [];
@@ -268,6 +294,144 @@ function desenharTabela(colunas, convidados, sessoes) {
   $('cTabela').classList.remove('hide');
 }
 
+// ============================================================================
+// O CRACHÁ NA TELA (10/09/2026).
+// ============================================================================
+// O convidado digita o código pessoal dele; a página decifra o bloco DELE e
+// desenha o QR. Nada é enviado a lugar nenhum: a conta acontece aqui dentro.
+//
+// O QUE VEM CIFRADO É A MATRIZ, e não o texto do QR. Sem isso esta página
+// precisaria de um gerador de QR completo — codificação, correção de erro,
+// máscara — e essa segunda implementação divergiria da do app no dia 1, que é
+// a lição que este projeto já pagou com a página de convite. Aqui ela só
+// desenha quadrados a partir de bits que o app já calculou.
+//
+// UMA DERIVAÇÃO SÓ, e é por isso que o sal leva o evento e não o convidado: o
+// código não diz QUEM é a pessoa, então a página deriva uma chave e tenta
+// abrir os blocos com ela. Abrir é microssegundos; quem separa as pessoas é o
+// AAD de cada bloco, que carrega o `guestId`.
+const PBKDF2_ITER = 20000;
+const BLOCO_V = 1;
+
+function normalizarCodigo(texto) {
+  // O MESMO que o app faz (`Crockford32.normalize`): o alfabeto não tem I, L,
+  // O nem U justamente para o que a pessoa vai errar ao ler e digitar.
+  return (texto || '')
+      .toUpperCase()
+      .replace(/[^0-9A-Z]/g, '')
+      .replace(/[ILO]/g, (c) => (c === 'O' ? '0' : '1'));
+}
+
+function bytesDeBase64(b64) {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function derivarChave(codigo, eventId) {
+  const material = await crypto.subtle.importKey(
+      'raw', new TextEncoder().encode(codigo), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: new TextEncoder().encode('synova/showcase-pass/v1|' + eventId),
+        iterations: PBKDF2_ITER,
+        hash: 'SHA-256',
+      },
+      material,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']);
+}
+
+/// Desenha a matriz. A margem clara em volta (quiet zone) NÃO é enfeite: sem
+/// ela a câmera não acha o código.
+function desenharQr(bits, lado) {
+  const quiet = 4;
+  const total = lado + quiet * 2;
+  const escala = Math.max(3, Math.floor(280 / total));
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = total * escala;
+  cv.style.width = cv.style.height = (total * escala) + 'px';
+  // FUNDO BRANCO SEMPRE, e não a cor do tema: um QR invertido não é lido, e
+  // esta página respeita o modo escuro em todo o resto.
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.fillStyle = '#000000';
+  for (let r = 0; r < lado; r++) {
+    for (let c = 0; c < lado; c++) {
+      const i = r * lado + c;
+      if ((bits[2 + (i >> 3)] >> (7 - (i & 7))) & 1) {
+        ctx.fillRect((c + quiet) * escala, (r + quiet) * escala, escala, escala);
+      }
+    }
+  }
+  return cv;
+}
+
+async function mostrarCracha() {
+  const alvo = $('qr');
+  const aviso = $('qrAviso');
+  alvo.innerHTML = '';
+  aviso.textContent = '';
+
+  const codigo = normalizarCodigo($('codigo').value);
+  if (!codigo) return;
+
+  const badges = (dados && dados.badges) || null;
+  if (!badges) {
+    aviso.textContent = 'Esta vitrine não traz crachás. Fale com a organização.';
+    return;
+  }
+
+  aviso.textContent = 'Abrindo…';
+  let chave;
+  try {
+    chave = await derivarChave(codigo, dados.eventId || '');
+  } catch (e) {
+    aviso.textContent = 'Este navegador não conseguiu fazer a conta do código.';
+    return;
+  }
+
+  for (const id of Object.keys(badges)) {
+    const bruto = bytesDeBase64(badges[id]);
+    try {
+      const plano = new Uint8Array(await crypto.subtle.decrypt(
+          {
+            name: 'AES-GCM',
+            iv: bruto.slice(0, 12),
+            additionalData: new TextEncoder()
+                .encode('showcase|' + (dados.eventId || '') + '|' + id),
+          },
+          chave,
+          bruto.slice(12)));
+      // VERSÃO DO BLOCO conferida antes de desenhar: um bloco de um app mais
+      // novo tem que parar aqui, e não virar um desenho errado na tela de
+      // quem vai entrar.
+      if (plano[0] !== BLOCO_V) {
+        aviso.textContent = 'Este crachá foi feito por uma versão mais nova do ' +
+            'aplicativo. Peça o link novo à organização.';
+        return;
+      }
+      alvo.append(desenharQr(plano, plano[1]));
+      aviso.textContent = 'Mostre esta tela na entrada. Deixe o brilho no máximo.';
+      // O CÓDIGO FICA GUARDADO NESTE NAVEGADOR, e só nele.
+      //
+      // Na porta pode não haver sinal, e a página busca o arquivo na rede: sem
+      // isto, quem abriu em casa chegaria na fila com uma tela que não carrega.
+      try { localStorage.setItem('synova-codigo-' + (dados.eventId || ''), codigo); } catch (e) {}
+      return;
+    } catch (e) {
+      // Chave errada para ESTE bloco: segue para o próximo. É o caso normal
+      // 249 vezes em 250.
+    }
+  }
+  aviso.textContent = 'Este código não abriu nenhum crachá desta vitrine. ' +
+      'Confira se ele é deste evento.';
+}
+
 function minhaPresenca() {
   const id = identificador($('cracha').value);
   const alvo = document.getElementById('eu');
@@ -301,6 +465,8 @@ function minhaPresenca() {
 
 // O listener fica FORA do desenho: religá-lo a cada render faria o clique
 // disparar em duplicata (o defeito que a página de convite já teve).
+$('abrir').addEventListener('click', mostrarCracha);
+$('codigo').addEventListener('keydown', (e) => { if (e.key === 'Enter') mostrarCracha(); });
 $('ver').addEventListener('click', minhaPresenca);
 $('cracha').addEventListener('keydown', (e) => { if (e.key === 'Enter') minhaPresenca(); });
 
