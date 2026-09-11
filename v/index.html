@@ -79,10 +79,11 @@
   <div class="card hide" id="cEu">
     <h2>A sua presença</h2>
     <p class="sub" style="margin:0 0 .8rem">
-      Cole o conteúdo do QR do seu crachá, ou o identificador que aparece nele.
-      Qualquer aplicativo de câmera lê um QR e mostra o texto.
+      Leia o QR do seu crachá com a câmera do celular e cole aqui o texto que
+      aparecer. Ele começa com SYN1. O código curto impresso embaixo do QR é a
+      sua entrada no evento e, por segurança, não funciona nesta página.
     </p>
-    <input id="cracha" placeholder="SYN1.…  ou o identificador" autocomplete="off">
+    <input id="cracha" placeholder="SYN1.…" autocomplete="off">
     <button id="ver">Ver a minha presença</button>
     <div id="eu" style="margin-top:14px"></div>
   </div>
@@ -154,6 +155,31 @@ function identificador(texto) {
   const partes = t.split('.');
   if (partes.length >= 3 && partes[0].toUpperCase().startsWith('SYN')) return partes[2];
   return t;
+}
+
+/// Os dois códigos que um convidado tem na mão e que NÃO são o texto do QR,
+/// reconhecidos pelo tamanho. São os tamanhos do app (`ShortCode.length` e
+/// `ShowcasePass.codeLength`), e o `showcase_page_agreement_test` cobra que
+/// continuem sendo.
+///
+/// POR QUE EXISTE (campo, 11/09/2026): um convidado digitou no campo da
+/// presença o código impresso no crachá, e a página respondeu "confira se o
+/// crachá é deste evento". Era deste evento. O código da porta não pode abrir
+/// esta página, porque ele é a entrada da pessoa e o arquivo é público; mas a
+/// página pode reconhecê-lo e dizer o que fazer.
+const CODIGO_PORTA_LEN = 6;
+const CODIGO_PESSOAL_LEN = 12;
+
+/// O que a pessoa pôs no campo da presença: 'qr', 'porta', 'pessoal', 'id',
+/// ou '' quando não há nada.
+function tipoDaEntrada(texto) {
+  const t = (texto || '').trim();
+  if (!t) return '';
+  if (t.toUpperCase().startsWith('SYN')) return 'qr';
+  const n = normalizarCodigo(t);
+  if (n.length === CODIGO_PORTA_LEN) return 'porta';
+  if (n.length === CODIGO_PESSOAL_LEN) return 'pessoal';
+  return 'id';
 }
 
 let dados = null;
@@ -433,15 +459,31 @@ async function mostrarCracha() {
 }
 
 function minhaPresenca() {
-  const id = identificador($('cracha').value);
+  const entrada = $('cracha').value;
   const alvo = document.getElementById('eu');
   alvo.innerHTML = '';
-  if (!id) return;
+  const tipo = tipoDaEntrada(entrada);
+  if (!tipo) return;
+  if (tipo === 'porta') {
+    alvo.textContent = 'Esse é o código de entrada impresso no crachá. Por ' +
+        'segurança ele não funciona nesta página: leia o QR do crachá com a ' +
+        'câmera do celular e cole aqui o texto que aparecer.';
+    return;
+  }
+  if (tipo === 'pessoal') {
+    alvo.textContent = (dados && dados.badges)
+        ? 'Esse parece o seu código pessoal. Use-o no campo "O seu crachá", ' +
+          'acima: ele mostra o seu QR.'
+        : 'Esse parece um código pessoal, mas esta vitrine não traz crachás. ' +
+          'Leia o QR do crachá com a câmera e cole aqui o texto.';
+    return;
+  }
 
+  const id = identificador(entrada);
   const g = (dados.guests || []).find((x) => x.id === id);
   if (!g) {
-    alvo.textContent = 'Não achamos este identificador nesta vitrine. ' +
-        'Confira se o crachá é deste evento.';
+    alvo.textContent = 'Não achamos este crachá nesta vitrine. Confira se o ' +
+        'texto veio inteiro do QR e se o crachá é deste evento.';
     return;
   }
   const sessoes = Array.isArray(dados.sessions) ? dados.sessions : [];
