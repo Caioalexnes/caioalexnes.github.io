@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Login do assistente do Synova</title>
+<!--
+  A PÁGINA DE RESERVA DO LOGIN DO OPENROUTER (22/09/2026, lote 2 do
+  `docs/plano-ask.md`).
+
+  O OpenRouter devolve o login para https://caioalexnes.github.io/j/or?code=…
+  Onde o App Link está verificado, o Android entrega o endereço direto ao
+  aplicativo e esta página nem carrega. Onde não está (o navegador seguiu o
+  redirecionamento sozinho, ou a verificação ainda não passou), é ela que
+  aparece, e o botão devolve o código ao app por `synova://or?code=…`. O app
+  aceita as duas formas (`OpenRouterOAuth.matches`).
+
+  O CÓDIGO VEM NA QUERY, e não no fragmento como no convite: é o OpenRouter
+  quem monta o endereço. Então este site VÊ o código. Sozinho ele não vale
+  nada: só vira chave junto com o verificador do PKCE, que nunca saiu do
+  aparelho que começou o login, e o app o aceita uma vez só e por 15 minutos.
+-->
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:36rem; margin:0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 .3rem; }
+  .sub { color:var(--muted); margin:0 0 1.6rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px; margin-bottom:16px; }
+  .btn { font:inherit; font-weight:600; border-radius:9px; padding:11px 16px;
+         border:1px solid var(--accent); display:block; width:100%;
+         text-align:center; text-decoration:none; margin-top:10px; }
+  .primary { background:var(--accent); color:var(--bg); }
+  .hide { display:none; }
+  footer { color:var(--muted); font-size:.83rem; margin-top:28px; text-align:center; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Voltando ao Synova</h1>
+  <p class="sub" id="sub">Se o aplicativo não abriu sozinho, toque no botão abaixo.</p>
+
+  <div class="card" id="ok">
+    <p id="okBody">O login do OpenRouter foi aprovado. Falta entregar o código ao
+       aplicativo, no mesmo aparelho em que você começou o login.</p>
+    <a class="btn primary" id="open" href="#">Abrir no Synova</a>
+    <p id="okNote">O código vale uma vez só, por 15 minutos.</p>
+  </div>
+
+  <div class="card hide" id="empty">
+    <strong id="emptyTitle">Este endereço não traz um código do OpenRouter.</strong>
+    <p id="emptyBody">Comece o login de novo pelo aplicativo: Conta do assistente,
+       Entrar com o OpenRouter.</p>
+  </div>
+
+  <div class="card" id="other">
+    <strong id="otherTitle">Se nada abrir</strong>
+    <p id="otherBody">No Synova, em Conta do assistente, cole uma chave criada em
+       openrouter.ai/settings/keys. Esse caminho não depende desta página.</p>
+  </div>
+
+  <footer id="foot">
+    O código veio no endereço, e este site o vê. Sozinho ele não serve para
+    nada: só vira uma chave junto com um segredo que nunca saiu do seu aparelho.
+  </footer>
+</main>
+
+<script>
+(function () {
+  var el = function (id) { return document.getElementById(id); };
+  var en = !/^pt/i.test(navigator.language || '');
+
+  // O app lê a mesma coisa do lado dele (`OpenRouterOAuth.complete`): só o
+  // parâmetro `code`, sem espaço em volta.
+  var code = '';
+  try {
+    code = (new URLSearchParams(location.search).get('code') || '').trim();
+  } catch (e) {
+    code = '';
+  }
+
+  if (en) {
+    document.documentElement.lang = 'en';
+    document.title = 'Synova assistant sign-in';
+    el('title').textContent = 'Back to Synova';
+    el('sub').textContent = 'If the app did not open on its own, tap the button below.';
+    el('okBody').textContent = 'The OpenRouter sign-in was approved. The code still has to reach the app, on the same device where you started the sign-in.';
+    el('open').textContent = 'Open in Synova';
+    el('okNote').textContent = 'The code works once, for 15 minutes.';
+    el('emptyTitle').textContent = 'This address does not carry an OpenRouter code.';
+    el('emptyBody').textContent = 'Start the sign-in again from the app: Assistant account, Sign in with OpenRouter.';
+    el('otherTitle').textContent = 'If nothing opens';
+    el('otherBody').textContent = 'In Synova, under Assistant account, paste a key created at openrouter.ai/settings/keys. That path does not depend on this page.';
+    el('foot').textContent = 'The code came in the address, and this site can see it. On its own it is useless: it only becomes a key together with a secret that never left your device.';
+  }
+
+  var ok = code.length > 0;
+  el('ok').classList.toggle('hide', !ok);
+  el('empty').classList.toggle('hide', ok);
+  if (!ok) {
+    el('sub').textContent = en
+      ? 'There is nothing to hand back to the app.'
+      : 'Não há nada para entregar ao aplicativo.';
+    return;
+  }
+  // Esquema próprio: inútil numa conversa, útil AQUI, onde o navegador sabe
+  // entregá-lo ao aplicativo.
+  el('open').href = 'synova://or?code=' + encodeURIComponent(code);
+})();
+</script>
+</body>
+</html>
