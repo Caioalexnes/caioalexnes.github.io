@@ -30,39 +30,82 @@
 <body>
 <main>
   <h1>Política de privacidade do Synova</h1>
-  <p class="sub">Atualizada em 4 de setembro de 2026.</p>
+  <p class="sub">Atualizada em 22 de setembro de 2026.</p>
 
   <div class="card">
     <strong>O resumo:</strong> o Synova não tem servidor. Quem escreveu o aplicativo não recebe,
     não guarda e não consegue ver nada do que você registra nele. A lista de convidados fica
-    cifrada no seu aparelho.
+    cifrada no seu aparelho. Três coisas são opcionais, nascem desligadas e mandam dados para
+    fora do aparelho quando ligadas: a sincronização pelo Google Drive, a vitrine do convidado e
+    a cópia do backup de chave no seu Drive. Esta página explica as três.
   </div>
 
   <h2>O que o aplicativo guarda, e onde</h2>
   <p>
     Tudo que você cria no Synova — eventos, lista de convidados, registros de entrada e saída —
-    fica <strong>no seu próprio aparelho</strong>, cifrado com uma chave derivada da senha do
-    evento. Nada disso é enviado para o autor do aplicativo, porque não existe servidor para onde
-    enviar.
+    fica <strong>no seu próprio aparelho</strong>, cifrado com a chave do evento. Essa chave só
+    abre com a senha do evento, ou pelo cofre do próprio aparelho, se você escolher manter o
+    evento destravado. Nada disso é enviado para o autor do aplicativo, porque não existe
+    servidor para onde enviar.
   </p>
   <p>
-    Se você desinstalar o aplicativo, esses dados são apagados junto. Não há cópia em lugar nenhum,
-    e não há como recuperá-los — nem por nós.
+    Se você desinstalar o aplicativo, o que está nele é apagado junto. Só continua existindo o que
+    você mesmo guardou fora dele: uma cópia de evento que você exportou, um backup de chave ou os
+    arquivos da sincronização no seu Drive, todos cifrados. Sem isso, não há como recuperar os
+    dados, nem por nós.
   </p>
 
   <h2>As permissões que o aplicativo pede</h2>
   <ul>
     <li><strong>Câmera</strong> — para ler o QR do crachá na porta do evento e o código de
         pareamento entre aparelhos. As imagens não são gravadas nem enviadas.</li>
+    <li><strong>Localização precisa</strong> — só quando o organizador liga a regra de raio ou
+        toca em "usar onde estou". Tem uma seção inteira sobre isso logo abaixo.</li>
+    <li><strong>Notificações</strong> — para avisar na tela quando chega um aviso do evento ou
+        um pedido esperando decisão. O aplicativo não roda em segundo plano: se ele estiver
+        fechado, nada é entregue.</li>
     <li><strong>Internet</strong> — para sincronizar com outro aparelho na mesma rede local e,
-        se você ativar, publicar no seu Google Drive. O aplicativo funciona inteiro sem
+        se você ativar, guardar arquivos no seu Google Drive. O aplicativo funciona inteiro sem
         internet.</li>
     <li><strong>Estado da rede</strong> — para saber se há conexão antes de tentar sincronizar.</li>
+    <li><strong>Vibração</strong> — para o retorno no crachá lido, de quem está com o aparelho
+        na mão e não olhando a tela.</li>
   </ul>
+  <p>
+    Duas permissões aparecem na lista do Android e <strong>o Synova não usa nenhuma das duas</strong>:
+    as de biometria e impressão digital. Elas vêm de uma biblioteca do próprio Android (<code>androidx.biometric</code>) que chega junto de outra
+    dependência. Não há desbloqueio por digital em lugar nenhum do aplicativo.
+  </p>
   <p>
     Fotos e arquivos são acessados apenas quando <em>você</em> escolhe um, pela tela do próprio
     sistema Android. O aplicativo não varre a sua galeria nem os seus arquivos.
   </p>
+
+  <h2>Localização</h2>
+  <p>
+    O organizador pode marcar no mapa onde o evento acontece e exigir que os registros de presença
+    sejam feitos perto dali. Com essa regra ligada, o aplicativo lê a posição do aparelho
+    <strong>no instante de cada registro</strong> e guarda a coordenada junto do registro, para o
+    organizador poder conferir depois.
+  </p>
+  <p>
+    O botão "usar onde estou", que o organizador usa para marcar o local do evento, também lê a
+    posição: uma vez, naquele momento, e só quando ele toca.
+  </p>
+  <ul>
+    <li>A leitura é <strong>pontual</strong>. O aplicativo não acompanha trajeto, não lê em
+        segundo plano e não lê com o evento fechado.</li>
+    <li>Com a regra desligada — que é como o evento fica enquanto ninguém marcar um ponto — a
+        posição <strong>não é lida em nenhuma entrada</strong>, e a permissão só é pedida se
+        alguém tocar em "usar onde estou".</li>
+    <li>A coordenada fica dentro do registro e <strong>sincroniza com os outros aparelhos do
+        mesmo evento</strong>. Com o Drive ligado, ela viaja cifrada junto com o resto do log.</li>
+    <li>Ela <strong>não</strong> vai para a vitrine: o arquivo público não carrega coordenada nem
+        horário de ninguém.</li>
+    <li>Negar a permissão não impede ninguém de entrar no evento. Sem posição o registro acontece
+        do mesmo jeito, marcado como "sem posição"; dependendo de como o organizador configurou,
+        ele pode ficar esperando a autorização dele.</li>
+  </ul>
 
   <h2>Leitura de listas por foto e por PDF</h2>
   <p>
@@ -71,22 +114,84 @@
     A imagem e o texto reconhecido não são enviados para lugar nenhum.
   </p>
 
-  <h2>Google Drive (opcional)</h2>
+  <h2>Sincronização pelo Google Drive (opcional)</h2>
   <p>
     Você pode ativar a sincronização pelo Google Drive. Quando ativa:
   </p>
   <ul>
-    <li>O aplicativo publica <strong>no seu próprio Drive</strong>, em um arquivo criado por ele.</li>
-    <li>O conteúdo desse arquivo é <strong>cifrado</strong>. O Google armazena, mas não consegue
-        ler: a chave é derivada da senha do evento e nunca sai dos aparelhos autorizados.</li>
+    <li>O aplicativo publica <strong>no seu próprio Drive</strong>, em arquivos criados por ele.</li>
+    <li>O conteúdo desses arquivos é <strong>cifrado</strong>. O Google armazena, mas não consegue
+        ler: a chave do evento nunca é enviada para ele.</li>
     <li>O aplicativo usa a permissão mais restrita disponível
         (<code>drive.file</code>), que dá acesso <strong>apenas aos arquivos que ele mesmo
         criou</strong>. Ele não enxerga o resto do seu Drive.</li>
-    <li>Você pode apagar esse arquivo a qualquer momento, pelo próprio Drive.</li>
+    <li>Você pode apagar esses arquivos a qualquer momento, pelo próprio Drive.</li>
+    <li>Os arquivos ficam numa pasta chamada <strong>Synova</strong>, e a tela "Arquivos no
+        Drive" do aplicativo manda para a lixeira do Drive os de eventos que você não usa mais.
+        Na lixeira, o próprio Drive os guarda por 30 dias.</li>
   </ul>
   <p>
-    Se você não ativar, nenhuma conta Google é pedida e nada é publicado.
+    Se você não ativar, nenhuma conta Google é pedida para a sincronização e nada dela é
+    publicado.
   </p>
+  <div class="card">
+    <strong>Uma exceção que precisa estar escrita:</strong> a vitrine do convidado, descrita
+    abaixo, também usa o Drive — e o arquivo <em>dela</em> é publicado em claro, de propósito,
+    porque uma página de navegador precisa conseguir lê-lo. A frase acima vale para a
+    sincronização entre aparelhos, não para a vitrine.
+  </div>
+
+  <h2>A vitrine do convidado (opcional)</h2>
+  <p>
+    O organizador pode publicar uma página só de leitura para os convidados acompanharem o evento.
+    Ela nasce <strong>desligada</strong>. Quando ligada, o aplicativo publica um arquivo no Drive
+    do organizador e o marca como <strong>legível por qualquer pessoa que tenha o link</strong>.
+  </p>
+  <p>O que vai nesse arquivo:</p>
+  <ul>
+    <li>o nome do evento, a programação (as sessões) e os avisos publicados;</li>
+    <li>para cada convidado, um <strong>identificador opaco</strong> e em quais sessões ele esteve
+        presente — sem horário, sem coordenada e sem o código do crachá;</li>
+    <li><strong>nome, e-mail, telefone e qualquer outra coluna da lista só entram se o organizador
+        escolher publicá-las.</strong> O padrão é nenhuma: quem liga a vitrine e não escolhe nada
+        publica a programação, os avisos e uma tabela de identificadores.</li>
+  </ul>
+  <p>
+    Isso é <strong>pseudônimo, não anônimo</strong>. Quem souber o identificador de alguém sabe
+    onde essa pessoa esteve, e num evento pequeno o próprio padrão de presenças pode apontar para
+    uma pessoa. Para acompanhar um evento costuma bastar; não é sigilo, e não vamos chamar de
+    sigilo.
+  </p>
+  <p>
+    O arquivo carrega uma data de validade e <strong>vence 30 dias depois da última sessão</strong>
+    do evento. O organizador pode apagá-lo antes disso, pelo próprio Drive, e desligar a vitrine a
+    qualquer momento.
+  </p>
+  <p>
+    Se o organizador também ligar o crachá na vitrine, cada convidado ganha ali um bloco
+    <strong>cifrado</strong> com o QR dele, que só abre com o código pessoal que ele recebeu. Sem
+    esse código, o bloco não diz nada a quem tem o link.
+  </p>
+  <p>
+    Quem abre a página baixa o arquivo direto do Google. Não há servidor nosso no meio, e nós não
+    registramos quem abriu, quando, nem de onde.
+  </p>
+
+  <h2>Backup de chave (opcional)</h2>
+  <p>
+    Você pode salvar um arquivo com a identidade deste aparelho no Synova (a chave que assina o
+    que ele registra) e as chaves dos eventos que ele mantém destravados. É o que permite voltar a
+    ser dono dos seus eventos num aparelho novo.
+  </p>
+  <ul>
+    <li>O arquivo é <strong>protegido por uma senha que você escolhe</strong>. Sem ela, ele não
+        abre, nem para nós.</li>
+    <li>Ele fica onde você salvar. Se você marcar a opção, uma cópia vai também para o
+        <strong>seu</strong> Google Drive, como <strong>arquivo privado</strong>: ao contrário
+        da vitrine, ele não é compartilhado com ninguém.</li>
+    <li>Para restaurar pelo Drive, o aplicativo lista só os backups de chave que ele mesmo criou
+        na sua conta.</li>
+  </ul>
 
   <h2>O que sai do aparelho sem ser por sua conta</h2>
   <div class="card">
@@ -115,14 +220,15 @@
   <h2>Dados de outras pessoas</h2>
   <p>
     Uma lista de convidados contém dados de outras pessoas. Quem organiza o evento é quem responde
-    por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. O autor
-    do aplicativo não tem acesso a essa lista e não tem como intervir nela.
+    por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. Isso
+    inclui a decisão de ligar a vitrine e a de escolher quais colunas ela publica. O autor do
+    aplicativo não tem acesso a essa lista e não tem como intervir nela.
   </p>
 
   <h2>Código aberto</h2>
   <p>
-    O Synova é software livre, sob licença MIT. Tudo que está escrito aqui pode ser conferido no
-    código: <a href="https://github.com/caioalexnes">github.com/caioalexnes</a>.
+    O Synova é distribuído sob licença MIT. O repositório público que esta página apontava está
+    fechado no momento; se você quiser ler o código, peça pelo contato abaixo.
   </p>
 
   <h2>Contato</h2>
