@@ -30,11 +30,11 @@
 <body>
 <main>
   <h1>Termos de uso do Synova</h1>
-  <p class="sub">Atualizados em 22 de setembro de 2026.</p>
+  <p class="sub">Atualizados em 4 de outubro de 2026.</p>
 
   <div class="card">
-    <strong>O resumo:</strong> o Synova é software livre, oferecido como está, de graça e sem
-    garantia. Quem usa é quem responde pelo que faz com ele.
+    <strong>O resumo:</strong> o Synova é oferecido como está, de graça e sem garantia. Quem usa
+    é quem responde pelo que faz com ele.
   </div>
 
   <h2>Licença</h2>
@@ -68,7 +68,8 @@
 
   <h2>Criptografia sem auditoria</h2>
   <p>
-    O aplicativo cifra os dados no aparelho e nas cópias que você exporta, com algoritmos
+    O aplicativo cifra os dados no aparelho, nas cópias que você exporta e no que vai para o
+    servidor do Synova, com algoritmos
     conhecidos e usados amplamente. Mas <strong>o código não passou por auditoria de segurança
     independente</strong>. Ele foi escrito com cuidado; isso não é a mesma coisa que ter sido
     verificado por especialistas.
@@ -83,6 +84,12 @@
     chave que você consiga abrir), os dados daquele evento estão perdidos.</strong> Isso é
     desenho, não defeito.
   </p>
+  <p>
+    O mesmo vale para a <strong>senha do cofre</strong> da conta e para o <strong>código de
+    recuperação</strong>: nenhum dos dois é guardado no servidor. Se os dois se perderem, a cópia
+    da conta no servidor não abre mais. Os eventos que continuam no seu aparelho não são
+    afetados.
+  </p>
 
   <h2>O que é sugerido e o que é decidido</h2>
   <p>
@@ -95,10 +102,20 @@
   <p>
     Uma lista de convidados contém dados pessoais de outras pessoas. <strong>Quem opera o evento é
     quem responde por eles</strong> — pela base legal para tratá-los, pelo tempo que os guarda e
-    por com quem os compartilha. O autor do aplicativo não tem servidor, não tem cópia desses dados
-    e não tem como intervir.
+    por com quem os compartilha. O servidor do Synova guarda esses dados só cifrados com a chave
+    de cada evento, que ele não tem: o autor do aplicativo não tem cópia legível deles e não tem
+    como intervir.
   </p>
 
+  <h2>A conta e o servidor do Synova</h2>
+  <p>
+    A conta é opcional. Com ela, os seus eventos também passam pelo servidor do Synova,
+    hospedado pelo Supabase, cifrados com a chave de cada evento. O servidor é oferecido como o
+    resto do aplicativo, sem garantia: ele pode ficar fora do ar, e enquanto isso o aplicativo
+    continua funcionando no aparelho, com a rede local, o Drive e o arquivo. A
+    <a href="/privacidade/">política de privacidade</a> diz o que o servidor guarda, e você pode
+    <a href="/excluir-conta/">excluir a sua conta</a> a qualquer momento.
+  </p>
   <h2>Sincronização pelo Google Drive, e a vitrine</h2>
   <p>
     Se você ativar a sincronização pelo Drive, ou guardar lá a cópia do backup de chave, esses
@@ -128,7 +145,8 @@
 
   <footer>
     Synova — registro de presença em eventos, offline-first.
-    <a href="/">Início</a> · <a href="/privacidade/">Privacidade</a>
+    <a href="/">Início</a> · <a href="/privacidade/">Privacidade</a> ·
+    <a href="/excluir-conta/">Excluir a conta</a>
   </footer>
 </main>
 </body>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacidade — Synova</title>
+<title>Privacidade · Synova</title>
 <style>
   :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
           --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; }
@@ -21,7 +21,7 @@
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
           padding:16px 18px; margin:16px 0; }
   ul { padding-left:1.2rem; } li { margin-bottom:.5rem; }
-  a { color:var(--accent); }
+  a { color:var(--accent); overflow-wrap:anywhere; }
   strong { font-weight:650; }
   footer { color:var(--muted); font-size:.85rem; margin-top:40px;
            border-top:1px solid var(--line); padding-top:16px; }
@@ -30,55 +30,155 @@
 <body>
 <main>
   <h1>Política de privacidade do Synova</h1>
-  <p class="sub">Atualizada em 22 de setembro de 2026.</p>
+  <p class="sub">Atualizada em 4 de outubro de 2026.</p>
 
   <div class="card">
-    <strong>O resumo:</strong> o Synova não tem servidor. Quem escreveu o aplicativo não recebe,
-    não guarda e não consegue ver nada do que você registra nele. A lista de convidados fica
-    cifrada no seu aparelho. Três coisas são opcionais, nascem desligadas e mandam dados para
-    fora do aparelho quando ligadas: a sincronização pelo Google Drive, a vitrine do convidado e
-    a cópia do backup de chave no seu Drive. Esta página explica as três.
+    <strong>O resumo:</strong> você pode usar o Synova sem conta, e aí tudo fica no seu aparelho.
+    Com uma conta, os seus aparelhos também sincronizam pelo servidor do Synova, que guarda os
+    eventos <strong>cifrados com a chave de cada evento</strong> e não consegue lê-los. A lista de
+    convidados nunca chega legível a nós. Algumas coisas mandam dados para fora do aparelho: a
+    conta e o servidor, a sincronização pelo Google Drive, a vitrine do convidado, a cópia do
+    backup de chave no seu Drive e o assistente de IA. Esta página explica cada uma, o que fica
+    guardado e onde, e como excluir a sua conta.
   </div>
 
   <h2>O que o aplicativo guarda, e onde</h2>
   <p>
-    Tudo que você cria no Synova — eventos, lista de convidados, registros de entrada e saída —
-    fica <strong>no seu próprio aparelho</strong>, cifrado com a chave do evento. Essa chave só
-    abre com a senha do evento, ou pelo cofre do próprio aparelho, se você escolher manter o
-    evento destravado. Nada disso é enviado para o autor do aplicativo, porque não existe
-    servidor para onde enviar.
+    Tudo que você cria no Synova (eventos, lista de convidados, registros de entrada e saída) fica
+    <strong>no seu próprio aparelho</strong>, cifrado com a chave do evento. Essa chave só abre com
+    a senha do evento, ou pelo cofre do próprio aparelho, se você escolher manter o evento
+    destravado. Nenhum aplicativo além do Synova consegue ler esses arquivos.
   </p>
   <p>
-    Se você desinstalar o aplicativo, o que está nele é apagado junto. Só continua existindo o que
-    você mesmo guardou fora dele: uma cópia de evento que você exportou, um backup de chave ou os
-    arquivos da sincronização no seu Drive, todos cifrados. Sem isso, não há como recuperar os
-    dados, nem por nós.
+    Cada conta tem o seu espaço no aparelho, e <strong>uma conta não abre os eventos de
+    outra</strong>: os segredos de cada uma ficam cifrados com a chave daquela conta. Os eventos
+    criados sem conta continuam num espaço à parte, como sempre foram.
+  </p>
+  <p>
+    Se você desinstalar o aplicativo, o que está nele é apagado junto. Continua existindo só o que
+    foi guardado fora dele: o que está no servidor do Synova (descrito abaixo), uma cópia de evento
+    que você exportou, um backup de chave e os arquivos da sincronização no seu Drive, tudo
+    cifrado. Sem nada disso, não há como recuperar os dados, nem por nós.
+  </p>
+
+  <h2>A conta do Synova (opcional)</h2>
+  <p>
+    A conta é opcional: o aplicativo funciona inteiro sem ela, e o botão de entrar sem conta
+    continua na primeira tela. Você pode entrar com o <strong>Google</strong> ou com
+    <strong>e-mail e senha</strong>. As contas ficam no <strong>Supabase</strong>, o provedor do
+    servidor do Synova, num servidor em São Paulo. Sobre a sua conta, o servidor guarda:
+  </p>
+  <ul>
+    <li><strong>o e-mail da conta</strong> e, se você entra com o Google, o identificador da sua
+        Conta Google e os dados de perfil que o Google entrega no login, como o nome;</li>
+    <li>se você entra com e-mail e senha, <strong>a senha guardada pelo provedor de um jeito que
+        ninguém consegue ler de volta</strong>;</li>
+    <li>quando a conta foi criada e quando foi usada pela última vez;</li>
+    <li><strong>a chave da conta</strong>, criada no servidor e entregue ao seu aparelho depois que
+        você entra. Ela cifra os segredos da conta no aparelho. Sozinha, ela não abre nenhum
+        evento: as chaves dos eventos nunca chegam ao servidor em forma legível;</li>
+    <li>um registro das entradas na conta (data, e-mail e endereço IP), que o provedor pode
+        manter para segurança. Ele é apagado junto com a conta.</li>
+  </ul>
+  <p>
+    Quem cria a conta por e-mail recebe uma mensagem para confirmar o endereço, enviada pelo
+    servidor do Synova.
+  </p>
+
+  <h2>O servidor do Synova</h2>
+  <p>
+    Numa conta, os aparelhos de um evento sincronizam pelo servidor, além da rede local e do
+    Drive. Cada registro (um convidado novo, uma presença) vai <strong>cifrado com a chave do
+    evento</strong>, que o servidor não tem. Ele guarda o conteúdo cifrado e, em claro, só o que
+    precisa para entregar cada registro a quem falta:
+  </p>
+  <ul>
+    <li>o identificador do evento e o do aparelho que registrou;</li>
+    <li>um número de ordem, quando o registro chegou e uma impressão do conteúdo cifrado, para não
+        guardar o mesmo registro duas vezes;</li>
+    <li>uma impressão de uma senha tirada da chave do evento, que confere quem pode ler e escrever
+        naquele evento sem revelar a chave;</li>
+    <li><strong>qual conta registrou o evento no servidor</strong> pela primeira vez. Essa ligação
+        é apagada quando a conta é excluída.</li>
+  </ul>
+  <p>
+    O servidor não vê o que cada registro diz: nomes de convidados, o nome do evento, quem
+    entrou. Ele vê quando os registros chegam e quantos são, o que mostra quando um evento está
+    movimentado, mas não o que aconteceu nele. Quando o evento está aberto em mais de um
+    aparelho, os registros novos também passam por um canal em tempo real do mesmo provedor,
+    cifrados da mesma forma, e esse canal não guarda nada.
+  </p>
+  <p>
+    O servidor nasce ligado em cada evento de uma conta, e pode ser desligado por evento, na tela
+    <em>Sincronizar pela internet</em>. Desligado, o evento continua sincronizando pela rede local
+    e pelo Drive, se ele estiver ligado.
+  </p>
+
+  <h2>A cópia da conta e os seus outros celulares</h2>
+  <p>
+    Para você não perder os seus eventos ao trocar de celular, a conta pode guardar uma
+    <strong>cópia no servidor</strong>: a identidade deste aparelho no Synova e as chaves e as
+    listas dos eventos que ficam destravados nele. Ela é cifrada com uma chave que sai de uma
+    <strong>senha do cofre</strong>
+    que você escolhe, ou de um <strong>código de recuperação</strong> que o aplicativo cria e mostra
+    uma vez. A senha e o código nunca são enviados: <strong>o servidor não consegue abrir a
+    cópia</strong>, e nós também não. Depois de criada, a cópia é atualizada sozinha quando um
+    evento muda. Se você esquecer a senha e perder o código, a cópia não abre mais.
+  </p>
+  <ul>
+    <li><strong>No backup do Android:</strong> a chave que abre a cópia também é guardada no
+        backup da sua Conta Google, para um celular novo restaurado desse backup trazer a conta
+        sem pedir a senha. Isso só acontece quando o Android oferece cifra de ponta a ponta para
+        esse backup (ele a amarra ao bloqueio de tela). Sem ela, nada é guardado ali.</li>
+    <li><strong>Dois celulares na mesma conta:</strong> eles deixam pedidos e respostas na pasta
+        da conta no servidor, cifrados com a chave da cópia, para o segundo celular entrar nos
+        eventos do primeiro. O servidor não consegue ler esses arquivos.</li>
+    <li><strong>A passagem por QR:</strong> o celular antigo deixa no servidor uma caixa cifrada, e
+        a chave dela vai só no QR que o celular novo lê. Quando o novo recebe a caixa, ela é
+        apagada.</li>
+  </ul>
+
+  <h2>Excluir a conta</h2>
+  <p>
+    Você pode excluir a conta a qualquer momento, pelo aplicativo, ou pedir por e-mail se não tiver
+    mais o aplicativo. Excluir apaga, no servidor, o login, a chave da conta, a cópia da conta, os
+    arquivos que os seus celulares trocam entre si, o registro das entradas e a ligação entre a
+    conta e os eventos que ela registrou. Os registros cifrados dos eventos continuam no servidor,
+    porque pertencem ao evento e os outros aparelhos dependem deles. O passo a passo, e tudo o que
+    é apagado e o que fica, está em <a href="/excluir-conta/">Excluir a conta</a>.
   </p>
 
   <h2>As permissões que o aplicativo pede</h2>
   <ul>
-    <li><strong>Câmera</strong> — para ler o QR do crachá na porta do evento e o código de
+    <li><strong>Câmera</strong>: para ler o QR do crachá na porta do evento e o código de
         pareamento entre aparelhos. As imagens não são gravadas nem enviadas.</li>
-    <li><strong>Localização precisa</strong> — só quando o organizador liga a regra de raio ou
+    <li><strong>Localização precisa</strong>: só quando o organizador liga a regra de raio ou
         toca em "usar onde estou". Tem uma seção inteira sobre isso logo abaixo.</li>
-    <li><strong>Notificações</strong> — para avisar na tela quando chega um aviso do evento ou
-        um pedido esperando decisão. O aplicativo não roda em segundo plano: se ele estiver
-        fechado, nada é entregue.</li>
-    <li><strong>Internet</strong> — para sincronizar com outro aparelho na mesma rede local e,
-        se você ativar, guardar arquivos no seu Google Drive. O aplicativo funciona inteiro sem
-        internet.</li>
-    <li><strong>Estado da rede</strong> — para saber se há conexão antes de tentar sincronizar.</li>
-    <li><strong>Vibração</strong> — para o retorno no crachá lido, de quem está com o aparelho
-        na mão e não olhando a tela.</li>
+    <li><strong>Microfone</strong>: só se você ligar o assistente de IA e segurar o microfone dele
+        para falar em vez de escrever. Não há escuta contínua: a gravação começa quando o seu dedo
+        encosta e acaba quando ele sai. Onde o aparelho reconhece a fala sem internet, ela não sai
+        dele; quando falta o pacote de voz do idioma, quem reconhece é o serviço do Android, e aí
+        ela sai. O aplicativo pergunta uma vez antes, e quem recusa continua escrevendo.</li>
+    <li><strong>Notificações</strong>: para avisar na tela quando chega um aviso do evento ou um
+        pedido esperando decisão. O aplicativo não roda em segundo plano: se ele estiver fechado,
+        nada é entregue.</li>
+    <li><strong>Internet</strong>: para sincronizar com outro aparelho na mesma rede local, falar
+        com o servidor do Synova se você usa uma conta e, se você ativar, guardar arquivos no seu
+        Google Drive. O aplicativo funciona inteiro sem internet.</li>
+    <li><strong>Estado da rede</strong>: para saber se há conexão antes de tentar sincronizar.</li>
+    <li><strong>Vibração</strong>: para o retorno no crachá lido, de quem está com o aparelho na
+        mão e não olhando a tela.</li>
   </ul>
   <p>
     Duas permissões aparecem na lista do Android e <strong>o Synova não usa nenhuma das duas</strong>:
-    as de biometria e impressão digital. Elas vêm de uma biblioteca do próprio Android (<code>androidx.biometric</code>) que chega junto de outra
-    dependência. Não há desbloqueio por digital em lugar nenhum do aplicativo.
+    as de biometria e impressão digital. Elas vêm de uma biblioteca do próprio Android
+    (<code>androidx.biometric</code>) que chega junto de outra dependência. Não há desbloqueio por
+    digital em lugar nenhum do aplicativo.
   </p>
   <p>
     Fotos e arquivos são acessados apenas quando <em>você</em> escolhe um, pela tela do próprio
-    sistema Android. O aplicativo não varre a sua galeria nem os seus arquivos.
+    sistema Android, ou dentro de uma pasta que você escolhe nela. O aplicativo não varre a sua
+    galeria nem os seus arquivos.
   </p>
 
   <h2>Localização</h2>
@@ -95,11 +195,12 @@
   <ul>
     <li>A leitura é <strong>pontual</strong>. O aplicativo não acompanha trajeto, não lê em
         segundo plano e não lê com o evento fechado.</li>
-    <li>Com a regra desligada — que é como o evento fica enquanto ninguém marcar um ponto — a
+    <li>Com a regra desligada, que é como o evento fica enquanto ninguém marcar um ponto, a
         posição <strong>não é lida em nenhuma entrada</strong>, e a permissão só é pedida se
         alguém tocar em "usar onde estou".</li>
     <li>A coordenada fica dentro do registro e <strong>sincroniza com os outros aparelhos do
-        mesmo evento</strong>. Com o Drive ligado, ela viaja cifrada junto com o resto do log.</li>
+        mesmo evento</strong>. Pelo servidor e pelo Drive, ela viaja cifrada junto com o resto do
+        registro.</li>
     <li>Ela <strong>não</strong> vai para a vitrine: o arquivo público não carrega coordenada nem
         horário de ninguém.</li>
     <li>Negar a permissão não impede ninguém de entrar no evento. Sem posição o registro acontece
@@ -107,28 +208,36 @@
         ele pode ficar esperando a autorização dele.</li>
   </ul>
 
-  <h2>Leitura de listas por foto e por PDF</h2>
+  <h2>Leitura de listas por foto, imagem, PDF e planilha</h2>
   <p>
-    Quando você importa uma lista fotografando um papel ou abrindo um PDF, o reconhecimento de
-    texto acontece <strong>dentro do seu aparelho</strong>, por uma biblioteca que roda localmente.
-    A imagem e o texto reconhecido não são enviados para lugar nenhum.
+    Quando você importa uma lista, a leitura acontece <strong>dentro do seu aparelho</strong>: o
+    texto de um PDF é lido do próprio arquivo quando ele tem texto, e uma foto ou um PDF
+    digitalizado passa por um reconhecimento de texto que roda localmente. O arquivo e o texto
+    lido não são enviados para lugar nenhum.
+  </p>
+  <p>
+    Há uma exceção, e ela nunca acontece sozinha: com o assistente de IA ligado, você pode
+    <strong>mandar o arquivo para o modelo</strong> quando a leitura no aparelho não serviu. O
+    aplicativo lê no aparelho primeiro, sempre; quando o resultado sai ruim, a tela diz o que saiu
+    errado e oferece mandar, dizendo para onde. Nada sai sem você pedir, e o padrão é não mandar.
   </p>
 
   <h2>Sincronização pelo Google Drive (opcional)</h2>
   <p>
-    Você pode ativar a sincronização pelo Google Drive. Quando ativa:
+    Você pode ativar a sincronização pelo Google Drive. Numa conta ela é a reserva do servidor, e
+    serve sobretudo aos aparelhos do evento que usam o aplicativo sem conta. Quando ativa:
   </p>
   <ul>
     <li>O aplicativo publica <strong>no seu próprio Drive</strong>, em arquivos criados por ele.</li>
     <li>O conteúdo desses arquivos é <strong>cifrado</strong>. O Google armazena, mas não consegue
         ler: a chave do evento nunca é enviada para ele.</li>
-    <li>O aplicativo usa a permissão mais restrita disponível
-        (<code>drive.file</code>), que dá acesso <strong>apenas aos arquivos que ele mesmo
-        criou</strong>. Ele não enxerga o resto do seu Drive.</li>
+    <li>O aplicativo usa a permissão mais restrita disponível (<code>drive.file</code>), que dá
+        acesso <strong>apenas aos arquivos que ele mesmo criou</strong>. Ele não enxerga o resto do
+        seu Drive.</li>
     <li>Você pode apagar esses arquivos a qualquer momento, pelo próprio Drive.</li>
-    <li>Os arquivos ficam numa pasta chamada <strong>Synova</strong>, e a tela "Arquivos no
-        Drive" do aplicativo manda para a lixeira do Drive os de eventos que você não usa mais.
-        Na lixeira, o próprio Drive os guarda por 30 dias.</li>
+    <li>Os arquivos ficam numa pasta chamada <strong>Synova</strong>, e a tela "Arquivos no Drive"
+        do aplicativo manda para a lixeira do Drive os de eventos que você não usa mais. Na
+        lixeira, o próprio Drive os guarda por 30 dias.</li>
   </ul>
   <p>
     Se você não ativar, nenhuma conta Google é pedida para a sincronização e nada dela é
@@ -136,7 +245,7 @@
   </p>
   <div class="card">
     <strong>Uma exceção que precisa estar escrita:</strong> a vitrine do convidado, descrita
-    abaixo, também usa o Drive — e o arquivo <em>dela</em> é publicado em claro, de propósito,
+    abaixo, também usa o Drive, e o arquivo <em>dela</em> é publicado em claro, de propósito,
     porque uma página de navegador precisa conseguir lê-lo. A frase acima vale para a
     sincronização entre aparelhos, não para a vitrine.
   </div>
@@ -151,7 +260,7 @@
   <ul>
     <li>o nome do evento, a programação (as sessões) e os avisos publicados;</li>
     <li>para cada convidado, um <strong>identificador opaco</strong> e em quais sessões ele esteve
-        presente — sem horário, sem coordenada e sem o código do crachá;</li>
+        presente, sem horário, sem coordenada e sem o código do crachá;</li>
     <li><strong>nome, e-mail, telefone e qualquer outra coluna da lista só entram se o organizador
         escolher publicá-las.</strong> O padrão é nenhuma: quem liga a vitrine e não escolhe nada
         publica a programação, os avisos e uma tabela de identificadores.</li>
@@ -179,18 +288,116 @@
 
   <h2>Backup de chave (opcional)</h2>
   <p>
-    Você pode salvar um arquivo com a identidade deste aparelho no Synova (a chave que assina o
-    que ele registra) e as chaves dos eventos que ele mantém destravados. É o que permite voltar a
-    ser dono dos seus eventos num aparelho novo.
+    Você pode salvar um arquivo com a identidade deste aparelho no Synova (a chave que assina o que
+    ele registra), as chaves dos eventos que ele mantém destravados e as listas desses eventos. É o
+    que permite voltar a ser dono dos seus eventos num aparelho novo, com ou sem conta.
   </p>
   <ul>
     <li>O arquivo é <strong>protegido por uma senha que você escolhe</strong>. Sem ela, ele não
         abre, nem para nós.</li>
     <li>Ele fica onde você salvar. Se você marcar a opção, uma cópia vai também para o
-        <strong>seu</strong> Google Drive, como <strong>arquivo privado</strong>: ao contrário
-        da vitrine, ele não é compartilhado com ninguém.</li>
-    <li>Para restaurar pelo Drive, o aplicativo lista só os backups de chave que ele mesmo criou
-        na sua conta.</li>
+        <strong>seu</strong> Google Drive, como <strong>arquivo privado</strong>: ao contrário da
+        vitrine, ele não é compartilhado com ninguém.</li>
+    <li>Para restaurar pelo Drive, o aplicativo lista só os backups de chave que ele mesmo criou na
+        sua conta.</li>
+  </ul>
+
+  <h2>O assistente de IA (opcional)</h2>
+  <p>
+    O Synova pode conversar com um modelo de IA através de um de dois serviços de terceiros: o
+    <strong>OpenRouter</strong>, que repassa o pedido a modelos de outras empresas, ou a
+    <strong>API Gemini</strong>, do Google. Ele <strong>nasce desligado</strong> e depende de duas
+    coisas: o organizador do evento tem que liberar, e cada aparelho tem que ligar o dele, com uma
+    conta do serviço conectada por quem usa aquele aparelho. Sem as duas, o assistente não existe.
+  </p>
+  <p>
+    Quando está ligado, <strong>o que você digita sai do aparelho</strong> e chega ao serviço que
+    responde: o OpenRouter e, dali, a empresa que roda o modelo escolhido, ou o Google.
+    <strong>Isso não é cifrado de ponta a ponta: eles leem.</strong> O modo privacidade, ligado por
+    padrão, pede ao OpenRouter que use só provedores que não guardam o que recebem. Não
+    controlamos o OpenRouter, o Google nem esses provedores, e não temos como garantir o que eles
+    fazem.
+  </p>
+  <p>
+    E o assistente <strong>lê o evento</strong> para responder. Ele pode pedir ao aplicativo os
+    números do evento, a programação, uma busca na lista, a ficha de um convidado, um exame dos
+    registros de presença, as configurações do evento e dos aparelhos, o estado da sincronização e
+    as colunas de uma lista que você está importando, com algumas amostras de cada uma. O que
+    essas leituras devolvem sai do aparelho junto com a pergunta:
+  </p>
+  <ul>
+    <li><strong>nomes de convidados</strong>, os campos que a pergunta alcançar, nomes de sessões e
+        horários de entrada;</li>
+    <li>antes de qualquer coisa sair, o aplicativo <strong>tapa e-mail, CPF e sequências longas de
+        dígitos</strong>, e <strong>nunca manda os códigos que abrem a porta</strong>: o do crachá
+        e o código pessoal da vitrine;</li>
+    <li><strong>o nome não é tapado</strong>, e isso é uma escolha: é ele que a pergunta precisa.
+        Se isso não lhe serve, o assistente é para ficar desligado;</li>
+    <li>ele <strong>só lê</strong>. Não registra presença de ninguém, não muda a lista, não apaga e
+        não publica nada. O que ele propõe vai para a mesma tela de revisão do resto, e quem aplica
+        é uma pessoa;</li>
+    <li>o que ele leu para cada resposta <strong>fica escrito na conversa</strong>, acima da
+        resposta.</li>
+  </ul>
+  <p>
+    O dado do evento só passa por um caminho que <strong>não tem permissão de treinar</strong> com
+    o que recebe. Quando a conta em uso não é um desses, o assistente continua conversando e
+    <strong>para de ver o evento</strong>, e a tela diz isso. Essa é a regra do aplicativo sobre os
+    próprios pedidos dele; não é uma promessa sobre o que um terceiro faz com o que recebe.
+  </p>
+  <p>
+    Pelos termos do Google para a API Gemini, o que é enviado com uma chave da camada gratuita
+    <strong>é usado para melhorar os produtos do Google</strong> e pode ser lido por revisores
+    humanos; com faturamento ativo no projeto da chave, não é. A chave não diz qual é. O Synova
+    trata o Gemini como podendo treinar com o que recebe, a menos que a pessoa declare que a chave
+    é de um projeto com faturamento. O aplicativo não tem como conferir essa declaração: ela é a
+    palavra de quem a fez.
+  </p>
+  <p>
+    <strong>Um arquivo anexado ao chat sai inteiro</strong>, e só nesse caso: a imagem ou o PDF como
+    está, com os nomes, os números e tudo o mais que estiver impresso nele. O aplicativo
+    <strong>não consegue tapar nada dentro de uma imagem</strong> como tapa e-mail e CPF no que ele
+    lê do evento, e não tenta.
+  </p>
+  <p>
+    Para manter a escolha de modelos em ordem, o aplicativo também faz algumas chamadas próprias, e
+    só depois de o assistente ter sido usado: cerca de uma vez por semana, e depois de um modelo
+    falhar, ele manda <strong>números de funcionamento</strong> (quantas vezes cada modelo
+    respondeu ou falhou, quanto levou, e os nomes dos modelos) e pede uma ordem nova para os
+    modelos de reserva; uma vez por dia, faz três perguntas fixas de teste ao modelo que respondeu,
+    para notar se o modelo por trás de um nome foi trocado. <strong>Nada do evento vai nessas
+    chamadas</strong>, e elas podem ser desligadas nos ajustes do assistente.
+  </p>
+  <p>
+    Cada pergunta é cobrada da conta que você conectou (a camada gratuita do Gemini não cobra, e
+    tem limites por minuto e por dia), e essas chamadas também. A chave de cada conta fica
+    <strong>no seu aparelho</strong>, no armazenamento seguro do sistema.
+  </p>
+  <p>
+    Modelos de IA inventam coisas. Uma resposta do assistente é uma sugestão, nunca um registro.
+    Cada resposta tem um botão de <strong>denunciar</strong>: denunciar esconde aquela resposta da
+    conversa e guarda a denúncia <strong>neste aparelho</strong>, e nada é enviado por denunciar.
+    Depois disso, e só depois, o aplicativo oferece passar a denúncia ao autor, e você pode
+    recusar; se aceitar, <strong>o texto que vai é mostrado antes</strong>, porque ele pode carregar
+    nomes da sua lista, e quem escolhe para onde mandar é você. <strong>É o único lugar em que algo
+    legível da sua lista pode chegar ao autor</strong>, e ele depende de dois toques seus.
+  </p>
+
+  <h2>O que fica guardado, e por quanto tempo</h2>
+  <ul>
+    <li><strong>No seu aparelho:</strong> até você esquecer o evento, excluir a conta ou
+        desinstalar o aplicativo. Sair de uma conta não apaga nada: os eventos dela ficam
+        guardados para quando você entrar de novo.</li>
+    <li><strong>A conta, a chave da conta, a cópia da conta e os arquivos entre os seus
+        celulares:</strong> até você excluir a conta. A caixa da passagem por QR sai assim que o
+        celular novo a recebe.</li>
+    <li><strong>Os registros cifrados dos eventos no servidor:</strong> eles não têm, hoje, um prazo
+        para sair, e não saem quando uma conta é excluída, porque pertencem ao evento e os outros
+        aparelhos dependem deles. O servidor não consegue lê-los.</li>
+    <li><strong>No seu Google Drive:</strong> até você apagar. O arquivo da vitrine vence 30 dias
+        depois da última sessão do evento.</li>
+    <li><strong>Registros técnicos de acesso</strong> que o provedor do servidor mantém, como
+        qualquer serviço na internet: ele os apaga sozinho, em poucos dias.</li>
   </ul>
 
   <h2>O que sai do aparelho sem ser por sua conta</h2>
@@ -198,14 +405,16 @@
     <p>
       Uma ressalva que preferimos escrever do que omitir: a biblioteca de reconhecimento de texto
       do Google (ML Kit), usada para ler listas por foto, <strong>envia dados próprios de
-      diagnóstico para o Google</strong> — informações técnicas sobre o funcionamento dela, não o
+      diagnóstico para o Google</strong>: informações técnicas sobre o funcionamento dela, não o
       conteúdo do que foi lido. Isso é comportamento da biblioteca, não do Synova, e acontece mesmo
-      sem você ativar o Drive.
+      sem você ativar o Drive nem usar uma conta.
     </p>
     <p>
-      Não temos como afirmar exatamente o que essa telemetria contém, porque ela é do Google.
-      O que podemos afirmar é que <strong>o texto reconhecido e as imagens não saem do
-      aparelho</strong>.
+      Não temos como afirmar exatamente o que essa telemetria contém, porque ela é do Google. O que
+      podemos afirmar é que <strong>essa telemetria não leva o texto reconhecido nem a
+      imagem</strong>. Nenhum dos dois sai do aparelho por causa dela, nem por causa da leitura de
+      listas; o único caminho por onde um arquivo sai é você mandá-lo ao assistente, e está descrito
+      na seção dele.
     </p>
   </div>
 
@@ -213,16 +422,28 @@
   <ul>
     <li>Não há publicidade.</li>
     <li>Não há rastreamento de uso, medição de audiência nem perfil de usuário.</li>
-    <li>Não há cadastro, login nem conta no Synova.</li>
-    <li>Não há venda nem compartilhamento de dados com terceiros — não temos os dados.</li>
+    <li>Não há conta obrigatória: sem conta, o aplicativo funciona inteiro.</li>
+    <li>Não há venda de dados. Os serviços de terceiros que aparecem nesta página (o Supabase, que
+        hospeda o servidor, o Google e o OpenRouter) recebem só o que está descrito nela, e só
+        quando você usa o recurso de cada um.</li>
   </ul>
+
+  <h2>Os seus direitos</h2>
+  <p>
+    Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir a confirmação de que tratamos dados
+    seus, o acesso a eles, a correção e a exclusão. Escreva para
+    <a href="mailto:caioalex.nes@gmail.com">caioalex.nes@gmail.com</a> a partir do endereço da sua
+    conta, para podermos confirmar que o pedido é seu. A exclusão da conta também pode ser feita
+    pelo próprio aplicativo, a qualquer momento.
+  </p>
 
   <h2>Dados de outras pessoas</h2>
   <p>
     Uma lista de convidados contém dados de outras pessoas. Quem organiza o evento é quem responde
     por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. Isso
-    inclui a decisão de ligar a vitrine e a de escolher quais colunas ela publica. O autor do
-    aplicativo não tem acesso a essa lista e não tem como intervir nela.
+    inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de ligar o
+    assistente de IA e a de mandar ao autor uma resposta denunciada que carregue nomes. O autor do
+    aplicativo não tem acesso legível a essa lista e não tem como intervir nela.
   </p>
 
   <h2>Licença</h2>
@@ -239,8 +460,9 @@
   </p>
 
   <footer>
-    Synova — registro de presença em eventos, offline-first.
-    <a href="/">Início</a> · <a href="/termos/">Termos de uso</a>
+    Synova, registro de presença em eventos, offline-first.
+    <a href="/">Início</a> · <a href="/termos/">Termos de uso</a> ·
+    <a href="/excluir-conta/">Excluir a conta</a>
   </footer>
 </main>
 </body>
