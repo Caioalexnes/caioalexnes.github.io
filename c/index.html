@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://thrpjvrngwducbhsaxjy.supabase.co; img-src data:; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="data:,">
+<title>Conferir certificado · Synova</title>
+<style>
+  :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; --ok:#1b7a3d;
+          --bad:#b3261e; --warn:#8a6100; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
+            --accent:#6fd3aa; --muted:#9db0a7; --ok:#6fd38e; --bad:#ff8a80;
+            --warn:#f0c96b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:36rem; margin:0 auto; }
+  .marca { color:var(--accent); font-weight:700; letter-spacing:.04em; margin:0 0 .15rem; }
+  h1 { font-size:1.45rem; margin:0 0 1.2rem; }
+  h2 { font-size:1.05rem; margin:0 0 .6rem; }
+  h3 { font-size:.95rem; margin:0 0 .3rem; }
+  p { margin:0 0 .6rem; }
+  .sub { color:var(--muted); }
+  .pequeno { color:var(--muted); font-size:.88rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px; margin-bottom:16px; overflow-wrap:anywhere; }
+  textarea { font:inherit; width:100%; padding:11px 12px; border-radius:9px;
+             border:1px solid var(--line); background:var(--bg); color:var(--ink);
+             resize:vertical; }
+  button { font:inherit; font-weight:600; border-radius:9px; padding:11px 16px;
+           border:1px solid var(--accent); background:var(--accent); color:var(--bg);
+           cursor:pointer; display:block; width:100%; margin-top:10px; }
+  button.leve { background:transparent; color:var(--accent); }
+  .veredito { display:flex; gap:12px; align-items:flex-start; margin-bottom:.6rem; }
+  .veredito svg { flex:none; width:32px; height:32px; }
+  .veredito h2 { font-size:1.2rem; margin:2px 0 0; color:inherit; }
+  .ok { color:var(--ok); }
+  .ruim { color:var(--bad); }
+  .aviso { color:var(--warn); }
+  .novo { color:var(--accent); }
+  .dados { display:grid; grid-template-columns:minmax(0, 8.5rem) minmax(0, 1fr);
+           gap:6px 12px; margin:14px 0 0; }
+  .dados dt { color:var(--muted); font-size:.88rem; padding-top:.12rem; }
+  .dados dd { margin:0; }
+  .quem { margin-top:16px; }
+  .forte { font-weight:600; margin:0; }
+  .dominio { display:flex; gap:6px; align-items:center; margin:0; }
+  .dominio svg { width:16px; height:16px; flex:none; }
+  .quem .pequeno { margin-top:.4rem; }
+  .esperando { display:flex; gap:12px; align-items:center; }
+  .gira { width:20px; height:20px; border:2px solid var(--line); border-top-color:var(--accent);
+          border-radius:50%; animation:gira .8s linear infinite; flex:none; }
+  @keyframes gira { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .gira { animation:none; } }
+  .hide { display:none; }
+  footer { color:var(--muted); font-size:.83rem; margin-top:28px; text-align:center; }
+  footer a { color:var(--accent); }
+  @media (max-width: 380px) {
+    .dados { grid-template-columns:minmax(0, 1fr); gap:0; }
+    .dados dd { margin-bottom:8px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="marca">Synova</p>
+  <h1 data-t="certVerifyMenu">Conferir certificado</h1>
+
+  <noscript>
+    <div class="card">
+      Esta página precisa de JavaScript para conferir o certificado.<br>
+      This page needs JavaScript to verify the certificate.
+    </div>
+  </noscript>
+
+  <div class="card hide" id="esperando">
+    <div class="esperando"><div class="gira" aria-hidden="true"></div><span data-t="certVerifyChecking"></span></div>
+  </div>
+  <div class="card hide" id="resultado" aria-live="polite"></div>
+  <div class="card hide" id="intro"><p class="sub" data-t="pgIntro"></p></div>
+
+  <div class="card">
+    <h2 id="tColar" data-t="pgColarTitulo"></h2>
+    <p class="sub" data-t="pgColarComo"></p>
+    <textarea id="colado" rows="3" aria-labelledby="tColar" autocomplete="off"
+              autocapitalize="off" spellcheck="false"></textarea>
+    <button id="conferir" type="button" data-t="pgConferir"></button>
+  </div>
+
+  <div class="card">
+    <h2 data-t="certVerifyPdf"></h2>
+    <p class="sub" data-t="pgPdfComo"></p>
+    <input type="file" id="arquivo" class="hide" tabindex="-1" aria-hidden="true">
+    <button id="escolher" class="leve" type="button" data-t="pgEscolherPdf"></button>
+  </div>
+
+  <p class="pequeno" data-t="pgPrivacidade"></p>
+
+  <footer>
+    Synova ·
+    <a href="/privacidade/" data-t="pgLinkPrivacidade"></a> ·
+    <a href="/termos/" data-t="pgLinkTermos"></a>
+  </footer>
+</main>
+
+<script id="logica">
+"use strict";
+// ============================================================================
+// A CONFERÊNCIA DE UM CERTIFICADO DO SYNOVA, na página (C3, 08/10/2026).
+// ============================================================================
+// É a MESMA conferência do app (lib/core/cert/cert_verify.dart), escrita de
+// novo em JavaScript para quem lê o QR sem o app. Duas implementações da mesma
+// regra divergem no dia 1, e por isso esta tem um gabarito: o teste
+// test/core/cert_page_agreement_test.dart monta os casos com o PRÓPRIO app (o
+// QR, a resposta do registro e o veredito do app), e tool/pagina_c/conferir.mjs
+// roda ESTE bloco no Node e exige o mesmo veredito, os mesmos dados e o mesmo
+// pedido ao registro. Os campos dos resultados têm os nomes do app de
+// propósito: o teste compara um a um, sem tradução no meio.
+//
+// O QUE SAI DESTE APARELHO: só o resumo (SHA-256) do atestado, ou do arquivo,
+// perguntado ao registro do Synova (a função cert_check, sem conta). O QR
+// chega no FRAGMENTO do endereço (depois do #), que nenhum servidor recebe,
+// nem o GitHub Pages que serve esta página. O nome de quem recebeu não sai.
+//
+// NADA QUE NÃO FOI CONFERIDO É MOSTRADO: os dados do atestado só aparecem com
+// o registro achando o resumo dele, a impressão da chave batendo e a
+// assinatura conferida. Num navegador sem Ed25519 a assinatura não se confere,
+// e a página diz isso em vez de chamar o certificado de verdadeiro.
+//
+// DUAS DIVERGÊNCIAS CONHECIDAS, só para QR montado à mão, e nas duas os dois
+// recusam o certificado; só o veredito muda:
+// - um número escrito com ponto ou expoente ("m":5.0, "m":1e2) o app lê como
+//   double e recusa, e o navegador lê o número e pergunta ao registro, que não
+//   conhece esses bytes. Só quem já emite poderia registrar um assim, e quem
+//   emite emite o que quiser;
+// - uma versão logo abaixo de 2^63 o app lê exata e diz "mais novo"; o
+//   navegador a arredonda para 2^63, não tem como separá-la, e recusa como
+//   torta.
+// ============================================================================
+(function () {
+  const REGISTRO = 'https://thrpjvrngwducbhsaxjy.supabase.co';
+  // A chave publicável do projeto (SynovaServerConfig.publishableKey): pública
+  // por desenho, viaja no app e aqui, e sem conta só alcança cert_check.
+  const CHAVE_PUBLICAVEL = 'sb_publishable_DQkMKepi3Ew3g-W2te9gbw_6ejgcTNC';
+  const HOST = 'caioalexnes.github.io';
+  const CAMINHOS = ['/c/', '/c', '/c/index.html'];
+  const PREFIXO = 'synova-certificado-v1';
+  const VERSAO = 1;
+  const MAX_BYTES = 4096;
+  const MAX_CARACTERES = 400;
+  const MAX_MINUTOS = 1000000;
+  const MAX_TEMPO = 32503680000000;
+  const TAMANHO_ASSINATURA = 64;
+  const TAMANHO_CHAVE = 32;
+  const PRAZO_MS = 30000;
+  // Só da página: o PDF de uma pessoa tem poucos megabytes, e ler um arquivo
+  // enorme inteiro na memória derrubaria a aba num celular.
+  const MAX_ARQUIVO = 25 * 1024 * 1024;
+  const ALFABETO_ULID = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+  const IMPRESSAO = /^[A-Za-z0-9_-]{11}$/;
+  const MOTIVOS = ['data_error', 'mistake', 'other'];
+  const LINK = /https:\/\/caioalexnes\.github\.io\/c(?:\/|\/index\.html)?#[A-Za-z0-9_.-]+/gi;
+
+  // O `trim` do Dart: o espaço do JavaScript mais o NEL (U+0085), que o Dart
+  // conta como espaço e o JavaScript não.
+  function aparar(s) {
+    return s.replace(/^[\s\u0085]+|[\s\u0085]+$/g, '');
+  }
+
+  // Só a propriedade do PRÓPRIO objeto. Nenhuma chave lida aqui existe no
+  // Object.prototype, então hoje isto não muda resposta nenhuma (a mutação
+  // que o tira passa, medido em 08/10/2026); fica para um protótipo mexido por
+  // outro script nunca responder no lugar do JSON.
+  function proprio(o, k) {
+    return Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined;
+  }
+
+  function ehObjeto(v) {
+    return typeof v === 'object' && v !== null && !Array.isArray(v);
+  }
+
+  // `is int` de um valor que veio de JSON: um número inteiro que cabe nos 64
+  // bits do Dart (acima disso o Dart já o lê como double).
+  function ehInteiro(v) {
+    return typeof v === 'number' && Number.isInteger(v) && Math.abs(v) < 9223372036854775808;
+  }
+
+  // `_inteiro` do registro: o int, ou o double que é inteiro.
+  function inteiroOuNulo(v) {
+    return typeof v === 'number' && Number.isFinite(v) && Number.isInteger(v) ? v + 0 : null;
+  }
+
+  // `_texto` do registro: aparado, e vazio vira nulo.
+  function textoOuNulo(v) {
+    if (typeof v !== 'string') return null;
+    const t = aparar(v);
+    return t === '' ? null : t;
+  }
+
+  function ehUlid(s) {
+    if (s.length !== 26 || s.charCodeAt(0) > 55) return false;
+    for (let i = 0; i < s.length; i++) {
+      if (ALFABETO_ULID.indexOf(s[i]) < 0) return false;
+    }
+    return true;
+  }
+
+  // O decodificador de base64 do Dart (dart:convert), reescrito: os dois
+  // alfabetos (o padrão e o de URL, até misturados), o preenchimento com "="
+  // ou "%3D", e os bits que sobram antes do preenchimento TÊM que ser zero.
+  // Nulo onde o Dart lançaria.
+  function valorBase64(c) {
+    if (c >= 65 && c <= 90) return c - 65;
+    if (c >= 97 && c <= 122) return c - 71;
+    if (c >= 48 && c <= 57) return c + 4;
+    if (c === 43 || c === 45) return 62;
+    if (c === 47 || c === 95) return 63;
+    if (c === 61 || c === 37) return -2;
+    return -1;
+  }
+
+  function restoDoPreenchimento(s, inicio, esperado) {
+    const fim = s.length;
+    let p = inicio;
+    if (p === fim) return esperado === 0;
+    while (esperado > 0) {
+      let c = s.charCodeAt(p);
+      if (esperado === 3) {
+        if (c === 61) {
+          esperado -= 3;
+          p++;
+          break;
+        }
+        if (c !== 37) break;
+        esperado--;
+        p++;
+        if (p === fim) break;
+        c = s.charCodeAt(p);
+      }
+      let parcial = esperado;
+      if (parcial > 3) parcial -= 3;
+      if (parcial === 2) {
+        if (c !== 51) break;
+        p++;
+        esperado--;
+        if (p === fim) break;
+        c = s.charCodeAt(p);
+      }
+      if ((c | 32) !== 100) break;
+      p++;
+      esperado--;
+      if (p === fim) break;
+    }
+    return p === fim && esperado === 0;
+  }
+
+  function base64ComoDart(s) {
+    const out = [];
+    let bits = 0;
+    let conta = 0;
+    for (let i = 0; i < s.length; i++) {
+      const c = s.charCodeAt(i);
+      const v = valorBase64(c);
+      if (v >= 0) {
+        bits = ((bits << 6) | v) & 0xFFFFFF;
+        conta = (conta + 1) & 3;
+        if (conta === 0) {
+          out.push((bits >> 16) & 255, (bits >> 8) & 255, bits & 255);
+          bits = 0;
+        }
+        continue;
+      }
+      if (v === -2 && conta > 1) {
+        if (conta === 3) {
+          if ((bits & 3) !== 0) return null;
+          out.push((bits >> 10) & 255, (bits >> 2) & 255);
+        } else {
+          if ((bits & 15) !== 0) return null;
+          out.push((bits >> 4) & 255);
+        }
+        let esperado = (3 - conta) * 3;
+        if (c === 37) esperado += 2;
+        return restoDoPreenchimento(s, i + 1, esperado) ? Uint8Array.from(out) : null;
+      }
+      return null;
+    }
+    return conta === 0 ? Uint8Array.from(out) : null;
+  }
+
+  // `CertCode._unb64`: só o alfabeto de URL, sem preenchimento, que é
+  // completado antes de decodificar.
+  function deBase64Url(s) {
+    if (s === '' || !/^[A-Za-z0-9_-]+$/.test(s)) return null;
+    let b = s;
+    while (b.length % 4 !== 0) b += '=';
+    return base64ComoDart(b);
+  }
+
+  function paraBase64Url(bytes) {
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  // `CertCode._ourBase`: o endereço antes do # é desta página? O `URL` do
+  // navegador faz quase o que o `Uri.tryParse` do Dart faz (as barras
+  // invertidas, os segmentos com ponto, a porta, o usuário, o host escapado);
+  // as três diferenças, medidas contra o app, são cobertas aqui: controle no
+  // meio (o navegador tira a quebra de linha, o Dart não), as duas barras
+  // depois de "https:" (o navegador aceita sem elas), e o escape de letra no
+  // caminho ("%63" é "c" para o Dart, e não para o navegador).
+  function baseEhNossa(antes) {
+    const t = aparar(antes);
+    if (/[\u0000-\u001F\u007F]/.test(t)) return false;
+    const esquema = /^([A-Za-z][A-Za-z0-9+.-]*):[\\/]{2}(?![\\/])/.exec(t);
+    if (!esquema || esquema[1].toLowerCase() !== 'https') return false;
+    let u;
+    try {
+      u = new URL(t);
+    } catch (_) {
+      return false;
+    }
+    if (u.protocol !== 'https:' || u.hostname !== HOST) return false;
+    const caminho = u.pathname.replace(/%([0-9A-Fa-f]{2})/g, function (x, h) {
+      const c = String.fromCharCode(parseInt(h, 16));
+      return /[A-Za-z0-9._~-]/.test(c) ? c : x;
+    });
+    return CAMINHOS.indexOf(caminho) >= 0;
+  }
+
+  // `CertCode.parse`: o link inteiro, ou só o que vem depois do #. Nulo
+  // quando não é um certificado do Synova.
+  function lerCodigo(texto) {
+    let t = aparar(String(texto));
+    const i = t.indexOf('#');
+    if (i >= 0) {
+      if (!baseEhNossa(t.substring(0, i))) return null;
+      t = t.substring(i + 1);
+    }
+    t = t.replace(/\s+/g, '');
+    const partes = t.split('.');
+    if (partes.length !== 2) return null;
+    const atestado = deBase64Url(partes[0]);
+    const assinatura = deBase64Url(partes[1]);
+    if (!atestado || !assinatura) return null;
+    // O teto também é conferido na leitura do atestado, como no app, e um cobre
+    // a falta do outro: só tirar os dois juntos muda a resposta (medido).
+    if (atestado.length === 0 || atestado.length > MAX_BYTES) return null;
+    if (assinatura.length !== TAMANHO_ASSINATURA) return null;
+    return { attestation: atestado, signature: assinatura };
+  }
+
+  // `CertCode.find`: o link no meio de um texto maior (a mensagem em que ele
+  // chegou). O texto que é só o link, ou só o código, também vale.
+  function acharCodigo(texto) {
+    const direto = lerCodigo(texto);
+    if (direto) return direto;
+    for (const m of String(texto).matchAll(LINK)) {
+      const c = lerCodigo(m[0]);
+      if (c) return c;
+    }
+    return null;
+  }
+
+  // `CertCode.payload`.
+  function paraTexto(codigo) {
+    return paraBase64Url(codigo.attestation) + '.' + paraBase64Url(codigo.signature);
+  }
+
+  // `CertAttestation.read`. O decodificador tira UM BOM do começo, como o do
+  // Dart, e recusa UTF-8 torto (inclusive o surrogate codificado).
+  function lerAtestado(bytes) {
+    const torto = { failure: 'malformed' };
+    if (bytes.length === 0 || bytes.length > MAX_BYTES) return torto;
+    let raw;
+    try {
+      raw = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    } catch (_) {
+      return torto;
+    }
+    if (!ehObjeto(raw)) return torto;
+    const v = proprio(raw, 'v');
+    if (!ehInteiro(v)) return torto;
+    if (v > VERSAO) return { failure: 'newer' };
+    if (v !== VERSAO) return torto;
+    const id = proprio(raw, 'i');
+    const n = proprio(raw, 'n');
+    const e = proprio(raw, 'e');
+    const d = proprio(raw, 'd') ?? '';
+    const m = proprio(raw, 'm');
+    const o = proprio(raw, 'o') ?? '';
+    const t = proprio(raw, 't');
+    const k = proprio(raw, 'k');
+    if (typeof id !== 'string' || !ehUlid(id)) return torto;
+    if (typeof n !== 'string' || aparar(n) === '' || n.length > MAX_CARACTERES) return torto;
+    if (typeof e !== 'string' || e.length > MAX_CARACTERES) return torto;
+    if (typeof d !== 'string' || d.length > MAX_CARACTERES) return torto;
+    if (!ehInteiro(m) || m < 0 || m > MAX_MINUTOS) return torto;
+    if (typeof o !== 'string' || o.length > MAX_CARACTERES) return torto;
+    if (!ehInteiro(t) || t <= 0 || t > MAX_TEMPO) return torto;
+    if (typeof k !== 'string' || !IMPRESSAO.test(k)) return torto;
+    return {
+      attestation: {
+        id: id,
+        name: n,
+        event: e,
+        dates: d,
+        minutes: m + 0,
+        organization: o,
+        issuedAtMs: t,
+        keyId: k,
+      },
+    };
+  }
+
+  async function sha256(bytes) {
+    return new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', bytes));
+  }
+
+  // O resumo que o registro guarda: SHA-256 em hexadecimal minúsculo.
+  async function hashHex(bytes) {
+    let s = '';
+    for (const b of await sha256(bytes)) s += (b < 16 ? '0' : '') + b.toString(16);
+    return s;
+  }
+
+  // `CertAttestation.keyIdOf`: os 8 primeiros bytes do SHA-256 da chave.
+  async function impressaoDaChave(chave) {
+    return paraBase64Url((await sha256(chave)).subarray(0, 8));
+  }
+
+  // `CertAttestation.signingMessage`: o prefixo, uma quebra de linha, e os
+  // bytes do atestado como eles viajam.
+  function mensagemAssinada(atestado) {
+    const p = new TextEncoder().encode(PREFIXO);
+    const m = new Uint8Array(p.length + 1 + atestado.length);
+    m.set(p, 0);
+    m[p.length] = 10;
+    m.set(atestado, p.length + 1);
+    return m;
+  }
+
+  // `CertCheck.parse`. Nulo é resposta torta, e quem chama a trata como falha
+  // do servidor.
+  function lerRegistro(texto) {
+    let m;
+    try {
+      m = JSON.parse(texto);
+    } catch (_) {
+      return null;
+    }
+    if (!ehObjeto(m)) return null;
+    const f = proprio(m, 'found');
+    if (typeof f !== 'boolean') return null;
+    if (!f) return { found: false };
+    const quando = inteiroOuNulo(proprio(m, 'registered_at'));
+    const chave = textoOuNulo(proprio(m, 'key'));
+    if (quando === null || chave === null) return null;
+    const motivo = proprio(m, 'reason');
+    return {
+      found: true,
+      file: proprio(m, 'file') === true,
+      registeredAtMs: quando,
+      revokedAtMs: inteiroOuNulo(proprio(m, 'revoked_at')),
+      reason: MOTIVOS.indexOf(motivo) >= 0 ? motivo : null,
+      publicKeyB64: chave,
+      keyDisabledAtMs: inteiroOuNulo(proprio(m, 'key_disabled_at')),
+      name: textoOuNulo(proprio(m, 'name')),
+      institution: textoOuNulo(proprio(m, 'institution')),
+      domain: textoOuNulo(proprio(m, 'domain')),
+      personal: proprio(m, 'personal') === true,
+    };
+  }
+
+  // A pergunta ao registro, como o app a faz (HttpCertLookup).
+  function pedido(attHash, fileHash) {
+    return {
+      url: REGISTRO + '/rest/v1/rpc/cert_check',
+      headers: {
+        apikey: CHAVE_PUBLICAVEL,
+        Authorization: 'Bearer ' + CHAVE_PUBLICAVEL,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      corpo: JSON.stringify({ p_att: attHash, p_file: fileHash }),
+    };
+  }
+
+  // O desfecho sai do CÓDIGO do erro, nunca da mensagem (certFailureOf): só o
+  // SQL não aplicado tem frase própria, e o resto é "o servidor respondeu
+  // outra coisa".
+  async function perguntar(p, enviar) {
+    let r;
+    try {
+      r = await enviar(p);
+    } catch (_) {
+      return { failure: 'offline' };
+    }
+    if (r.status >= 200 && r.status < 300) {
+      const c = lerRegistro(r.texto);
+      return c ? { check: c } : { failure: 'server' };
+    }
+    let codigo = null;
+    try {
+      const m = JSON.parse(r.texto);
+      if (ehObjeto(m)) codigo = proprio(m, 'code');
+    } catch (_) {
+      // Corpo que não é JSON: é como não ter código.
+    }
+    return { failure: codigo === 'PGRST202' ? 'notReady' : 'server' };
+  }
+
+  // A assinatura Ed25519 pelo WebCrypto do navegador: verdadeiro ou falso, e
+  // NULO quando o navegador não sabe Ed25519.
+  async function verificarEd25519(chave, assinatura, mensagem) {
+    const s = globalThis.crypto && globalThis.crypto.subtle;
+    if (!s) return null;
+    let k;
+    try {
+      k = await s.importKey('raw', chave, { name: 'Ed25519' }, false, ['verify']);
+    } catch (e) {
+      return e && e.name === 'NotSupportedError' ? null : false;
+    }
+    try {
+      return await s.verify({ name: 'Ed25519' }, k, assinatura, mensagem);
+    } catch (e) {
+      return e && e.name === 'NotSupportedError' ? null : false;
+    }
+  }
+
+  // `CertVerifier.verifyCode`. O veredito "registered" é só da página: o
+  // registro conhece o certificado e a impressão da chave bate, mas o
+  // navegador não conferiu a assinatura.
+  async function conferirCodigo(texto, enviar, verificar) {
+    const codigo = lerCodigo(texto);
+    if (!codigo) return { verdict: 'malformed' };
+    const lido = lerAtestado(codigo.attestation);
+    if (lido.failure === 'newer') return { verdict: 'newer' };
+    if (!lido.attestation) return { verdict: 'malformed' };
+    const r = await perguntar(pedido(await hashHex(codigo.attestation), null), enviar);
+    if (r.failure) return { verdict: r.failure };
+    const c = r.check;
+    if (!c.found) return { verdict: 'notFound' };
+    const chave = base64ComoDart(c.publicKeyB64);
+    if (!chave || chave.length !== TAMANHO_CHAVE) return { verdict: 'server' };
+    if ((await impressaoDaChave(chave)) !== lido.attestation.keyId) {
+      return { verdict: 'tampered', check: c };
+    }
+    const assinado = await verificar(chave, codigo.signature, mensagemAssinada(codigo.attestation));
+    if (assinado === false) return { verdict: 'tampered', check: c };
+    const revogado = c.revokedAtMs !== null;
+    return {
+      verdict: revogado ? 'revoked' : (assinado === true ? 'valid' : 'registered'),
+      attestation: lido.attestation,
+      check: c,
+      signatureChecked: assinado === true,
+    };
+  }
+
+  // `CertVerifier.verifyFile`: o arquivo pelo resumo dele.
+  async function conferirArquivo(bytes, enviar) {
+    if (bytes.length === 0) return { verdict: 'malformed' };
+    const r = await perguntar(pedido(null, await hashHex(bytes)), enviar);
+    if (r.failure) return { verdict: r.failure };
+    const c = r.check;
+    if (!c.found || !c.file) return { verdict: 'notFound' };
+    return { verdict: c.revokedAtMs !== null ? 'revoked' : 'valid', check: c };
+  }
+
+  // `S.certHours`.
+  function horas(minutos, lingua) {
+    const h = Math.floor(minutos / 60);
+    const m = minutos % 60;
+    const pt = lingua === 'pt';
+    if (h === 0 && m > 0) {
+      if (pt) return m === 1 ? '1 minuto' : m + ' minutos';
+      return m === 1 ? '1 minute' : m + ' minutes';
+    }
+    const hs = pt ? (h === 1 ? '1 hora' : h + ' horas') : (h === 1 ? '1 hour' : h + ' hours');
+    if (m === 0) return hs;
+    if (pt) return hs + ' e ' + m + ' ' + (m === 1 ? 'minuto' : 'minutos');
+    return hs + ' and ' + m + ' ' + (m === 1 ? 'minute' : 'minutes');
+  }
+
+  // `dayMonthYearHhmm`: a hora local, com o dia e o ano, igual nas duas línguas.
+  function quando(ms) {
+    const d = new Date(ms);
+    const p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    return p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' +
+        p2(d.getHours()) + ':' + p2(d.getMinutes());
+  }
+
+  // `AppLocale.fromCodes`: o primeiro português ou inglês da lista decide, e
+  // o padrão é o inglês.
+  function linguaDe(lista) {
+    for (const bruto of lista || []) {
+      const t = aparar(String(bruto));
+      let corte = t.length;
+      for (let i = 0; i < t.length; i++) {
+        if (t[i] === '_' || t[i] === '-') {
+          corte = i;
+          break;
+        }
+      }
+      const l = t.substring(0, corte).toLowerCase();
+      if (l === 'pt') return 'pt';
+      if (l === 'en') return 'en';
+    }
+    return 'en';
+  }
+
+  // As palavras. As que não começam com "pg" são as do app, iguais (o teste
+  // compara com o S de lib/l10n/strings.dart nas duas línguas); "@@" é onde
+  // entra o valor. As que começam com "pg" são só desta página.
+  const TEXTOS = {
+    pt: {
+      certVerifyMenu: 'Conferir certificado',
+      certVerifyChecking: 'Conferindo…',
+      certVerdictValid: 'Certificado verdadeiro',
+      certVerdictValidFile: 'Este arquivo é o original',
+      certVerdictValidFileWhy: 'O registro do Synova guarda este arquivo exatamente como ele saiu. O nome de quem recebeu está no próprio arquivo.',
+      certVerdictRevoked: 'Certificado revogado',
+      certVerdictNotFound: 'Não encontrado no registro',
+      certVerdictNotFoundWhy: 'O registro do Synova não conhece este certificado. Ele pode ser falso, ou o QR foi alterado.',
+      certVerdictNotFoundFileWhy: 'O registro do Synova não conhece este arquivo. Ele pode ter sido alterado, ou não é o PDF de uma pessoa: o PDF com todos não é registrado, e o papel se confere pelo QR.',
+      certVerdictTampered: 'Certificado alterado',
+      certVerdictTamperedWhy: 'O registro conhece este certificado, mas a assinatura não confere: alguém mexeu nele.',
+      certVerdictMalformed: 'Este código não é um certificado do Synova.',
+      certVerdictOffline: 'Sem internet: a conferência pergunta ao registro do Synova.',
+      certNoQrNotReady: 'O registro dos certificados ainda não está pronto no servidor do Synova.',
+      certNoQrServer: 'O servidor do Synova não respondeu como devia.',
+      certVerifyName: 'Nome',
+      certVerifyEvent: 'Evento',
+      certVerifyDates: 'Datas',
+      certVerifyHours: 'Carga horária',
+      certVerifyOrg: 'Organização',
+      certVerifyCode: 'Código',
+      certVerifyIssuedAt: 'Emitido em',
+      certVerifyRegisteredAt: 'Registrado em',
+      certVerifyRevokedAt: 'Revogado em @@.',
+      certVerifyRevokedReason: 'Motivo: @@',
+      certVerifyIssuer: 'Quem emitiu',
+      certVerifyIssuerNote: 'O nome e a instituição foram escolhidos por quem emitiu. O domínio vem do login da conta.',
+      certVerifyIssuerGone: 'Quem emitiu não mostra mais nada aqui (a conta foi excluída, ou tirou o nome).',
+      certVerifyKeyOff: 'A chave que assinou foi desligada em @@. Os certificados registrados antes continuam valendo.',
+      certVerifyLimit: 'Confira se os dados acima são os do papel na sua mão: um papel com o nome trocado e o QR de outro certificado mostra aqui o nome verdadeiro.',
+      certVerifyPdf: 'Conferir um PDF',
+      certIssuerPersonalEmail: 'e-mail pessoal',
+      certReasonDataError: 'Erro nos dados',
+      certReasonMistake: 'Emitido por engano',
+      certReasonOther: 'Outro motivo',
+      cameraRetry: 'Tentar de novo',
+      pgIntro: 'Esta página confere um certificado emitido pelo Synova. Ela abre pelo QR impresso no certificado; também dá para colar o link aqui embaixo, ou escolher o PDF que você recebeu.',
+      pgColarTitulo: 'Conferir pelo link',
+      pgColarComo: 'Cole o link do QR, ou a mensagem inteira em que ele chegou.',
+      pgConferir: 'Conferir',
+      pgPdfComo: 'O PDF de uma pessoa, como ele chegou. O arquivo não sai deste aparelho: só o resumo dele é perguntado ao registro.',
+      pgEscolherPdf: 'Escolher o PDF',
+      pgPrivacidade: 'O que esta página manda ao registro do Synova é só o resumo (SHA-256) do certificado ou do arquivo. O nome de quem recebeu e o próprio arquivo não saem deste aparelho, e a página não guarda nada.',
+      pgRegistrado: 'Certificado registrado',
+      pgSemAssinatura: 'Este navegador não sabe conferir a assinatura digital do certificado, e o que aparece aqui vem só do registro do Synova. Para a conferência completa, abra o link num navegador atualizado ou no app Synova.',
+      pgMaisNovo: 'Este certificado é de uma versão mais nova do Synova, que esta página ainda não sabe ler. Recarregue a página; se continuar assim, confira pelo app Synova.',
+      pgArquivoGrande: 'Este arquivo é grande demais para ser o certificado de uma pessoa.',
+      pgArquivoIlegivel: 'Não deu para ler este arquivo.',
+      pgLinkPrivacidade: 'Privacidade',
+      pgLinkTermos: 'Termos de uso',
+    },
+    en: {
+      certVerifyMenu: 'Verify certificate',
+      certVerifyChecking: 'Verifying…',
+      certVerdictValid: 'Genuine certificate',
+      certVerdictValidFile: 'This file is the original',
+      certVerdictValidFileWhy: 'The Synova registry keeps this file exactly as it came out. The recipient\'s name is in the file itself.',
+      certVerdictRevoked: 'Revoked certificate',
+      certVerdictNotFound: 'Not found in the registry',
+      certVerdictNotFoundWhy: 'The Synova registry does not know this certificate. It may be fake, or the QR was altered.',
+      certVerdictNotFoundFileWhy: 'The Synova registry does not know this file. It may have been altered, or it is not one person\'s PDF: the PDF with everyone is not registered, and paper is verified by the QR.',
+      certVerdictTampered: 'Altered certificate',
+      certVerdictTamperedWhy: 'The registry knows this certificate, but the signature does not match: someone tampered with it.',
+      certVerdictMalformed: 'This code is not a Synova certificate.',
+      certVerdictOffline: 'No internet: verification asks the Synova registry.',
+      certNoQrNotReady: 'The certificate registry is not ready on the Synova server yet.',
+      certNoQrServer: 'The Synova server did not answer as it should.',
+      certVerifyName: 'Name',
+      certVerifyEvent: 'Event',
+      certVerifyDates: 'Dates',
+      certVerifyHours: 'Workload',
+      certVerifyOrg: 'Organization',
+      certVerifyCode: 'Code',
+      certVerifyIssuedAt: 'Issued on',
+      certVerifyRegisteredAt: 'Registered on',
+      certVerifyRevokedAt: 'Revoked on @@.',
+      certVerifyRevokedReason: 'Reason: @@',
+      certVerifyIssuer: 'Who issued it',
+      certVerifyIssuerNote: 'The name and the institution were chosen by whoever issued it. The domain comes from the account\'s sign-in.',
+      certVerifyIssuerGone: 'The issuer no longer shows anything here (the account was deleted, or removed the name).',
+      certVerifyKeyOff: 'The key that signed it was turned off on @@. Certificates registered before remain valid.',
+      certVerifyLimit: 'Check that the details above match the paper in your hands: a paper with a swapped name and another certificate\'s QR shows the true name here.',
+      certVerifyPdf: 'Verify a PDF',
+      certIssuerPersonalEmail: 'personal email',
+      certReasonDataError: 'Error in the details',
+      certReasonMistake: 'Issued by mistake',
+      certReasonOther: 'Other reason',
+      cameraRetry: 'Try again',
+      pgIntro: 'This page verifies a certificate issued by Synova. It opens from the QR printed on the certificate; you can also paste the link below, or choose the PDF you received.',
+      pgColarTitulo: 'Verify by link',
+      pgColarComo: 'Paste the QR link, or the whole message it came in.',
+      pgConferir: 'Verify',
+      pgPdfComo: 'One person\'s PDF, as it arrived. The file does not leave this device: only its fingerprint is checked against the registry.',
+      pgEscolherPdf: 'Choose the PDF',
+      pgPrivacidade: 'All this page sends to the Synova registry is a fingerprint (SHA-256) of the certificate or of the file. The recipient\'s name and the file itself never leave this device, and the page stores nothing.',
+      pgRegistrado: 'Registered certificate',
+      pgSemAssinatura: 'This browser cannot check the certificate\'s digital signature, so what appears here comes only from the Synova registry. For the full check, open the link in an up-to-date browser or in the Synova app.',
+      pgMaisNovo: 'This certificate is from a newer version of Synova that this page cannot read yet. Reload the page; if it stays like this, verify it in the Synova app.',
+      pgArquivoGrande: 'This file is too large to be one person\'s certificate.',
+      pgArquivoIlegivel: 'Could not read this file.',
+      pgLinkPrivacidade: 'Privacy',
+      pgLinkTermos: 'Terms of use',
+    },
+  };
+
+  function motivoTexto(motivo, lingua) {
+    const t = TEXTOS[lingua];
+    if (motivo === 'data_error') return t.certReasonDataError;
+    if (motivo === 'mistake') return t.certReasonMistake;
+    return t.certReasonOther;
+  }
+
+  globalThis.SynovaConferencia = {
+    constantes: {
+      REGISTRO: REGISTRO,
+      CHAVE_PUBLICAVEL: CHAVE_PUBLICAVEL,
+      HOST: HOST,
+      CAMINHOS: CAMINHOS,
+      PREFIXO: PREFIXO,
+      VERSAO: VERSAO,
+      MAX_BYTES: MAX_BYTES,
+      MAX_CARACTERES: MAX_CARACTERES,
+      MAX_MINUTOS: MAX_MINUTOS,
+      MAX_TEMPO: MAX_TEMPO,
+      TAMANHO_ASSINATURA: TAMANHO_ASSINATURA,
+      TAMANHO_CHAVE: TAMANHO_CHAVE,
+      PRAZO_MS: PRAZO_MS,
+      MAX_ARQUIVO: MAX_ARQUIVO,
+    },
+    TEXTOS: TEXTOS,
+    base64ComoDart: base64ComoDart,
+    lerCodigo: lerCodigo,
+    acharCodigo: acharCodigo,
+    paraTexto: paraTexto,
+    lerAtestado: lerAtestado,
+    lerRegistro: lerRegistro,
+    hashHex: hashHex,
+    impressaoDaChave: impressaoDaChave,
+    pedido: pedido,
+    verificarEd25519: verificarEd25519,
+    conferirCodigo: conferirCodigo,
+    conferirArquivo: conferirArquivo,
+    horas: horas,
+    quando: quando,
+    linguaDe: linguaDe,
+    motivoTexto: motivoTexto,
+  };
+})();
+</script>
+
+<script>
+"use strict";
+// A TELA: só desenha o que a conferência (o bloco de cima) respondeu. Todo
+// texto entra por textContent, nunca como HTML: o nome no QR e o que o
+// registro manda são texto de fora. Nada vai para o console nem fica guardado.
+(function () {
+  const C = globalThis.SynovaConferencia;
+  const preferidas = navigator.languages && navigator.languages.length
+      ? navigator.languages : [navigator.language || ''];
+  const lingua = C.linguaDe(preferidas);
+  const T = C.TEXTOS[lingua];
+  const $ = function (id) { return document.getElementById(id); };
+
+  document.documentElement.lang = lingua === 'pt' ? 'pt-BR' : 'en';
+  document.title = T.certVerifyMenu + ' · Synova';
+  for (const el of document.querySelectorAll('[data-t]')) el.textContent = T[el.dataset.t];
+  $('colado').placeholder = 'https://caioalexnes.github.io/c/#…';
+
+  // Cada conferência leva um número: a resposta de uma anterior que chega
+  // depois não apaga a de agora.
+  let vez = 0;
+  let ultima = null;
+
+  function mostrar(id, sim) {
+    $(id).classList.toggle('hide', !sim);
+  }
+
+  function enviar(p) {
+    const ctrl = new AbortController();
+    const prazo = setTimeout(function () { ctrl.abort(); }, C.constantes.PRAZO_MS);
+    return fetch(p.url, {
+      method: 'POST',
+      headers: p.headers,
+      body: p.corpo,
+      signal: ctrl.signal,
+      cache: 'no-store',
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer',
+      mode: 'cors',
+    }).then(async function (r) {
+      return { status: r.status, texto: await r.text() };
+    }).finally(function () { clearTimeout(prazo); });
+  }
+
+  const SVG = 'http://www.w3.org/2000/svg';
+  const DESENHOS = {
+    ok: ['M7.5 12.5l3 3 6-6.5'],
+    x: ['M8.5 8.5l7 7', 'M15.5 8.5l-7 7'],
+    duvida: ['M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.7.3-1 .8-1 1.6v.4', 'M12 17.2v.1'],
+    info: ['M12 11v6', 'M12 7.6v.1'],
+    nuvem: ['M7 18h10a4 4 0 0 0 .9-7.9 6 6 0 0 0-11.5 1.4A3.3 3.3 0 0 0 7 18z', 'M4 4l16 16'],
+    arroba: ['M15.5 12a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z', 'M15.5 12v1.3a2.2 2.2 0 0 0 4.4 0V12a7.9 7.9 0 1 0-3.2 6.3'],
+    selo: ['M8.5 12.2l2.4 2.4 4.6-4.9'],
+  };
+
+  function icone(nome, comCirculo) {
+    const s = document.createElementNS(SVG, 'svg');
+    s.setAttribute('viewBox', '0 0 24 24');
+    s.setAttribute('fill', 'none');
+    s.setAttribute('stroke', 'currentColor');
+    s.setAttribute('stroke-width', '2');
+    s.setAttribute('stroke-linecap', 'round');
+    s.setAttribute('stroke-linejoin', 'round');
+    s.setAttribute('aria-hidden', 'true');
+    if (comCirculo) {
+      const c = document.createElementNS(SVG, 'circle');
+      c.setAttribute('cx', '12');
+      c.setAttribute('cy', '12');
+      c.setAttribute('r', '10');
+      s.appendChild(c);
+    }
+    for (const d of DESENHOS[nome]) {
+      const p = document.createElementNS(SVG, 'path');
+      p.setAttribute('d', d);
+      s.appendChild(p);
+    }
+    return s;
+  }
+
+  function paragrafo(onde, texto, classe) {
+    const p = document.createElement('p');
+    if (classe) p.className = classe;
+    p.textContent = texto;
+    onde.appendChild(p);
+    return p;
+  }
+
+  function linha(dl, rotulo, valor) {
+    const dt = document.createElement('dt');
+    dt.textContent = rotulo;
+    const dd = document.createElement('dd');
+    dd.textContent = valor;
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+  }
+
+  function com(modelo, valor) {
+    return modelo.replace('@@', function () { return valor; });
+  }
+
+  function desenhar(r, modo) {
+    const caixa = $('resultado');
+    caixa.textContent = '';
+    const arquivo = modo === 'arquivo';
+    let titulo;
+    let porque = null;
+    let tom = 'ruim';
+    let desenho = 'x';
+    switch (r.verdict) {
+      case 'valid':
+        titulo = arquivo ? T.certVerdictValidFile : T.certVerdictValid;
+        porque = arquivo ? T.certVerdictValidFileWhy : null;
+        tom = 'ok';
+        desenho = 'ok';
+        break;
+      case 'registered':
+        titulo = T.pgRegistrado;
+        tom = 'aviso';
+        desenho = 'info';
+        break;
+      case 'revoked':
+        titulo = T.certVerdictRevoked;
+        break;
+      case 'notFound':
+        titulo = T.certVerdictNotFound;
+        porque = arquivo ? T.certVerdictNotFoundFileWhy : T.certVerdictNotFoundWhy;
+        desenho = 'duvida';
+        break;
+      case 'tampered':
+        titulo = T.certVerdictTampered;
+        porque = T.certVerdictTamperedWhy;
+        break;
+      case 'malformed':
+        titulo = T.certVerdictMalformed;
+        break;
+      case 'newer':
+        titulo = T.pgMaisNovo;
+        tom = 'novo';
+        desenho = 'info';
+        break;
+      case 'offline':
+        titulo = T.certVerdictOffline;
+        desenho = 'nuvem';
+        break;
+      case 'notReady':
+        titulo = T.certNoQrNotReady;
+        desenho = 'nuvem';
+        break;
+      case 'tooBig':
+        titulo = T.pgArquivoGrande;
+        break;
+      case 'unreadable':
+        titulo = T.pgArquivoIlegivel;
+        break;
+      default:
+        titulo = T.certNoQrServer;
+        desenho = 'nuvem';
+    }
+    const cab = document.createElement('div');
+    cab.className = 'veredito ' + tom;
+    cab.appendChild(icone(desenho, desenho !== 'nuvem'));
+    const h = document.createElement('h2');
+    h.textContent = titulo;
+    cab.appendChild(h);
+    caixa.appendChild(cab);
+    if (porque) paragrafo(caixa, porque);
+
+    const a = r.attestation;
+    const c = r.check;
+    const conferido = r.verdict === 'valid' || r.verdict === 'revoked' || r.verdict === 'registered';
+    if (conferido && r.signatureChecked === false) paragrafo(caixa, T.pgSemAssinatura, 'pequeno');
+    if (r.verdict === 'revoked' && c && c.revokedAtMs !== null) {
+      paragrafo(caixa, com(T.certVerifyRevokedAt, C.quando(c.revokedAtMs)), 'ruim');
+    }
+    if (r.verdict === 'revoked' && c && c.reason) {
+      paragrafo(caixa, com(T.certVerifyRevokedReason, C.motivoTexto(c.reason, lingua)), 'ruim');
+    }
+    if (r.verdict === 'offline' || r.verdict === 'notReady' || r.verdict === 'server') {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'leve';
+      b.textContent = T.cameraRetry;
+      b.addEventListener('click', function () {
+        if (ultima) conferir(ultima.acao, ultima.modo, false);
+      });
+      caixa.appendChild(b);
+    }
+    if (conferido) {
+      const dl = document.createElement('dl');
+      dl.className = 'dados';
+      if (a) {
+        linha(dl, T.certVerifyName, a.name);
+        linha(dl, T.certVerifyEvent, a.event);
+        if (a.dates !== '') linha(dl, T.certVerifyDates, a.dates);
+        if (a.minutes > 0) linha(dl, T.certVerifyHours, C.horas(a.minutes, lingua));
+        if (a.organization !== '') linha(dl, T.certVerifyOrg, a.organization);
+        linha(dl, T.certVerifyIssuedAt, C.quando(a.issuedAtMs));
+        linha(dl, T.certVerifyCode, a.id);
+      }
+      if (c && c.registeredAtMs !== null) {
+        linha(dl, T.certVerifyRegisteredAt, C.quando(c.registeredAtMs));
+      }
+      if (dl.childNodes.length) caixa.appendChild(dl);
+      if (c) {
+        if (c.keyDisabledAtMs !== null) {
+          paragrafo(caixa, com(T.certVerifyKeyOff, C.quando(c.keyDisabledAtMs)), 'pequeno');
+        }
+        const q = document.createElement('div');
+        q.className = 'quem';
+        const h3 = document.createElement('h3');
+        h3.textContent = T.certVerifyIssuer;
+        q.appendChild(h3);
+        // CertShown: o domínio some quando o e-mail é pessoal, e no lugar dele
+        // vem "e-mail pessoal".
+        const dominio = c.personal ? T.certIssuerPersonalEmail : c.domain;
+        if (c.name === null && c.institution === null && dominio === null) {
+          paragrafo(q, T.certVerifyIssuerGone);
+        } else {
+          if (c.name !== null) paragrafo(q, c.name, 'forte');
+          if (c.institution !== null) paragrafo(q, c.institution, 'forte');
+          if (dominio !== null) {
+            const d = document.createElement('p');
+            d.className = 'dominio';
+            d.appendChild(icone(c.personal ? 'arroba' : 'selo', !c.personal));
+            const t = document.createElement('span');
+            t.textContent = dominio;
+            d.appendChild(t);
+            q.appendChild(d);
+          }
+          paragrafo(q, T.certVerifyIssuerNote, 'pequeno');
+        }
+        caixa.appendChild(q);
+        paragrafo(caixa, T.certVerifyLimit, 'pequeno').style.marginTop = '16px';
+      }
+    }
+  }
+
+  async function conferir(acao, modo, rolar) {
+    const minha = ++vez;
+    ultima = { acao: acao, modo: modo };
+    mostrar('intro', false);
+    mostrar('resultado', false);
+    mostrar('esperando', true);
+    let r;
+    try {
+      r = await acao();
+    } catch (_) {
+      r = { verdict: 'server' };
+    }
+    if (minha !== vez) return;
+    mostrar('esperando', false);
+    desenhar(r, modo);
+    mostrar('resultado', true);
+    if (rolar) $('resultado').scrollIntoView({ block: 'start' });
+  }
+
+  function pelaUrl() {
+    const fragmento = location.hash.length > 1 ? location.hash.substring(1) : '';
+    if (fragmento === '') {
+      vez++;
+      mostrar('esperando', false);
+      mostrar('resultado', false);
+      mostrar('intro', true);
+      return;
+    }
+    conferir(function () {
+      return C.conferirCodigo(fragmento, enviar, C.verificarEd25519);
+    }, 'codigo', false);
+  }
+
+  $('conferir').addEventListener('click', function () {
+    const achado = C.acharCodigo($('colado').value);
+    conferir(function () {
+      return achado
+          ? C.conferirCodigo(C.paraTexto(achado), enviar, C.verificarEd25519)
+          : { verdict: 'malformed' };
+    }, 'codigo', true);
+  });
+
+  $('escolher').addEventListener('click', function () { $('arquivo').click(); });
+  $('arquivo').addEventListener('change', function () {
+    const f = $('arquivo').files && $('arquivo').files[0];
+    $('arquivo').value = '';
+    if (!f) return;
+    conferir(async function () {
+      if (f.size > C.constantes.MAX_ARQUIVO) return { verdict: 'tooBig' };
+      let bytes;
+      try {
+        bytes = new Uint8Array(await f.arrayBuffer());
+      } catch (_) {
+        return { verdict: 'unreadable' };
+      }
+      return C.conferirArquivo(bytes, enviar);
+    }, 'arquivo', true);
+  });
+
+  window.addEventListener('hashchange', pelaUrl);
+  pelaUrl();
+})();
+</script>
+</body>
+</html>

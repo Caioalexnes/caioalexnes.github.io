@@ -30,16 +30,16 @@
 <body>
 <main>
   <h1>Política de privacidade do Synova</h1>
-  <p class="sub">Atualizada em 4 de outubro de 2026.</p>
+  <p class="sub">Atualizada em 8 de outubro de 2026.</p>
 
   <div class="card">
     <strong>O resumo:</strong> você pode usar o Synova sem conta, e aí tudo fica no seu aparelho.
     Com uma conta, os seus aparelhos também sincronizam pelo servidor do Synova, que guarda os
     eventos <strong>cifrados com a chave de cada evento</strong> e não consegue lê-los. A lista de
     convidados nunca chega legível a nós. Algumas coisas mandam dados para fora do aparelho: a
-    conta e o servidor, a sincronização pelo Google Drive, a vitrine do convidado, a cópia do
-    backup de chave no seu Drive e o assistente de IA. Esta página explica cada uma, o que fica
-    guardado e onde, e como excluir a sua conta.
+    conta e o servidor, os certificados com QR, a sincronização pelo Google Drive, a vitrine do
+    convidado, a cópia do backup de chave no seu Drive e o assistente de IA. Esta página explica
+    cada uma, o que fica guardado e onde, e como excluir a sua conta.
   </div>
 
   <h2>O que o aplicativo guarda, e onde</h2>
@@ -78,7 +78,11 @@
         você entra. Ela cifra os segredos da conta no aparelho. Sozinha, ela não abre nenhum
         evento: as chaves dos eventos nunca chegam ao servidor em forma legível;</li>
     <li>um registro das entradas na conta (data, e-mail e endereço IP), que o provedor pode
-        manter para segurança. Ele é apagado junto com a conta.</li>
+        manter para segurança. Ele é apagado junto com a conta;</li>
+    <li>se você pedir a exclusão da conta pelo aplicativo, <strong>o pedido</strong>: quando foi
+        feito, quando vence, e um selo cifrado que só a sua senha do cofre abre. O servidor guarda
+        o selo e um resumo do código que desfaz o pedido, e nunca a senha. O pedido sai quando
+        você desfaz, ou junto com a conta, no fim do prazo.</li>
   </ul>
   <p>
     Quem cria a conta por e-mail recebe uma mensagem para confirmar o endereço, enviada pelo
@@ -138,14 +142,63 @@
         apagada.</li>
   </ul>
 
+  <h2>Os certificados (opcional)</h2>
+  <p>
+    O organizador pode emitir certificados de participação pelo aplicativo. O certificado leva o
+    nome de quem participou, o evento, as datas e a carga horária, impressos no papel e dentro do
+    QR. Para pôr o QR, é preciso uma conta: ele leva uma assinatura digital, e quem confere
+    pergunta ao <strong>registro de certificados</strong>, no servidor do Synova, se aquele
+    certificado foi emitido e se continua valendo. Um certificado sem QR não passa pelo servidor.
+  </p>
+  <p>O registro guarda:</p>
+  <ul>
+    <li>um <strong>resumo (SHA-256)</strong> de cada certificado e do PDF de cada pessoa, a data do
+        registro e, se o certificado for revogado, a data e o motivo, que sai de uma lista fixa.
+        <strong>O nome de quem recebeu nunca chega ao servidor</strong>: ele vai no QR, no papel e
+        no arquivo, e o registro tem só o resumo, de onde o nome não se tira;</li>
+    <li>a <strong>chave pública</strong> que assinou cada certificado, de qual conta ela é, quando
+        ela foi desligada, se foi, e o nome do aparelho em que ela nasceu, que só a própria conta
+        vê;</li>
+    <li>qual conta registrou cada evento para emitir certificados;</li>
+    <li>para cada conta que o dono do evento autoriza a emitir ou a revogar certificados,
+        <strong>a marca dessa conta naquele evento</strong>, guardada no lugar do identificador da
+        conta: um resumo tirado do evento e da conta, que muda de um evento para outro. O servidor,
+        que calcula a marca, sabe de qual conta ela é; quem só a vê, como a equipe do evento, não
+        reconhece a mesma conta em dois eventos;</li>
+    <li><strong>o que a conferência mostra de quem emitiu</strong>, escolhido por quem emite: um
+        nome, uma instituição e, se a pessoa quiser, o domínio do e-mail da conta, como
+        <em>ufg.br</em>. Um e-mail pessoal, como o do Gmail, aparece só como "e-mail pessoal". A
+        instituição e o domínio ficam como estavam em cada certificado; o nome segue a escolha de
+        agora.</li>
+  </ul>
+  <p>
+    <strong>O que quem emite escolhe mostrar aparece para qualquer pessoa que conferir</strong> um
+    certificado emitido por ele, junto com as datas, a revogação e o aviso de chave desligada. A
+    conferência não pede conta: ela responde a quem tem o QR ou o arquivo do certificado.
+  </p>
+  <p>
+    A página de conferência, <a href="/c/">caioalexnes.github.io/c</a>, é a que abre pelo QR.
+    O conteúdo do QR fica na parte do endereço depois do <code>#</code>, que o navegador não envia
+    a servidor nenhum, nem a quem hospeda a página. Ela manda ao registro só o resumo do
+    certificado, ou do PDF escolhido, e não guarda nada: nem o que foi conferido, nem quem
+    conferiu. A conferência pelo aplicativo funciona do mesmo jeito.
+  </p>
+
   <h2>Excluir a conta</h2>
   <p>
     Você pode excluir a conta a qualquer momento, pelo aplicativo, ou pedir por e-mail se não tiver
-    mais o aplicativo. Excluir apaga, no servidor, o login, a chave da conta, a cópia da conta, os
-    arquivos que os seus celulares trocam entre si, o registro das entradas e a ligação entre a
-    conta e os eventos que ela registrou. Os registros cifrados dos eventos continuam no servidor,
-    porque pertencem ao evento e os outros aparelhos dependem deles. O passo a passo, e tudo o que
-    é apagado e o que fica, está em <a href="/excluir-conta/">Excluir a conta</a>.
+    mais o aplicativo. Pelo aplicativo, a exclusão <strong>espera 30 dias</strong>: nesse prazo a
+    conta fica trancada em todos os celulares, nada dela abre nem se baixa, e você pode desfazer o
+    pedido com a senha do cofre. No fim do prazo, ela é apagada sozinha. Excluir apaga, no servidor,
+    o login, a chave da conta, a cópia da conta, os arquivos que os seus celulares trocam entre si,
+    o registro das entradas e a ligação entre a conta e os eventos que ela registrou; a cópia da
+    conta e os arquivos entre os celulares saem já no pedido. Os registros cifrados dos eventos
+    continuam no servidor, porque pertencem ao evento e os outros aparelhos dependem deles. Os
+    certificados que a conta emitiu <strong>continuam conferíveis</strong>: saem o nome que a
+    conferência mostrava, a ligação com a conta e as autorizações, e ficam o resumo, as datas, a
+    revogação, a chave pública e a instituição e o domínio de cada certificado. O passo a passo, e
+    tudo o que é apagado e o que fica, está em
+    <a href="/excluir-conta/">Excluir a conta</a>.
   </p>
 
   <h2>As permissões que o aplicativo pede</h2>
@@ -387,13 +440,19 @@
   <ul>
     <li><strong>No seu aparelho:</strong> até você esquecer o evento, excluir a conta ou
         desinstalar o aplicativo. Sair de uma conta não apaga nada: os eventos dela ficam
-        guardados para quando você entrar de novo.</li>
-    <li><strong>A conta, a chave da conta, a cópia da conta e os arquivos entre os seus
-        celulares:</strong> até você excluir a conta. A caixa da passagem por QR sai assim que o
-        celular novo a recebe.</li>
+        guardados para quando você entrar de novo. Com a exclusão pedida, os eventos da conta
+        ficam trancados no aparelho durante os 30 dias, e saem quando ele se conectar depois do
+        prazo.</li>
+    <li><strong>A conta e a chave da conta:</strong> até você excluir a conta, e, com a exclusão
+        pedida pelo aplicativo, até o fim dos 30 dias para desfazer.</li>
+    <li><strong>A cópia da conta e os arquivos entre os seus celulares:</strong> até você pedir a
+        exclusão da conta. A caixa da passagem por QR sai assim que o celular novo a recebe.</li>
     <li><strong>Os registros cifrados dos eventos no servidor:</strong> eles não têm, hoje, um prazo
         para sair, e não saem quando uma conta é excluída, porque pertencem ao evento e os outros
         aparelhos dependem deles. O servidor não consegue lê-los.</li>
+    <li><strong>O registro dos certificados:</strong> ele não tem prazo para sair, e continua
+        depois da exclusão da conta de quem emitiu, sem o nome escolhido e sem a ligação com a
+        conta, para um certificado já entregue a alguém continuar conferível.</li>
     <li><strong>No seu Google Drive:</strong> até você apagar. O arquivo da vitrine vence 30 dias
         depois da última sessão do evento.</li>
     <li><strong>Registros técnicos de acesso</strong> que o provedor do servidor mantém, como
@@ -441,9 +500,10 @@
   <p>
     Uma lista de convidados contém dados de outras pessoas. Quem organiza o evento é quem responde
     por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. Isso
-    inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de ligar o
-    assistente de IA e a de mandar ao autor uma resposta denunciada que carregue nomes. O autor do
-    aplicativo não tem acesso legível a essa lista e não tem como intervir nela.
+    inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de emitir
+    certificados e a quem entregá-los, a de ligar o assistente de IA e a de mandar ao autor uma
+    resposta denunciada que carregue nomes. O autor do aplicativo não tem acesso legível a essa
+    lista e não tem como intervir nela.
   </p>
 
   <h2>Licença</h2>

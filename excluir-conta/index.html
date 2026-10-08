@@ -30,13 +30,15 @@
 <body>
 <main>
   <h1>Excluir a sua conta do Synova</h1>
-  <p class="sub">Atualizada em 4 de outubro de 2026.</p>
+  <p class="sub">Atualizada em 8 de outubro de 2026.</p>
 
   <div class="card">
     <strong>O resumo:</strong> você pode excluir a sua conta do Synova a qualquer momento, pelo
-    próprio aplicativo. Se não tiver mais o aplicativo, pode pedir a exclusão por e-mail.
-    Excluir apaga o seu login e os dados da conta no servidor do Synova, e
-    <strong>não dá para desfazer</strong>.
+    próprio aplicativo. A exclusão pedida pelo aplicativo <strong>espera 30 dias</strong>: nesse
+    prazo a conta fica trancada em todos os celulares, nada dela abre nem se baixa, e você pode
+    <strong>desfazer com a senha do cofre</strong>. No fim dos 30 dias ela é apagada sozinha, e aí
+    <strong>não dá mais para desfazer</strong>. Se não tiver mais o aplicativo, pode pedir a
+    exclusão por e-mail.
   </div>
 
   <h2>Pelo aplicativo</h2>
@@ -47,11 +49,49 @@
         da seção <em>Cópia da conta no servidor</em>.</li>
     <li>Leia o que é apagado e o que fica. Se quiser continuar dono dos seus eventos em outro
         aparelho, salve o backup de chave antes, pelo botão da própria tela.</li>
-    <li>Escreva a frase de confirmação e toque em <strong>Excluir a conta</strong>.</li>
+    <li>Escreva a frase de confirmação e toque em <strong>Excluir a conta</strong>. Num celular em
+        que a conta tem a senha do cofre, é ela que confirma, ou o código de recuperação: é com
+        ela que a exclusão poderá ser desfeita. Sem a senha do cofre, quem confirma é o bloqueio
+        de tela do celular.</li>
   </ol>
   <p>
-    A exclusão acontece no servidor, então precisa de internet. Sem conexão, nada é apagado, e a
-    tela diz isso.
+    O pedido vai ao servidor, então precisa de internet. Sem conexão, nada muda, e a tela diz
+    isso.
+  </p>
+  <p>
+    <strong>Numa versão antiga do aplicativo, sem estes 30 dias, a exclusão é imediata.</strong> Se
+    a tela de excluir a conta não fala do prazo de 30 dias, atualize o aplicativo antes de excluir.
+  </p>
+
+  <h2>Os 30 dias para desfazer</h2>
+  <ul>
+    <li><strong>A conta tranca:</strong> no celular em que você pediu, na hora; nos outros
+        celulares da conta, na próxima vez que eles falarem com o servidor. Um celular sem
+        internet continua com o acesso até se conectar de novo.</li>
+    <li><strong>Trancada, nada da conta abre:</strong> os eventos dela não aparecem em celular
+        nenhum, e o servidor recusa a chave da conta, a cópia da conta, a troca de registros
+        entre os celulares dela e a emissão e a revogação de certificados. Os eventos continuam
+        guardados nos celulares, cifrados, e voltam se você desfizer. Os certificados já emitidos
+        continuam conferíveis.</li>
+    <li><strong>Para desfazer:</strong> abra o aplicativo em qualquer celular em que a conta
+        esteja, ou entre nela de novo, e digite a senha do cofre ou o código de recuperação. A
+        senha não vai ao servidor: com ela, o aplicativo abre, no próprio celular, o código que
+        desfaz o pedido.</li>
+    <li><strong>Pedido feito sem a senha do cofre:</strong> desfazer é por e-mail. Escreva para
+        <a href="mailto:caioalex.nes@gmail.com">caioalex.nes@gmail.com</a> a partir do endereço da
+        conta, dentro dos 30 dias.</li>
+    <li><strong>A cópia da conta no servidor sai já no pedido</strong>, junto com os arquivos que os
+        celulares da conta trocam entre si. Se você desfizer, os celulares que ainda têm os
+        eventos os mandam de novo. Num celular novo, sem nenhum outro com a conta, desfazer
+        devolve a conta sem os eventos: para trazê-los, guarde um backup de chave antes de
+        excluir.</li>
+  </ul>
+
+  <h2>No fim dos 30 dias</h2>
+  <p>
+    O servidor apaga a conta sozinho, por uma limpeza que roda todos os dias. Ninguém precisa
+    pedir de novo, e a partir daí não há como desfazer. Os celulares em que a conta ainda estiver
+    aberta apagam os eventos dela na próxima vez que se conectarem.
   </p>
 
   <h2>Sem o aplicativo</h2>
@@ -63,24 +103,29 @@
   </p>
   <p>
     Vamos responder para esse mesmo endereço, para confirmar que o pedido é seu. A conta é excluída
-    em até 15 dias depois da confirmação, e avisamos quando terminar. Um pedido vindo de outro
-    endereço não é atendido: sem essa regra, qualquer pessoa poderia pedir a exclusão da conta de
-    outra.
+    em até 15 dias depois da confirmação, e avisamos quando terminar. A exclusão por e-mail não
+    passa pelos 30 dias: ela é feita de uma vez. Um pedido vindo de outro endereço não é atendido:
+    sem essa regra, qualquer pessoa poderia pedir a exclusão da conta de outra.
   </p>
 
   <h2>O que é apagado</h2>
   <ul>
-    <li><strong>No servidor do Synova:</strong> o login (e-mail e senha, ou a ligação com a Conta
-        Google), a chave da conta, a cópia do cofre da conta, os arquivos que os celulares da
-        conta trocam entre si e o registro das entradas na conta.</li>
+    <li><strong>No servidor do Synova, já no pedido:</strong> a cópia do cofre da conta, os
+        arquivos que os celulares da conta trocam entre si e a caixa da passagem por QR.</li>
+    <li><strong>No servidor do Synova, no fim do prazo:</strong> o login (e-mail e senha, ou a
+        ligação com a Conta Google), a chave da conta, o pedido de exclusão e o registro das
+        entradas na conta.</li>
     <li><strong>A ligação com os seus eventos:</strong> depois da exclusão, nada no servidor diz
         quais eventos a sua conta registrou.</li>
-    <li><strong>No aparelho em que você excluir pelo aplicativo:</strong> os eventos dessa conta,
-        com as listas, as presenças e as chaves.</li>
-    <li><strong>Nos outros celulares em que a conta estiver aberta:</strong> o acesso que eles já
-        têm vale por até uma hora. Quando ele vence, com o celular conectado, eles saem da conta
-        e os eventos dela deixam de abrir neles. O que ficou guardado ali fica ilegível e sai ao
-        desinstalar o aplicativo.</li>
+    <li><strong>Nos certificados, no fim do prazo:</strong> o nome que a conferência mostrava de
+        quem emitiu, a ligação entre as chaves de certificado e a conta (com o nome do aparelho de
+        cada chave), a ligação com os eventos que a conta registrou para emitir certificados e as
+        autorizações de emitir e de revogar: as que a conta deu nos eventos dela e as que ela
+        recebeu nos eventos de outras pessoas.</li>
+    <li><strong>Nos celulares em que a conta estiver aberta:</strong> os eventos dessa conta, com
+        as listas, as presenças e as chaves, na próxima vez que cada um se conectar depois do
+        prazo. Num celular em que você já tinha saído da conta, eles ficam cifrados com uma chave
+        que não existe mais em lugar nenhum, e saem ao desinstalar o aplicativo.</li>
   </ul>
 
   <h2>O que fica</h2>
@@ -91,6 +136,11 @@
         ler o conteúdo: ele é cifrado com a chave de cada evento, que nunca chega lá.</li>
     <li><strong>Os eventos nos aparelhos de outras pessoas</strong> (a equipe e as portas):
         continuam com elas, sem ninguém como dono.</li>
+    <li><strong>Os certificados que a conta emitiu continuam conferíveis.</strong> O registro
+        guarda de cada um o resumo, as datas, a revogação, a chave pública que assinou e a
+        instituição e o domínio como estavam no certificado. Isso é de propósito: um certificado já
+        entregue a alguém não pode deixar de ser conferível porque quem emitiu excluiu a conta. O
+        nome de quem recebeu nunca esteve no servidor.</li>
     <li><strong>O que é do aparelho e não da conta:</strong> os eventos registrados sem conta e as
         outras contas do mesmo aparelho.</li>
     <li><strong>Os arquivos no seu Google Drive</strong> (a sincronização, a vitrine e o backup de
@@ -109,7 +159,8 @@
   <p>
     Se você só quer parar de usar a conta num aparelho, toque em <strong>Sair da conta</strong>,
     na mesma tela. Sair fecha a conta naquele aparelho e não apaga nada: os eventos ficam guardados ali e
-    voltam quando você entrar de novo.
+    voltam quando você entrar de novo. Sair de uma conta com a exclusão pedida também não desfaz o
+    pedido.
   </p>
 
   <h2>Contato</h2>
