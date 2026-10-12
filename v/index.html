@@ -4,518 +4,1845 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Vitrine do evento</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://www.googleapis.com https://thrpjvrngwducbhsaxjy.supabase.co; img-src data:; worker-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="data:,">
+<title>Synova</title>
 <style>
   :root { color-scheme: light dark; --ink:#12241d; --bg:#f4f7f5; --card:#fff;
-          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; --warn:#8a6100;
-          --warnbg:#fff3cd; }
+          --line:#d7e0da; --accent:#0f5d43; --muted:#5b6b64; --ok:#1b7a3d;
+          --warn:#8a6100; --warnbg:#fff3cd; }
   @media (prefers-color-scheme: dark) {
     :root { --ink:#e8efea; --bg:#101614; --card:#18211d; --line:#2b3833;
-            --accent:#6fd3aa; --muted:#9db0a7; --warn:#f0c96b; --warnbg:#2b2415; }
+            --accent:#6fd3aa; --muted:#9db0a7; --ok:#6fd38e; --warn:#f0c96b;
+            --warnbg:#2b2415; }
   }
   * { box-sizing: border-box; }
   body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
          font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
   main { max-width:36rem; margin:0 auto; }
+  .marca { color:var(--accent); font-weight:700; letter-spacing:.04em; margin:0 0 .15rem; }
   h1 { font-size:1.45rem; margin:0 0 .3rem; }
   h2 { font-size:1.05rem; margin:0 0 .6rem; }
-  .sub { color:var(--muted); margin:0 0 1.6rem; }
+  p { margin:0 0 .6rem; }
+  .sub { color:var(--muted); margin:0 0 1.2rem; }
+  .pequeno { color:var(--muted); font-size:.88rem; margin:.6rem 0 0; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
-          padding:16px; margin-bottom:16px; }
+          padding:16px; margin-bottom:16px; overflow-wrap:anywhere; }
   .warn { background:var(--warnbg); border-color:var(--warn); color:var(--warn); }
   input { font:inherit; width:100%; padding:11px 12px; border-radius:9px;
           border:1px solid var(--line); background:var(--bg); color:var(--ink); }
   button { font:inherit; font-weight:600; border-radius:9px; padding:11px 16px;
            border:1px solid var(--accent); background:var(--accent); color:var(--bg);
            cursor:pointer; display:block; width:100%; margin-top:10px; }
+  button.leve { background:transparent; color:var(--accent); }
+  .qr { display:flex; justify-content:center; margin:4px 0 12px; }
+  .qr canvas { max-width:100%; height:auto; image-rendering:pixelated; }
+  .sess { display:flex; justify-content:space-between; gap:12px; padding:7px 0;
+          border-bottom:1px solid var(--line); }
+  .sess:last-child { border-bottom:0; }
+  .sess .nome { min-width:0; }
+  .sess .det { display:block; color:var(--muted); font-size:.85rem; }
+  .when { color:var(--muted); font-size:.85rem; white-space:nowrap; }
+  .estado { font-size:.85rem; font-weight:600; text-align:right; }
+  .yes { color:var(--ok); font-weight:600; }
+  .no { color:var(--muted); }
+  .fora { color:var(--warn); }
+  .aviso { padding:8px 0; border-bottom:1px solid var(--line); }
+  .aviso:last-child { border-bottom:0; }
+  .aviso .when { display:block; }
+  .forte { font-weight:600; }
+  .item { padding:10px 0; border-bottom:1px solid var(--line); }
+  .item:last-child { border-bottom:0; }
+  .item .acoes { display:flex; gap:8px; }
+  .item .acoes button { margin-top:8px; }
+  .esperando { display:flex; gap:12px; align-items:center; }
+  .gira { width:20px; height:20px; border:2px solid var(--line); border-top-color:var(--accent);
+          border-radius:50%; animation:gira .8s linear infinite; flex:none; }
+  @keyframes gira { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .gira { animation:none; } }
   table { width:100%; border-collapse:collapse; font-size:.92rem; }
   th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);
            vertical-align:top; }
   th { color:var(--muted); font-weight:600; font-size:.8rem; text-transform:uppercase;
        letter-spacing:.05em; }
-  .sess { display:flex; justify-content:space-between; gap:12px; padding:7px 0;
-          border-bottom:1px solid var(--line); }
-  .sess:last-child { border-bottom:0; }
-  .when { color:var(--muted); font-size:.85rem; white-space:nowrap; }
-  .yes { color:var(--accent); font-weight:600; }
-  .no { color:var(--muted); }
-  .aviso { padding:8px 0; border-bottom:1px solid var(--line); }
-  .aviso:last-child { border-bottom:0; }
-  .aviso .when { display:block; }
+  a { color:var(--accent); }
   .hide { display:none; }
   footer { color:var(--muted); font-size:.83rem; margin-top:28px; text-align:center; }
 </style>
 </head>
 <body>
 <main>
-  <h1 id="titulo">Vitrine do evento</h1>
-  <p class="sub" id="sub">Carregando…</p>
+  <p class="marca">Synova</p>
+  <h1 id="titulo"></h1>
+  <p class="sub" id="sub"></p>
 
-  <div class="card warn hide" id="erro"></div>
+  <noscript>
+    <div class="card">
+      Esta página precisa de JavaScript.<br>
+      This page needs JavaScript.
+    </div>
+  </noscript>
 
-  <div class="card hide" id="cSessoes">
-    <h2>Programação</h2>
-    <div id="sessoes"></div>
+  <div class="card hide" id="esperando">
+    <div class="esperando"><div class="gira" aria-hidden="true"></div><span id="esperandoTexto"></span></div>
   </div>
+  <div class="card warn hide" id="erro" aria-live="polite"></div>
+  <div class="card hide" id="nota" aria-live="polite"></div>
 
-  <div class="card hide" id="cAvisos">
-    <h2>Avisos</h2>
-    <div id="avisos"></div>
-  </div>
-
-  <div class="card hide" id="cCracha">
-    <h2>O seu crachá</h2>
-    <p class="sub" style="margin:0 0 .8rem">
-      Digite o código pessoal que a organização mandou para você. O QR aparece
-      aqui e é ele que a entrada lê — basta mostrar a tela.
-    </p>
-    <input id="codigo" placeholder="Ex.: 4KP29T-XQM7HB" autocomplete="off"
+  <!-- O MODO NOVO: a página do convidado no servidor do Synova. -->
+  <div class="card hide" id="cCodigo">
+    <h2 id="tCodigo" data-t="pgCodigoTitulo"></h2>
+    <p class="sub" data-t="pgCodigoComo"></p>
+    <input id="codigoNovo" aria-labelledby="tCodigo" autocomplete="off"
            autocapitalize="characters" spellcheck="false">
-    <button id="abrir">Mostrar o meu QR</button>
-    <div id="qr" style="margin-top:14px"></div>
-    <p class="sub" id="qrAviso" style="margin:.6rem 0 0"></p>
+    <button id="abrirNovo" type="button" data-t="pgCodigoAbrir"></button>
+    <p class="pequeno" id="codigoAviso" aria-live="polite"></p>
+  </div>
+  <div class="card hide" id="cQr">
+    <h2 data-t="pgQrTitulo"></h2>
+    <div class="qr" id="qr"></div>
+    <p class="pequeno" data-t="pgQrComo"></p>
+  </div>
+  <div class="card hide" id="cMinhas">
+    <h2 data-t="pgMinhasTitulo"></h2>
+    <div id="minhas"></div>
   </div>
 
-  <div class="card hide" id="cEu">
-    <h2>A sua presença</h2>
-    <p class="sub" style="margin:0 0 .8rem">
-      Leia o QR do seu crachá com a câmera do celular e cole aqui o texto que
-      aparecer. Ele começa com SYN1. O código curto impresso embaixo do QR é a
-      sua entrada no evento e, por segurança, não funciona nesta página.
-    </p>
-    <input id="cracha" placeholder="SYN1.…" autocomplete="off">
-    <button id="ver">Ver a minha presença</button>
-    <div id="eu" style="margin-top:14px"></div>
+  <!-- Os dois modos. -->
+  <div class="card hide" id="cProg">
+    <h2 data-t="pgProgramacao"></h2>
+    <div id="prog"></div>
+  </div>
+  <div class="card hide" id="cAvisos">
+    <h2 data-t="pgAvisos"></h2>
+    <div id="avisos"></div>
+    <p class="pequeno hide" id="omitidos"></p>
+  </div>
+  <div class="card hide" id="cLocal">
+    <h2 data-t="pgLocal"></h2>
+    <a id="mapa" target="_blank" rel="noopener noreferrer" data-t="pgAbrirMapa"></a>
+  </div>
+  <div class="card hide" id="cGuardada">
+    <p class="sub" data-t="pgGuardada"></p>
+    <button id="esquecer" class="leve" type="button" data-t="pgEsquecer"></button>
   </div>
 
-  <div class="card hide" id="cTabela">
-    <h2>Convidados</h2>
+  <!-- A CARTEIRA: as páginas abertas neste navegador. -->
+  <div class="card hide" id="cCarteira">
+    <h2 data-t="pgCarteiraTitulo"></h2>
+    <p class="sub" data-t="pgCarteiraComo"></p>
+    <div id="carteira"></div>
+  </div>
+  <div class="card hide" id="cIntro"><p class="sub" data-t="pgIntro"></p></div>
+
+  <!-- O MODO DO DRIVE: a vitrine de sempre. -->
+  <div class="card hide" id="dCracha">
+    <h2 id="tCracha" data-t="pgCrachaTitulo"></h2>
+    <p class="sub" data-t="pgCrachaComo"></p>
+    <input id="codigoDrive" aria-labelledby="tCracha" autocomplete="off"
+           autocapitalize="characters" spellcheck="false">
+    <button id="abrirDrive" type="button" data-t="pgCrachaMostrar"></button>
+    <div class="qr" id="qrDrive" style="margin-top:14px"></div>
+    <p class="pequeno" id="qrDriveAviso" aria-live="polite"></p>
+  </div>
+  <div class="card hide" id="dEu">
+    <h2 id="tEu" data-t="pgEuTitulo"></h2>
+    <p class="sub" data-t="pgEuComo"></p>
+    <input id="cracha" aria-labelledby="tEu" placeholder="SYN1.…" autocomplete="off"
+           spellcheck="false">
+    <button id="ver" type="button" data-t="pgEuVer"></button>
+    <div id="eu" style="margin-top:14px" aria-live="polite"></div>
+  </div>
+  <div class="card hide" id="dTabela">
+    <h2 data-t="pgTabelaTitulo"></h2>
     <div style="overflow-x:auto"><table id="tabela"></table></div>
   </div>
 
+  <p class="pequeno" id="privacidade"></p>
   <footer>
-    Página só de leitura. Ela não guarda nada e não manda nada para lugar nenhum:
-    tudo o que você digita fica neste navegador.
+    Synova ·
+    <a href="/privacidade/" data-t="pgLinkPrivacidade"></a> ·
+    <a href="/termos/" data-t="pgLinkTermos"></a>
   </footer>
 </main>
 
-<script>
+<script id="logica">
+"use strict";
 // ============================================================================
-// A VITRINE DO CONVIDADO (§15.5). Só leitura, sem servidor e sem conta.
-//
-// O ID DO ARQUIVO VEM NO FRAGMENTO (#), que NUNCA é enviado a servidor nenhum:
-// nem o GitHub Pages que hospeda esta página sabe de que evento é o link.
-//
-// POR QUE A LEITURA É PELA API E NÃO PELO LINK DIRETO DO DRIVE: medido em
-// 09/09/2026 a partir desta mesma origem. `drive.google.com/uc?export=download`
-// e `drive.usercontent.google.com/download` falham com "Failed to fetch" —
-// eles não mandam cabeçalho de CORS. Só `www.googleapis.com/drive/v3` responde
-// de dentro do navegador, e ele exige uma chave de API.
-//
-// A CHAVE DE API É PÚBLICA POR DESENHO, como o client ID do OAuth: ela viaja
-// nesta página, aparece no tráfego, e não autoriza nada sozinha. Quem a protege
-// é a restrição por referenciador (HTTP referrer) no console, e o fato de o
-// escopo dela ser só a API do Drive para arquivos JÁ públicos.
+// A PÁGINA DO CONVIDADO (Lote 3a, 09/10/2026), e a vitrine do Drive (§15.5).
 // ============================================================================
-// Criada em 09/09/2026, restrita a `https://caioalexnes.github.io/*` e à
-// Google Drive API. Ver docs/google-cloud-setup.md.
-const API_KEY = 'AIzaSyBw1prW0nnUqEXBxBQ3GRGchTRd6CBKqcg';
-const FORMATO = 1;
-
-const $ = (id) => document.getElementById(id);
-
-function erro(texto) {
-  $('erro').textContent = texto;
-  $('erro').classList.remove('hide');
-  $('sub').textContent = '';
-}
-
-function doisDigitos(n) { return String(n).padStart(2, '0'); }
-
-function quando(ms) {
-  if (typeof ms !== 'number') return '';
-  const d = new Date(ms);
-  return doisDigitos(d.getDate()) + '/' + doisDigitos(d.getMonth() + 1) + ' ' +
-         doisDigitos(d.getHours()) + ':' + doisDigitos(d.getMinutes());
-}
-
-function dia(ms) {
-  const d = new Date(ms);
-  return doisDigitos(d.getDate()) + '/' + doisDigitos(d.getMonth() + 1) + '/' + d.getFullYear();
-}
-
-/// O identificador do convidado, tanto do QR inteiro quanto colado sozinho.
-///
-/// O QR é `SYN1.<eventShort>.<guestId>.<mac>` e o `guestId` viaja em claro nele
-/// — é por isso que a vitrine indexa por ele e nenhum crachá já impresso fica
-/// de fora. O MAC que vem junto NÃO é usado aqui e não precisa ser.
-function identificador(texto) {
-  const t = (texto || '').trim();
-  if (!t) return '';
-  const partes = t.split('.');
-  if (partes.length >= 3 && partes[0].toUpperCase().startsWith('SYN')) return partes[2];
-  return t;
-}
-
-/// Os dois códigos que um convidado tem na mão e que NÃO são o texto do QR,
-/// reconhecidos pelo tamanho. São os tamanhos do app (`ShortCode.length` e
-/// `ShowcasePass.codeLength`), e o `showcase_page_agreement_test` cobra que
-/// continuem sendo.
-///
-/// POR QUE EXISTE (campo, 11/09/2026): um convidado digitou no campo da
-/// presença o código impresso no crachá, e a página respondeu "confira se o
-/// crachá é deste evento". Era deste evento. O código da porta não pode abrir
-/// esta página, porque ele é a entrada da pessoa e o arquivo é público; mas a
-/// página pode reconhecê-lo e dizer o que fazer.
-const CODIGO_PORTA_LEN = 6;
-const CODIGO_PESSOAL_LEN = 12;
-
-/// O que a pessoa pôs no campo da presença: 'qr', 'porta', 'pessoal', 'id',
-/// ou '' quando não há nada.
-function tipoDaEntrada(texto) {
-  const t = (texto || '').trim();
-  if (!t) return '';
-  if (t.toUpperCase().startsWith('SYN')) return 'qr';
-  const n = normalizarCodigo(t);
-  if (n.length === CODIGO_PORTA_LEN) return 'porta';
-  if (n.length === CODIGO_PESSOAL_LEN) return 'pessoal';
-  return 'id';
-}
-
-let dados = null;
-
-async function carregar() {
-  const id = (location.hash || '').replace(/^#/, '').trim();
-  if (!id) return erro('Este link está incompleto: falta a parte depois do #. ' +
-                       'Aplicativo de conversa às vezes corta link comprido — ' +
-                       'peça o link de novo, de preferência colado como texto.');
-
-  let r;
-  try {
-    r = await fetch('https://www.googleapis.com/drive/v3/files/' +
-                    encodeURIComponent(id) + '?alt=media&key=' + API_KEY +
-                    '&t=' + Date.now(), { cache: 'no-store' });
-  } catch (e) {
-    return erro('Não foi possível buscar a vitrine. Confira a sua conexão e tente de novo.');
-  }
-  if (r.status === 404 || r.status === 403) {
-    return erro('Esta vitrine não está mais disponível. Ela pode ter saído do ar, ' +
-                'ou o link pode estar errado.');
-  }
-  if (!r.ok) return erro('A vitrine não respondeu (erro ' + r.status + ').');
-
-  try {
-    dados = await r.json();
-  } catch (e) {
-    return erro('O que veio deste link não é uma vitrine do Synova.');
-  }
-
-  if (!dados || dados.kind !== 'synova-showcase') {
-    return erro('O que veio deste link não é uma vitrine do Synova.');
-  }
-  // Recusa o que não conhece em vez de desenhar meio errado.
-  if (dados.v > FORMATO) {
-    return erro('Esta vitrine foi publicada por uma versão mais nova do Synova, ' +
-                'e esta página ainda não sabe mostrá-la.');
-  }
-  // O prazo é respeitado AQUI também, e não só pelo app que apaga o arquivo:
-  // se o dono nunca mais abrir o app, o arquivo continua no Drive, e a data
-  // dentro dele é a única coisa que ainda vale.
-  if (typeof dados.expiresAt === 'number' && Date.now() > dados.expiresAt) {
-    return erro('Esta vitrine saiu do ar em ' + dia(dados.expiresAt) + '.');
-  }
-
-  desenhar();
-}
-
-function desenhar() {
-  document.title = dados.event || 'Vitrine do evento';
-  $('titulo').textContent = dados.event || 'Vitrine do evento';
-  $('sub').textContent = typeof dados.publishedAt === 'number'
-      ? 'Conteúdo de ' + quando(dados.publishedAt)
-      : '';
-
-  const sessoes = Array.isArray(dados.sessions) ? dados.sessions : [];
-  if (sessoes.length) {
-    $('sessoes').innerHTML = '';
-    for (const s of sessoes) {
-      const linha = document.createElement('div');
-      linha.className = 'sess';
-      const nome = document.createElement('span');
-      nome.textContent = s.name || '';
-      const hora = document.createElement('span');
-      hora.className = 'when';
-      hora.textContent = s.from ? quando(s.from) + (s.to ? ' → ' + quando(s.to) : '') : '';
-      linha.append(nome, hora);
-      $('sessoes').append(linha);
-    }
-    $('cSessoes').classList.remove('hide');
-  }
-
-  const avisos = Array.isArray(dados.announcements) ? dados.announcements : [];
-  if (avisos.length) {
-    $('avisos').innerHTML = '';
-    // Do mais novo para o mais velho: quem abre no meio do evento quer o que
-    // acabou de acontecer.
-    for (const a of avisos.slice().reverse()) {
-      const bloco = document.createElement('div');
-      bloco.className = 'aviso';
-      const texto = document.createElement('span');
-      texto.textContent = a.text || '';
-      const hora = document.createElement('span');
-      hora.className = 'when';
-      hora.textContent = quando(a.at);
-      bloco.append(texto, hora);
-      $('avisos').append(bloco);
-    }
-    $('cAvisos').classList.remove('hide');
-  }
-
-  // O CRACHÁ SÓ APARECE quando o arquivo traz blocos. Um campo pedindo código
-  // numa vitrine sem crachás faria a pessoa procurar um código que ninguém
-  // mandou.
-  if (dados.badges && Object.keys(dados.badges).length) {
-    $('cCracha').classList.remove('hide');
-    // O código volta preenchido de quem já abriu neste navegador — na porta
-    // pode não haver sinal nem paciência para digitar dez caracteres de novo.
-    try {
-      const salvo = localStorage.getItem('synova-codigo-' + (dados.eventId || ''));
-      if (salvo && !$('codigo').value) $('codigo').value = salvo;
-    } catch (e) {}
-  }
-
-  $('cEu').classList.remove('hide');
-
-  const colunas = Array.isArray(dados.columns) ? dados.columns : [];
-  const convidados = Array.isArray(dados.guests) ? dados.guests : [];
-  if (colunas.length && convidados.length) desenharTabela(colunas, convidados, sessoes);
-}
-
-function desenharTabela(colunas, convidados, sessoes) {
-  const t = $('tabela');
-  t.innerHTML = '';
-  const cabeca = t.insertRow();
-  for (const c of colunas) {
-    const th = document.createElement('th');
-    th.textContent = c.name || '';
-    cabeca.append(th);
-  }
-  for (const s of sessoes) {
-    const th = document.createElement('th');
-    th.textContent = s.name || '';
-    cabeca.append(th);
-  }
-  for (const g of convidados) {
-    const linha = t.insertRow();
-    for (const c of colunas) {
-      linha.insertCell().textContent = (g.cells && g.cells[c.id]) || '';
-    }
-    for (const s of sessoes) {
-      const td = linha.insertCell();
-      const veio = Array.isArray(g.at) && g.at.includes(s.id);
-      td.textContent = veio ? '✓' : '·';
-      td.className = veio ? 'yes' : 'no';
-    }
-  }
-  $('cTabela').classList.remove('hide');
-}
-
-// ============================================================================
-// O CRACHÁ NA TELA (10/09/2026).
-// ============================================================================
-// O convidado digita o código pessoal dele; a página decifra o bloco DELE e
-// desenha o QR. Nada é enviado a lugar nenhum: a conta acontece aqui dentro.
+// Três modos no mesmo endereço, decididos pelo que vem depois do #:
 //
-// O QUE VEM CIFRADO É A MATRIZ, e não o texto do QR. Sem isso esta página
-// precisaria de um gerador de QR completo — codificação, correção de erro,
-// máscara — e essa segunda implementação divergiria da do app no dia 1, que é
-// a lição que este projeto já pagou com a página de convite. Aqui ela só
-// desenha quadrados a partir de bits que o app já calculou.
+//   • `e1.<evento>.<código>` ou `e1.<evento>`: a página do convidado no
+//     servidor do Synova. É a MESMA leitura do app
+//     (lib/core/showcase/guest_space.dart), escrita de novo em JavaScript, e
+//     uma segunda implementação diverge da primeira no dia 1: por isso este
+//     bloco tem um gabarito. test/core/guest_page_agreement_test.dart monta os
+//     casos com o PRÓPRIO app e tool/pagina_v/conferir.mjs roda ESTE bloco no
+//     Node contra eles. Os campos dos resultados têm os nomes do app.
+//   • o id de um arquivo do Drive: a vitrine de sempre, para quem não usa conta
+//     (invariante 14). O crachá dela também é conferido contra o app.
+//   • nada: a carteira, as páginas abertas neste navegador.
 //
-// UMA DERIVAÇÃO SÓ, e é por isso que o sal leva o evento e não o convidado: o
-// código não diz QUEM é a pessoa, então a página deriva uma chave e tenta
-// abrir os blocos com ela. Abrir é microssegundos; quem separa as pessoas é o
-// AAD de cada bloco, que carrega o `guestId`.
-const PBKDF2_ITER = 20000;
-const BLOCO_V = 1;
+// O QUE SAI DESTE APARELHO no modo novo: o id do evento e um ENDEREÇO de 43
+// caracteres calculado do código (PBKDF2 de 20 mil voltas e HMAC), perguntados
+// ao servidor do Synova sem conta (a função guest_space_get do nono SQL). O
+// código nunca sai: ele chega no FRAGMENTO, que nenhum servidor recebe, nem o
+// GitHub Pages. O que volta é selado (AES-GCM) com uma chave que só o código
+// abre, e o servidor não consegue ler nem forjar.
+//
+// DUAS DIVERGÊNCIAS CONHECIDAS, as mesmas da página /c/, só para um bloco
+// escrito à mão pela conta que publica (ninguém mais escreve no servidor):
+// - uma versão escrita com ponto ou expoente ("v":1.0) o app lê como double e
+//   recusa, e o navegador lê o número 1 e abre;
+// - uma versão logo abaixo de 2^63 o app lê exata e diz "mais novo"; o
+//   navegador a arredonda para 2^63 e recusa como torta.
+// ============================================================================
+(function () {
+  const SERVIDOR = 'https://thrpjvrngwducbhsaxjy.supabase.co';
+  // A chave publicável do projeto (SynovaServerConfig.publishableKey): pública
+  // por desenho, viaja no app e aqui, e sem conta só alcança as funções abertas
+  // a todos (aqui, guest_space_get).
+  const CHAVE_PUBLICAVEL = 'sb_publishable_DQkMKepi3Ew3g-W2te9gbw_6ejgcTNC';
+  // A chave de API do Drive, da vitrine de sempre. Criada em 09/09/2026,
+  // restrita a `https://caioalexnes.github.io/*` e à Google Drive API (ver
+  // docs/google-cloud-setup.md). Pública por desenho, como o client ID: quem a
+  // protege é a restrição por REFERENCIADOR, e é por isso que esta página NÃO
+  // tem a regra geral de não mandar referenciador. Só o pedido ao servidor do
+  // Synova vai sem ele.
+  const API_KEY = 'AIzaSyBw1prW0nnUqEXBxBQ3GRGchTRd6CBKqcg';
+  const DRIVE = 'https://www.googleapis.com/drive/v3/files/';
+  const MAPA = 'https://www.google.com/maps/search/?api=1&query=';
+  const MARCA = 'e1';
+  const FORMATO = 1;
+  const TIPO_DRIVE = 'synova-showcase';
+  const ESPACO_V = 1;
+  const TIPO_PESSOAL = 'synova-guest';
+  const TIPO_COMUM = 'synova-guest-common';
+  const PBKDF2_ITER = 20000;
+  const BLOCO_V = 1;
+  const CODIGO_PORTA_LEN = 6;
+  const CODIGO_PESSOAL_LEN = 12;
+  const EXEMPLO_CODIGO = '4KP29T-XQM7HB';
+  const PRAZO_MS = 30000;
+  const CARTEIRA = 'synova-carteira';
+  const CARTEIRA_V = 1;
+  const MAX_CARTEIRA = 20;
+  const MAX_CORPO = 87384;
+  const MAX_TEXTO = 200;
+  const ALFABETO = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+  const EVENTO = /^[A-Za-z0-9_-]{1,64}$/;
+  const ENDERECO = /^[A-Za-z0-9_-]{43}$/;
+  const AAD_BLOCO = 'synova/guest-space/v1/block|';
 
-function normalizarCodigo(texto) {
-  // O MESMO que o app faz (`Crockford32.normalize`): o alfabeto não tem I, L,
-  // O nem U justamente para o que a pessoa vai errar ao ler e digitar.
-  return (texto || '')
-      .toUpperCase()
-      .replace(/[^0-9A-Z]/g, '')
-      .replace(/[ILO]/g, (c) => (c === 'O' ? '0' : '1'));
-}
+  // O `trim` do Dart: o espaço do JavaScript mais o NEL (U+0085), que o Dart
+  // conta como espaço e o JavaScript não.
+  function aparar(s) {
+    return s.replace(/^[\s\u0085]+|[\s\u0085]+$/g, '');
+  }
 
-function bytesDeBase64(b64) {
-  const bin = atob(b64);
-  const out = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-  return out;
-}
+  // Só a propriedade do PRÓPRIO objeto: um protótipo mexido por outro script
+  // nunca responde no lugar do JSON.
+  function proprio(o, k) {
+    return Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined;
+  }
 
-async function derivarChave(codigo, eventId) {
-  const material = await crypto.subtle.importKey(
-      'raw', new TextEncoder().encode(codigo), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey(
-      {
-        name: 'PBKDF2',
-        salt: new TextEncoder().encode('synova/showcase-pass/v1|' + eventId),
-        iterations: PBKDF2_ITER,
-        hash: 'SHA-256',
-      },
-      material,
-      { name: 'AES-GCM', length: 256 },
-      false,
-      ['decrypt']);
-}
+  function ehObjeto(v) {
+    return typeof v === 'object' && v !== null && !Array.isArray(v);
+  }
 
-/// Desenha a matriz. A margem clara em volta (quiet zone) NÃO é enfeite: sem
-/// ela a câmera não acha o código.
-function desenharQr(bits, lado) {
-  const quiet = 4;
-  const total = lado + quiet * 2;
-  const escala = Math.max(3, Math.floor(280 / total));
-  const cv = document.createElement('canvas');
-  cv.width = cv.height = total * escala;
-  cv.style.width = cv.style.height = (total * escala) + 'px';
-  // FUNDO BRANCO SEMPRE, e não a cor do tema: um QR invertido não é lido, e
-  // esta página respeita o modo escuro em todo o resto.
-  const ctx = cv.getContext('2d');
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, cv.width, cv.height);
-  ctx.fillStyle = '#000000';
-  for (let r = 0; r < lado; r++) {
-    for (let c = 0; c < lado; c++) {
-      const i = r * lado + c;
-      if ((bits[2 + (i >> 3)] >> (7 - (i & 7))) & 1) {
-        ctx.fillRect((c + quiet) * escala, (r + quiet) * escala, escala, escala);
+  // `is int` de um valor que veio de JSON: um número inteiro que cabe nos 64
+  // bits do Dart (acima disso o Dart já o lê como double).
+  function ehInteiro(v) {
+    return typeof v === 'number' && Number.isInteger(v) && Math.abs(v) < 9223372036854775808;
+  }
+
+  function utf8(s) {
+    return new TextEncoder().encode(s);
+  }
+
+  function subtle() {
+    const c = globalThis.crypto;
+    if (!c || !c.subtle) throw new Error('sem WebCrypto');
+    return c.subtle;
+  }
+
+  // ------------------------------------------------------------- base64 ----
+
+  // O decodificador de base64 do Dart (dart:convert), o mesmo da página /c/:
+  // os dois alfabetos (até misturados), o preenchimento com "=" ou "%3D", e os
+  // bits que sobram antes do preenchimento TÊM que ser zero. Nulo onde o Dart
+  // lançaria.
+  function valorBase64(c) {
+    if (c >= 65 && c <= 90) return c - 65;
+    if (c >= 97 && c <= 122) return c - 71;
+    if (c >= 48 && c <= 57) return c + 4;
+    if (c === 43 || c === 45) return 62;
+    if (c === 47 || c === 95) return 63;
+    if (c === 61 || c === 37) return -2;
+    return -1;
+  }
+
+  function restoDoPreenchimento(s, inicio, esperado) {
+    const fim = s.length;
+    let p = inicio;
+    if (p === fim) return esperado === 0;
+    while (esperado > 0) {
+      let c = s.charCodeAt(p);
+      if (esperado === 3) {
+        if (c === 61) {
+          esperado -= 3;
+          p++;
+          break;
+        }
+        if (c !== 37) break;
+        esperado--;
+        p++;
+        if (p === fim) break;
+        c = s.charCodeAt(p);
       }
+      let parcial = esperado;
+      if (parcial > 3) parcial -= 3;
+      if (parcial === 2) {
+        if (c !== 51) break;
+        p++;
+        esperado--;
+        if (p === fim) break;
+        c = s.charCodeAt(p);
+      }
+      if ((c | 32) !== 100) break;
+      p++;
+      esperado--;
+      if (p === fim) break;
     }
-  }
-  return cv;
-}
-
-async function mostrarCracha() {
-  const alvo = $('qr');
-  const aviso = $('qrAviso');
-  alvo.innerHTML = '';
-  aviso.textContent = '';
-
-  const codigo = normalizarCodigo($('codigo').value);
-  if (!codigo) return;
-
-  const badges = (dados && dados.badges) || null;
-  if (!badges) {
-    aviso.textContent = 'Esta vitrine não traz crachás. Fale com a organização.';
-    return;
+    return p === fim && esperado === 0;
   }
 
-  aviso.textContent = 'Abrindo…';
-  let chave;
-  try {
-    chave = await derivarChave(codigo, dados.eventId || '');
-  } catch (e) {
-    aviso.textContent = 'Este navegador não conseguiu fazer a conta do código.';
-    return;
+  function base64ComoDart(s) {
+    const out = [];
+    let bits = 0;
+    let conta = 0;
+    for (let i = 0; i < s.length; i++) {
+      const c = s.charCodeAt(i);
+      const v = valorBase64(c);
+      if (v >= 0) {
+        bits = ((bits << 6) | v) & 0xFFFFFF;
+        conta = (conta + 1) & 3;
+        if (conta === 0) {
+          out.push((bits >> 16) & 255, (bits >> 8) & 255, bits & 255);
+          bits = 0;
+        }
+        continue;
+      }
+      if (v === -2 && conta > 1) {
+        if (conta === 3) {
+          if ((bits & 3) !== 0) return null;
+          out.push((bits >> 10) & 255, (bits >> 2) & 255);
+        } else {
+          if ((bits & 15) !== 0) return null;
+          out.push((bits >> 4) & 255);
+        }
+        let esperado = (3 - conta) * 3;
+        if (c === 37) esperado += 2;
+        return restoDoPreenchimento(s, i + 1, esperado) ? Uint8Array.from(out) : null;
+      }
+      return null;
+    }
+    return conta === 0 ? Uint8Array.from(out) : null;
   }
 
-  for (const id of Object.keys(badges)) {
-    const bruto = bytesDeBase64(badges[id]);
+  function paraBase64Url(bytes) {
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  // -------------------------------------------------------------- código ----
+
+  // `ShowcasePass.normalize`: tira o que não é letra ou número ASCII, passa
+  // para maiúscula, e o que a pessoa vai errar vira o certo ("O" é zero, "I" e
+  // "L" são um). Nulo onde o app lança: o U, que o alfabeto não tem.
+  function normalizar(texto) {
+    const s = String(texto == null ? '' : texto).replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+    let out = '';
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i];
+      if (ch === 'O') out += '0';
+      else if (ch === 'I' || ch === 'L') out += '1';
+      else if (ALFABETO.indexOf(ch) >= 0) out += ch;
+      else return null;
+    }
+    return out;
+  }
+
+  // `ShowcasePass.display`: dois blocos de seis.
+  function exibir(codigo) {
+    return codigo.length <= 6 ? codigo : codigo.substring(0, 6) + '-' + codigo.substring(6);
+  }
+
+  // `GuestSpace.parseFragment`: nulo quando o fragmento não é do modo novo (o
+  // link da vitrine do Drive cai aí). Os pontos do FIM saem antes: um link
+  // colado no fim de uma frase às vezes leva o ponto final junto.
+  function lerFragmento(fragmento) {
+    let f = String(fragmento == null ? '' : fragmento);
+    if (f.startsWith('#')) f = f.substring(1);
+    f = f.replace(/\.+$/, '');
+    const partes = f.split('.');
+    if (partes.length < 2 || partes.length > 3 || partes[0] !== MARCA) return null;
+    const eventId = partes[1];
+    if (!EVENTO.test(eventId)) return null;
+    if (partes.length === 2) return { eventId: eventId, code: null, codeBroken: false };
+    const codigo = normalizar(partes[2]);
+    return codigo !== null && codigo.length === CODIGO_PESSOAL_LEN
+        ? { eventId: eventId, code: codigo, codeBroken: false }
+        : { eventId: eventId, code: null, codeBroken: true };
+  }
+
+  // ------------------------------------------------------------- chaves ----
+
+  async function rotulo(mestre, nome) {
+    const s = subtle();
+    const k = await s.importKey('raw', mestre, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    return new Uint8Array(await s.sign('HMAC', k, utf8('synova/guest-space/v1/' + nome)));
+  }
+
+  // `GuestSpace.keysFor`, sem a chave do nonce: ela é de quem sela, e quem lê
+  // não precisa dela.
+  async function chavesDoCodigo(codigo, eventId, iteracoes) {
+    const n = normalizar(codigo);
+    if (n === null) throw new Error('código com letra fora do alfabeto');
+    const s = subtle();
+    const material = await s.importKey('raw', utf8(n), 'PBKDF2', false, ['deriveBits']);
+    const mestre = new Uint8Array(await s.deriveBits(
+        {
+          name: 'PBKDF2',
+          salt: utf8('synova/guest-space/v1|' + eventId),
+          iterations: iteracoes || PBKDF2_ITER,
+          hash: 'SHA-256',
+        },
+        material,
+        256));
+    return { addr: paraBase64Url(await rotulo(mestre, 'addr')), key: await rotulo(mestre, 'key') };
+  }
+
+  // `GuestSpace.commonKeysIn`: as chaves do bloco comum DENTRO do bloco
+  // pessoal. Nulo quando elas não estão lá, ou vieram tortas.
+  function chavesDoComum(pessoal) {
+    const c = ehObjeto(pessoal) ? proprio(pessoal, 'common') : undefined;
+    if (!ehObjeto(c)) return null;
+    const addr = proprio(c, 'addr');
+    const key = proprio(c, 'key');
+    if (typeof addr !== 'string' || typeof key !== 'string' || !ENDERECO.test(addr)) return null;
+    const bytes = base64ComoDart(key);
+    if (bytes === null || bytes.length !== 32) return null;
+    return { addr: addr, key: bytes };
+  }
+
+  // -------------------------------------------------------------- blocos ----
+
+  // `GuestSpace.open`: 'ok' com o conteúdo; 'chave' quando a cifra não fecha
+  // (o código errado, ou o bloco de outro endereço ou de outro evento);
+  // 'torto' quando não é um bloco deste tipo; 'novo' quando é de uma versão
+  // mais nova que esta página.
+  async function abrirBloco(chaves, eventId, corpo, tipo) {
+    const bytes = typeof corpo === 'string' ? base64ComoDart(corpo) : null;
+    if (bytes === null || bytes.length < 12 + 16 + 1) return { estado: 'torto' };
+    let plano;
     try {
-      const plano = new Uint8Array(await crypto.subtle.decrypt(
+      const s = subtle();
+      const k = await s.importKey('raw', chaves.key, 'AES-GCM', false, ['decrypt']);
+      plano = new Uint8Array(await s.decrypt(
           {
             name: 'AES-GCM',
-            iv: bruto.slice(0, 12),
-            additionalData: new TextEncoder()
-                .encode('showcase|' + (dados.eventId || '') + '|' + id),
+            iv: bytes.slice(0, 12),
+            additionalData: utf8(AAD_BLOCO + eventId + '|' + chaves.addr),
+            tagLength: 128,
           },
-          chave,
-          bruto.slice(12)));
-      // VERSÃO DO BLOCO conferida antes de desenhar: um bloco de um app mais
-      // novo tem que parar aqui, e não virar um desenho errado na tela de
-      // quem vai entrar.
-      if (plano[0] !== BLOCO_V) {
-        aviso.textContent = 'Este crachá foi feito por uma versão mais nova do ' +
-            'aplicativo. Peça o link novo à organização.';
+          k,
+          bytes.slice(12)));
+    } catch (_) {
+      return { estado: 'chave' };
+    }
+    let m;
+    try {
+      // O `utf8.decode` do Dart tira UM BOM do começo, e só um (medido em
+      // 09/10/2026): é o que o TextDecoder faz por padrão. Um segundo BOM, ou
+      // um depois de um espaço, fica no texto, e o JSON falha dos dois lados.
+      m = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(plano));
+    } catch (_) {
+      return { estado: 'torto' };
+    }
+    if (!ehObjeto(m)) return { estado: 'torto' };
+    const v = proprio(m, 'v');
+    if (!ehInteiro(v) || v < 1) return { estado: 'torto' };
+    if (v > ESPACO_V) return { estado: 'novo' };
+    if (proprio(m, 'kind') !== tipo) return { estado: 'torto' };
+    return { estado: 'ok', conteudo: m };
+  }
+
+  // O pedido de UM bloco ao servidor: o evento e o endereço, e nada mais.
+  function pedidoDoBloco(eventId, addr) {
+    return {
+      url: SERVIDOR + '/rest/v1/rpc/guest_space_get',
+      headers: {
+        apikey: CHAVE_PUBLICAVEL,
+        Authorization: 'Bearer ' + CHAVE_PUBLICAVEL,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      corpo: JSON.stringify({ p_event: eventId, p_addr: addr }),
+    };
+  }
+
+  // A resposta do nono SQL: achou (com o corpo), venceu, ou não achou. O
+  // desfecho de erro sai do CÓDIGO, nunca da mensagem: só o SQL não aplicado
+  // (PGRST202) tem frase própria, e o resto é "o servidor respondeu outra
+  // coisa".
+  function lerResposta(status, texto) {
+    if (status >= 200 && status < 300) {
+      let m;
+      try {
+        m = JSON.parse(texto);
+      } catch (_) {
+        return { estado: 'servidor' };
+      }
+      if (!ehObjeto(m)) return { estado: 'servidor' };
+      const achou = proprio(m, 'found');
+      if (achou === true) {
+        const corpo = proprio(m, 'body');
+        return typeof corpo === 'string' ? { estado: 'achou', corpo: corpo } : { estado: 'servidor' };
+      }
+      if (achou === false) {
+        return proprio(m, 'expired') === true ? { estado: 'venceu' } : { estado: 'nao_achou' };
+      }
+      return { estado: 'servidor' };
+    }
+    let codigo = null;
+    try {
+      const m = JSON.parse(texto);
+      if (ehObjeto(m)) codigo = proprio(m, 'code');
+    } catch (_) {
+      // Corpo que não é JSON: é como não ter código.
+    }
+    return { estado: codigo === 'PGRST202' ? 'nao_pronto' : 'servidor' };
+  }
+
+  async function perguntar(enviar, eventId, addr) {
+    let r;
+    try {
+      r = await enviar(pedidoDoBloco(eventId, addr));
+    } catch (_) {
+      return { estado: 'offline' };
+    }
+    return lerResposta(r.status, r.texto);
+  }
+
+  // O pessoal aberto, e o comum que ele aponta. [guardado] é a cópia da
+  // carteira, e ela só entra no lugar do COMUM, e só quando o servidor não
+  // respondeu: uma resposta do servidor (não achou, venceu) nunca é trocada
+  // pela cópia.
+  async function abrirOsDois(eventId, chaves, corpoPessoal, enviar, guardado) {
+    const p = await abrirBloco(chaves, eventId, corpoPessoal, TIPO_PESSOAL);
+    if (p.estado !== 'ok') return { estado: p.estado === 'novo' ? 'novo' : 'torto' };
+    const out = {
+      estado: 'ok',
+      pessoal: p.conteudo,
+      comum: null,
+      comumEstado: 'ausente',
+      comumGuardado: false,
+      corpoPessoal: corpoPessoal,
+      corpoComum: null,
+    };
+    const ck = chavesDoComum(p.conteudo);
+    if (ck === null) return out;
+    const rc = enviar ? await perguntar(enviar, eventId, ck.addr) : { estado: 'offline' };
+    let corpo;
+    if (rc.estado === 'achou') {
+      corpo = rc.corpo;
+    } else if ((rc.estado === 'offline' || rc.estado === 'servidor') &&
+        guardado && typeof guardado.comum === 'string') {
+      corpo = guardado.comum;
+      out.comumGuardado = true;
+    } else {
+      out.comumEstado = rc.estado;
+      return out;
+    }
+    const c = await abrirBloco(ck, eventId, corpo, TIPO_COMUM);
+    out.comumEstado = c.estado;
+    if (c.estado === 'ok') {
+      out.comum = c.conteudo;
+      out.corpoComum = corpo;
+    }
+    return out;
+  }
+
+  function codigoValido(n, eventId) {
+    return n !== null && n.length === CODIGO_PESSOAL_LEN && EVENTO.test(String(eventId));
+  }
+
+  // O caminho inteiro de um código: a chave, o bloco pessoal e o comum.
+  async function abrirPagina(eventId, codigo, enviar, guardado, iteracoes) {
+    const n = normalizar(codigo);
+    if (!codigoValido(n, eventId)) return { estado: 'codigo' };
+    const chaves = await chavesDoCodigo(n, eventId, iteracoes);
+    const r = await perguntar(enviar, eventId, chaves.addr);
+    if (r.estado !== 'achou') return { estado: r.estado };
+    return abrirOsDois(eventId, chaves, r.corpo, enviar, guardado);
+  }
+
+  // A cópia da carteira, sem perguntar nada a ninguém: é o que abre na
+  // entrada sem sinal.
+  async function abrirGuardado(eventId, codigo, guardado, iteracoes) {
+    const n = normalizar(codigo);
+    if (!codigoValido(n, eventId) || !guardado || typeof guardado.pessoal !== 'string') {
+      return { estado: 'torto' };
+    }
+    const chaves = await chavesDoCodigo(n, eventId, iteracoes);
+    return abrirOsDois(eventId, chaves, guardado.pessoal, null, guardado);
+  }
+
+  function textos(v) {
+    if (!Array.isArray(v)) return [];
+    return v.filter(function (x) { return typeof x === 'string'; });
+  }
+
+  // As sessões do convidado, na ordem da programação: em quais ele entrou, e,
+  // nas sessões que usam lista, se ele está nela. Numa sessão sem lista todo
+  // mundo é esperado, e `esperado` é nulo: a página não diz nada.
+  function minhasSessoes(pessoal, comum) {
+    const lista = ehObjeto(comum) ? proprio(comum, 'sessions') : undefined;
+    const sessoes = Array.isArray(lista) ? lista : [];
+    const at = ehObjeto(pessoal) ? textos(proprio(pessoal, 'at')) : [];
+    const exp = ehObjeto(pessoal) ? textos(proprio(pessoal, 'exp')) : [];
+    const out = [];
+    for (const s of sessoes) {
+      if (!ehObjeto(s)) continue;
+      const id = proprio(s, 'id');
+      if (typeof id !== 'string') continue;
+      out.push({
+        id: id,
+        entrou: at.indexOf(id) >= 0,
+        esperado: proprio(s, 'list') === true ? exp.indexOf(id) >= 0 : null,
+      });
+    }
+    return out;
+  }
+
+  // `ShowcasePass.unpackMatrix`: [versão][lado][bits], e o tamanho tem que
+  // fechar. Nulo onde o app lançaria.
+  function matrizDeBytes(b) {
+    if (!b || b.length < 2 || b[0] !== BLOCO_V) return null;
+    const lado = b[1];
+    if (lado <= 0 || lado > 177) return null;
+    if (b.length !== 2 + Math.floor((lado * lado + 7) / 8)) return null;
+    return { lado: lado, bits: b };
+  }
+
+  function lerMatriz(b64) {
+    return typeof b64 === 'string' ? matrizDeBytes(base64ComoDart(b64)) : null;
+  }
+
+  function escuro(m, linha, coluna) {
+    const i = linha * m.lado + coluna;
+    return ((m.bits[2 + (i >> 3)] >> (7 - (i & 7))) & 1) === 1;
+  }
+
+  // O `double.toString` do Dart: o mesmo do JavaScript, menos o número
+  // inteiro, que o Dart escreve com ".0" (e o zero negativo com o sinal). O
+  // JSON canônico grava -16.0 como -16, e o app monta o link a partir do
+  // double.
+  function numeroComoDart(x) {
+    if (Object.is(x, -0)) return '-0.0';
+    const s = String(x);
+    return Number.isInteger(x) && s.indexOf('e') < 0 ? s + '.0' : s;
+  }
+
+  // O link do mapa (`GeoPoint.webUrl`), ou nulo quando o local veio torto.
+  function mapa(local) {
+    if (!ehObjeto(local)) return null;
+    const lat = proprio(local, 'lat');
+    const lon = proprio(local, 'lon');
+    if (typeof lat !== 'number' || typeof lon !== 'number' || !isFinite(lat) || !isFinite(lon) ||
+        Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+      return null;
+    }
+    return MAPA + numeroComoDart(lat) + ',' + numeroComoDart(lon);
+  }
+
+  // ------------------------------------------------------------ carteira ----
+
+  // A CARTEIRA: as páginas abertas neste navegador, para abrir de novo sem
+  // digitar e sem internet. Mora no localStorage (a tela lê e grava); estas
+  // funções só decidem o que entra e o que sai, e nunca lançam.
+  //
+  // Uma entrada por CONVIDADO de um evento, e não por código: o código novo
+  // de quem teve o código trocado substitui o antigo, que não abre mais nada.
+  function carteiraVazia() {
+    return { v: CARTEIRA_V, itens: [] };
+  }
+
+  function textoCurto(t) {
+    return typeof t === 'string' ? t.substring(0, MAX_TEXTO) : '';
+  }
+
+  function itemValido(i) {
+    if (!ehObjeto(i)) return null;
+    const e = proprio(i, 'e');
+    const g = proprio(i, 'g');
+    const c = proprio(i, 'c');
+    const em = proprio(i, 'em');
+    if (typeof e !== 'string' || !EVENTO.test(e)) return null;
+    if (typeof g !== 'string' || !EVENTO.test(g)) return null;
+    if (typeof c !== 'string' || normalizar(c) !== c || c.length !== CODIGO_PESSOAL_LEN) return null;
+    if (!ehInteiro(em) || em < 0) return null;
+    const out = { e: e, g: g, c: c, n: textoCurto(proprio(i, 'n')), ev: textoCurto(proprio(i, 'ev')), em: em };
+    const bp = proprio(i, 'bp');
+    const bc = proprio(i, 'bc');
+    if (typeof bp === 'string' && bp.length <= MAX_CORPO) out.bp = bp;
+    if (typeof bc === 'string' && bc.length <= MAX_CORPO) out.bc = bc;
+    return out;
+  }
+
+  function carteiraLer(texto) {
+    if (typeof texto !== 'string' || texto === '') return carteiraVazia();
+    let m;
+    try {
+      m = JSON.parse(texto);
+    } catch (_) {
+      return carteiraVazia();
+    }
+    if (!ehObjeto(m) || proprio(m, 'v') !== CARTEIRA_V) return carteiraVazia();
+    const itens = proprio(m, 'itens');
+    if (!Array.isArray(itens)) return carteiraVazia();
+    const out = [];
+    const vistos = new Set();
+    for (const bruto of itens) {
+      const i = itemValido(bruto);
+      if (i === null) continue;
+      const k = i.e + '|' + i.g;
+      if (vistos.has(k)) continue;
+      vistos.add(k);
+      out.push(i);
+      if (out.length >= MAX_CARTEIRA) break;
+    }
+    return { v: CARTEIRA_V, itens: out };
+  }
+
+  // O mais recente vai na frente, e o que passa do teto sai pelo fim.
+  function carteiraGuardar(carteira, item) {
+    const i = itemValido(item);
+    if (i === null) return carteira;
+    const resto = carteira.itens.filter(function (x) { return !(x.e === i.e && x.g === i.g); });
+    return { v: CARTEIRA_V, itens: [i].concat(resto).slice(0, MAX_CARTEIRA) };
+  }
+
+  function carteiraEsquecer(carteira, e, g) {
+    return {
+      v: CARTEIRA_V,
+      itens: carteira.itens.filter(function (x) { return !(x.e === e && x.g === g); }),
+    };
+  }
+
+  function carteiraAchar(carteira, e, c) {
+    for (const x of carteira.itens) {
+      if (x.e === e && x.c === c) return x;
+    }
+    return null;
+  }
+
+  function carteiraDoEvento(carteira, e) {
+    return carteira.itens.filter(function (x) { return x.e === e; });
+  }
+
+  // Para caber no armazenamento do navegador: tira os corpos guardados dos [n]
+  // itens mais antigos. Eles continuam na carteira, e abrem com internet.
+  function carteiraAliviar(carteira, n) {
+    const corte = carteira.itens.length - n;
+    return {
+      v: CARTEIRA_V,
+      itens: carteira.itens.map(function (x, idx) {
+        if (idx < corte) return x;
+        return { e: x.e, g: x.g, c: x.c, n: x.n, ev: x.ev, em: x.em };
+      }),
+    };
+  }
+
+  function carteiraTexto(carteira) {
+    return JSON.stringify(carteira);
+  }
+
+  // ------------------------------------------------------- vitrine do Drive --
+
+  function idDoDrive(fragmento) {
+    return aparar(String(fragmento == null ? '' : fragmento).replace(/^#/, ''));
+  }
+
+  function pedidoDrive(id, agora) {
+    return DRIVE + encodeURIComponent(id) + '?alt=media&key=' + API_KEY + '&t=' + agora;
+  }
+
+  // O arquivo da vitrine. O prazo é respeitado AQUI também, e não só pelo app
+  // que apaga o arquivo (`Showcase.isExpired`): se o dono nunca mais abrir o
+  // app, o arquivo continua no Drive, e a data dentro dele é o que vale.
+  function lerArquivoDrive(status, texto, agora) {
+    if (status === 404 || status === 403) return { estado: 'sumiu' };
+    if (!(status >= 200 && status < 300)) return { estado: 'erro', status: status };
+    let d;
+    try {
+      d = JSON.parse(texto);
+    } catch (_) {
+      return { estado: 'torto' };
+    }
+    if (!ehObjeto(d) || proprio(d, 'kind') !== TIPO_DRIVE) return { estado: 'torto' };
+    const v = proprio(d, 'v');
+    if (typeof v === 'number' && v > FORMATO) return { estado: 'novo' };
+    const ate = proprio(d, 'expiresAt');
+    if (ehInteiro(ate) && agora > ate) return { estado: 'venceu', ate: ate };
+    return { estado: 'ok', dados: d };
+  }
+
+  // O crachá da vitrine do Drive (`ShowcasePass.open`): UMA derivação do
+  // código, e o bloco de cada convidado tentado com ela. O sal leva o evento e
+  // o AAD leva o convidado: é o AAD que separa uma pessoa da outra.
+  async function abrirCrachaDrive(codigo, eventId, badges, iteracoes) {
+    if (!ehObjeto(badges) || Object.keys(badges).length === 0) return { estado: 'sem_crachas' };
+    const n = normalizar(codigo);
+    if (n === null || n === '') return { estado: 'nenhum' };
+    const s = subtle();
+    const material = await s.importKey('raw', utf8(n), 'PBKDF2', false, ['deriveKey']);
+    const chave = await s.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: utf8('synova/showcase-pass/v1|' + eventId),
+          iterations: iteracoes || PBKDF2_ITER,
+          hash: 'SHA-256',
+        },
+        material,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']);
+    for (const id of Object.keys(badges)) {
+      const corpo = proprio(badges, id);
+      const bruto = typeof corpo === 'string' ? base64ComoDart(corpo) : null;
+      if (bruto === null || bruto.length < 12 + 16) continue;
+      let plano;
+      try {
+        plano = new Uint8Array(await s.decrypt(
+            {
+              name: 'AES-GCM',
+              iv: bruto.slice(0, 12),
+              additionalData: utf8('showcase|' + eventId + '|' + id),
+            },
+            chave,
+            bruto.slice(12)));
+      } catch (_) {
+        // Chave errada para ESTE bloco: segue para o próximo. É o caso normal
+        // 249 vezes em 250.
+        continue;
+      }
+      // A VERSÃO DO BLOCO conferida antes de desenhar: um bloco de um app mais
+      // novo para aqui, e não vira um desenho errado na tela de quem vai entrar.
+      if (plano[0] !== BLOCO_V) return { estado: 'novo' };
+      const m = matrizDeBytes(plano);
+      return m ? { estado: 'ok', guestId: id, matriz: m } : { estado: 'torto' };
+    }
+    return { estado: 'nenhum' };
+  }
+
+  // O que a pessoa pôs no campo da presença: 'qr', 'porta', 'pessoal', 'id',
+  // ou '' quando não há nada. O código da porta e o pessoal são reconhecidos
+  // pelo TAMANHO (os do app, `ShortCode.length` e `ShowcasePass.codeLength`).
+  //
+  // POR QUE EXISTE (campo, 11/09/2026): um convidado digitou no campo da
+  // presença o código impresso no crachá, e a página respondeu "confira se o
+  // crachá é deste evento". Era deste evento. O código da porta não pode abrir
+  // esta página, porque ele é a entrada da pessoa e o arquivo é público; mas a
+  // página pode reconhecê-lo e dizer o que fazer.
+  function tipoDaEntrada(texto) {
+    const t = aparar(String(texto == null ? '' : texto));
+    if (!t) return '';
+    if (t.toUpperCase().startsWith('SYN')) return 'qr';
+    const n = normalizar(t);
+    if (n !== null && n.length === CODIGO_PORTA_LEN) return 'porta';
+    if (n !== null && n.length === CODIGO_PESSOAL_LEN) return 'pessoal';
+    return 'id';
+  }
+
+  // O identificador do convidado, do QR inteiro (`SYN1.<evento>.<id>.<mac>`, e
+  // o id viaja em claro nele) ou colado sozinho. O MAC não é usado aqui.
+  function identificador(texto) {
+    const t = aparar(String(texto == null ? '' : texto));
+    if (!t) return '';
+    const partes = t.split('.');
+    if (partes.length >= 3 && partes[0].toUpperCase().startsWith('SYN')) return partes[2];
+    return t;
+  }
+
+  // --------------------------------------------------------------- datas ----
+
+  // `lib/views/shared/when.dart`, na hora local, igual nas duas línguas.
+  function p2(n) {
+    return (n < 10 ? '0' : '') + n;
+  }
+
+  function hhmm(ms) {
+    const d = new Date(ms);
+    return p2(d.getHours()) + ':' + p2(d.getMinutes());
+  }
+
+  function diaHhmm(ms) {
+    const d = new Date(ms);
+    return p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + ' ' + hhmm(ms);
+  }
+
+  function dia(ms) {
+    const d = new Date(ms);
+    return p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+
+  function quando(ms) {
+    return dia(ms) + ' ' + hhmm(ms);
+  }
+
+  // `sessionRange`: o dia só aparece quando ele MUDA a informação.
+  function faixa(de, ate) {
+    const a = typeof de === 'number' ? de : null;
+    const b = typeof ate === 'number' ? ate : null;
+    if (a === null && b === null) return null;
+    if (a === null) return '→ ' + diaHhmm(b);
+    if (b === null) return diaHhmm(a) + ' →';
+    const x = new Date(a);
+    const y = new Date(b);
+    const mesmoDia = x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() &&
+        x.getDate() === y.getDate();
+    return mesmoDia ? diaHhmm(a) + ' → ' + hhmm(b) : diaHhmm(a) + ' → ' + diaHhmm(b);
+  }
+
+  // `AppLocale.fromCodes`: o primeiro português ou inglês da lista decide, e
+  // o padrão é o inglês.
+  function linguaDe(lista) {
+    for (const bruto of lista || []) {
+      const t = aparar(String(bruto));
+      let corte = t.length;
+      for (let i = 0; i < t.length; i++) {
+        if (t[i] === '_' || t[i] === '-') {
+          corte = i;
+          break;
+        }
+      }
+      const l = t.substring(0, corte).toLowerCase();
+      if (l === 'pt') return 'pt';
+      if (l === 'en') return 'en';
+    }
+    return 'en';
+  }
+
+  // As palavras, só desta página. "@@" é onde entra o valor.
+  const TEXTOS = {
+    pt: {
+      pgTituloPadrao: 'Página do convidado',
+      pgVitrine: 'Vitrine do evento',
+      pgCarregando: 'Carregando…',
+      pgAbrindo: 'Abrindo a sua página…',
+      pgAtualizando: 'Esta é a cópia guardada neste navegador. Buscando a versão mais nova…',
+      pgDe: 'A página de @@',
+      pgAtualizada: 'Atualizada em @@.',
+      pgAte: 'Fica no ar até @@.',
+      pgQrTitulo: 'O seu QR de entrada',
+      pgQrComo: 'Mostre esta tela na entrada, com o brilho no máximo.',
+      pgMinhasTitulo: 'As suas sessões',
+      pgEntrou: 'Compareceu',
+      pgNaLista: 'Está na lista',
+      pgForaDaLista: 'Não está na lista desta sessão',
+      pgProgramacao: 'Programação',
+      pgEntrada: 'Entrada: @@',
+      pgAvisos: 'Avisos',
+      pgOmitido1: 'O aviso mais antigo não coube aqui.',
+      pgOmitidos: 'Os @@ avisos mais antigos não couberam aqui.',
+      pgLocal: 'Local',
+      pgAbrirMapa: 'Abrir no mapa',
+      pgCodigoTitulo: 'O seu código',
+      pgCodigoComo: 'Digite o código pessoal que a organização mandou para você. Ele tem 12 letras e números.',
+      pgExemplo: 'Ex.: @@',
+      pgCodigoAbrir: 'Abrir a minha página',
+      pgCodigoCurto: 'O código pessoal tem 12 letras e números. Confira o que foi digitado.',
+      pgCodigoPorta: 'Esse é o código de entrada impresso no crachá, e ele não abre esta página. Use o código pessoal que a organização mandou.',
+      pgLinkCortado: 'Este link chegou cortado: o código não veio inteiro. Digite o código, ou peça o link de novo.',
+      pgLinkSemEvento: 'Este link chegou cortado, e não dá para saber de que evento ele é. Peça o link de novo à organização, de preferência colado como texto.',
+      pgNaoAbre: 'Este código não abre nenhuma página deste evento. Confira o código; se ele foi trocado, peça o novo à organização.',
+      pgVenceu: 'Esta página saiu do ar: o prazo dela acabou.',
+      pgNaoPronto: 'As páginas dos convidados ainda não estão prontas no servidor do Synova.',
+      pgServidor: 'O servidor do Synova não respondeu como devia. Tente de novo daqui a pouco.',
+      pgOffline: 'Sem internet. Na primeira vez, esta página precisa de internet; depois, ela abre neste navegador mesmo sem sinal.',
+      pgTorto: 'O que veio do servidor não é uma página do Synova.',
+      pgNovo: 'Esta página foi publicada por uma versão mais nova do Synova, que este endereço ainda não sabe mostrar. Recarregue a página.',
+      pgSemConta: 'Este navegador não consegue fazer a conta do código. Atualize o navegador, ou abra o link em outro.',
+      pgDaCopia: 'Não deu para buscar a versão mais nova: esta é a cópia guardada neste navegador em @@. O QR vale do mesmo jeito.',
+      pgComumFalta: 'A programação e os avisos não chegaram agora. Recarregue a página para tentar de novo.',
+      pgComumDaCopia: 'A programação e os avisos são da cópia guardada neste navegador.',
+      pgGuardada: 'Esta página fica guardada neste navegador, para abrir na entrada mesmo sem internet. Num aparelho de outra pessoa, esqueça-a quando terminar.',
+      pgEsquecer: 'Esquecer neste navegador',
+      pgEsquecida: 'Esquecida neste navegador.',
+      pgEsquecerDeNovo: 'Toque de novo para esquecer',
+      pgCarteiraTitulo: 'Guardadas neste navegador',
+      pgCarteiraComo: 'As páginas abertas aqui. Elas abrem mesmo sem internet.',
+      pgCarteiraAbrir: 'Abrir',
+      pgCarteiraEsquecer: 'Esquecer',
+      pgCarteiraEm: 'Aberta em @@',
+      pgIntro: 'Esta é a página do convidado do Synova. Abra o link que a organização mandou para você.',
+      pgPrivacidade: 'O código fica neste aparelho: o servidor do Synova recebe só um endereço calculado a partir dele, e não consegue ler o que guarda. As páginas abertas aqui ficam neste navegador até você esquecê-las.',
+      pgDriveIncompleto: 'Este link está incompleto: falta a parte depois do #. Aplicativo de conversa às vezes corta link comprido. Peça o link de novo, de preferência colado como texto.',
+      pgDriveOffline: 'Não foi possível buscar a vitrine. Confira a sua conexão e tente de novo.',
+      pgDriveSumiu: 'Esta vitrine não está mais disponível. Ela pode ter saído do ar, ou o link pode estar errado.',
+      pgDriveErro: 'A vitrine não respondeu (erro @@).',
+      pgDriveTorto: 'O que veio deste link não é uma vitrine do Synova.',
+      pgDriveNovo: 'Esta vitrine foi publicada por uma versão mais nova do Synova, e esta página ainda não sabe mostrá-la.',
+      pgDriveVenceu: 'Esta vitrine saiu do ar em @@.',
+      pgConteudoDe: 'Conteúdo de @@',
+      pgCrachaTitulo: 'O seu crachá',
+      pgCrachaComo: 'Digite o código pessoal que a organização mandou para você. O QR aparece aqui, e é ele que a entrada lê: basta mostrar a tela.',
+      pgCrachaMostrar: 'Mostrar o meu QR',
+      pgCrachaAbrindo: 'Abrindo…',
+      pgCrachaSemConta: 'Este navegador não conseguiu fazer a conta do código.',
+      pgCrachaNovo: 'Este crachá foi feito por uma versão mais nova do aplicativo. Peça o link novo à organização.',
+      pgCrachaMostre: 'Mostre esta tela na entrada. Deixe o brilho no máximo.',
+      pgCrachaNenhum: 'Este código não abriu nenhum crachá desta vitrine. Confira se ele é deste evento.',
+      pgCrachaSemCrachas: 'Esta vitrine não traz crachás. Fale com a organização.',
+      pgEuTitulo: 'A sua presença',
+      pgEuComo: 'Leia o QR do seu crachá com a câmera do celular e cole aqui o texto que aparecer. Ele começa com SYN1. O código curto impresso embaixo do QR é a sua entrada no evento e, por segurança, não funciona nesta página.',
+      pgEuVer: 'Ver a minha presença',
+      pgEuPorta: 'Esse é o código de entrada impresso no crachá. Por segurança ele não funciona nesta página: leia o QR do crachá com a câmera do celular e cole aqui o texto que aparecer.',
+      pgEuPessoalComCracha: 'Esse parece o seu código pessoal. Use-o no campo "O seu crachá", acima: ele mostra o seu QR.',
+      pgEuPessoalSemCracha: 'Esse parece um código pessoal, mas esta vitrine não traz crachás. Leia o QR do crachá com a câmera e cole aqui o texto.',
+      pgEuNaoAchou: 'Não achamos este crachá nesta vitrine. Confira se o texto veio inteiro do QR e se o crachá é deste evento.',
+      pgEuSemSessoes: 'Este evento não tem sessões.',
+      pgEuCompareceu: 'compareceu',
+      pgTabelaTitulo: 'Convidados',
+      pgDrivePrivacidade: 'Página só de leitura. O que você digita fica neste navegador e não é mandado a lugar nenhum.',
+      pgLinkPrivacidade: 'Privacidade',
+      pgLinkTermos: 'Termos de uso',
+    },
+    en: {
+      pgTituloPadrao: 'Guest page',
+      pgVitrine: 'Event showcase',
+      pgCarregando: 'Loading…',
+      pgAbrindo: 'Opening your page…',
+      pgAtualizando: 'This is the copy saved in this browser. Fetching the newest version…',
+      pgDe: 'Page for @@',
+      pgAtualizada: 'Updated on @@.',
+      pgAte: 'Online until @@.',
+      pgQrTitulo: 'Your entry QR',
+      pgQrComo: 'Show this screen at the entrance, with the brightness all the way up.',
+      pgMinhasTitulo: 'Your sessions',
+      pgEntrou: 'Attended',
+      pgNaLista: 'On the list',
+      pgForaDaLista: 'Not on the list for this session',
+      pgProgramacao: 'Schedule',
+      pgEntrada: 'Entrance: @@',
+      pgAvisos: 'Announcements',
+      pgOmitido1: 'The oldest announcement did not fit here.',
+      pgOmitidos: 'The @@ oldest announcements did not fit here.',
+      pgLocal: 'Location',
+      pgAbrirMapa: 'Open in maps',
+      pgCodigoTitulo: 'Your code',
+      pgCodigoComo: 'Type the personal code the organizers sent you. It has 12 letters and numbers.',
+      pgExemplo: 'E.g.: @@',
+      pgCodigoAbrir: 'Open my page',
+      pgCodigoCurto: 'The personal code has 12 letters and numbers. Check what you typed.',
+      pgCodigoPorta: 'That is the entry code printed on the badge, and it does not open this page. Use the personal code the organizers sent you.',
+      pgLinkCortado: 'This link arrived cut off: the code did not come through whole. Type the code, or ask for the link again.',
+      pgLinkSemEvento: 'This link arrived cut off, and there is no way to tell which event it is for. Ask the organizers for the link again, preferably pasted as text.',
+      pgNaoAbre: 'This code does not open any page for this event. Check the code; if it was changed, ask the organizers for the new one.',
+      pgVenceu: 'This page is no longer online: its time ran out.',
+      pgNaoPronto: 'Guest pages are not ready on the Synova server yet.',
+      pgServidor: 'The Synova server did not answer as it should. Try again in a moment.',
+      pgOffline: 'No internet. The first time, this page needs internet; after that, it opens in this browser even without signal.',
+      pgTorto: 'What came from the server is not a Synova page.',
+      pgNovo: 'This page was published by a newer version of Synova that this address cannot show yet. Reload the page.',
+      pgSemConta: 'This browser cannot do the math for the code. Update the browser, or open the link in another one.',
+      pgDaCopia: 'The newest version could not be fetched: this is the copy saved in this browser on @@. The QR works just the same.',
+      pgComumFalta: 'The schedule and announcements did not arrive this time. Reload the page to try again.',
+      pgComumDaCopia: 'The schedule and announcements come from the copy saved in this browser.',
+      pgGuardada: 'This page stays saved in this browser so it opens at the entrance even without internet. On someone else\'s device, forget it when you are done.',
+      pgEsquecer: 'Forget in this browser',
+      pgEsquecida: 'Forgotten in this browser.',
+      pgEsquecerDeNovo: 'Tap again to forget',
+      pgCarteiraTitulo: 'Saved in this browser',
+      pgCarteiraComo: 'The pages opened here. They open even without internet.',
+      pgCarteiraAbrir: 'Open',
+      pgCarteiraEsquecer: 'Forget',
+      pgCarteiraEm: 'Opened on @@',
+      pgIntro: 'This is the Synova guest page. Open the link the organizers sent you.',
+      pgPrivacidade: 'The code stays on this device: the Synova server only receives an address computed from it, and cannot read what it stores. Pages opened here stay in this browser until you forget them.',
+      pgDriveIncompleto: 'This link is incomplete: the part after the # is missing. Chat apps sometimes cut long links. Ask for the link again, preferably pasted as text.',
+      pgDriveOffline: 'Could not fetch the showcase. Check your connection and try again.',
+      pgDriveSumiu: 'This showcase is no longer available. It may have gone offline, or the link may be wrong.',
+      pgDriveErro: 'The showcase did not answer (error @@).',
+      pgDriveTorto: 'What came from this link is not a Synova showcase.',
+      pgDriveNovo: 'This showcase was published by a newer version of Synova, and this page cannot show it yet.',
+      pgDriveVenceu: 'This showcase went offline on @@.',
+      pgConteudoDe: 'Content from @@',
+      pgCrachaTitulo: 'Your badge',
+      pgCrachaComo: 'Type the personal code the organizers sent you. The QR shows up here, and it is what the entrance reads: just show the screen.',
+      pgCrachaMostrar: 'Show my QR',
+      pgCrachaAbrindo: 'Opening…',
+      pgCrachaSemConta: 'This browser could not do the math for the code.',
+      pgCrachaNovo: 'This badge was made by a newer version of the app. Ask the organizers for the new link.',
+      pgCrachaMostre: 'Show this screen at the entrance. Turn the brightness all the way up.',
+      pgCrachaNenhum: 'This code did not open any badge in this showcase. Check that it is from this event.',
+      pgCrachaSemCrachas: 'This showcase has no badges. Talk to the organizers.',
+      pgEuTitulo: 'Your attendance',
+      pgEuComo: 'Scan your badge QR with the phone camera and paste here the text that shows up. It starts with SYN1. The short code printed under the QR is your entry to the event and, for safety, does not work on this page.',
+      pgEuVer: 'See my attendance',
+      pgEuPorta: 'That is the entry code printed on the badge. For safety it does not work on this page: scan the badge QR with the phone camera and paste here the text that shows up.',
+      pgEuPessoalComCracha: 'That looks like your personal code. Use it in the "Your badge" field above: it shows your QR.',
+      pgEuPessoalSemCracha: 'That looks like a personal code, but this showcase has no badges. Scan the badge QR with the camera and paste the text here.',
+      pgEuNaoAchou: 'We could not find this badge in this showcase. Check that the text came whole from the QR and that the badge is from this event.',
+      pgEuSemSessoes: 'This event has no sessions.',
+      pgEuCompareceu: 'attended',
+      pgTabelaTitulo: 'Guests',
+      pgDrivePrivacidade: 'Read-only page. What you type stays in this browser and is not sent anywhere.',
+      pgLinkPrivacidade: 'Privacy',
+      pgLinkTermos: 'Terms of use',
+    },
+  };
+
+  globalThis.SynovaVitrine = {
+    constantes: {
+      SERVIDOR: SERVIDOR,
+      CHAVE_PUBLICAVEL: CHAVE_PUBLICAVEL,
+      MARCA: MARCA,
+      FORMATO: FORMATO,
+      TIPO_DRIVE: TIPO_DRIVE,
+      ESPACO_V: ESPACO_V,
+      TIPO_PESSOAL: TIPO_PESSOAL,
+      TIPO_COMUM: TIPO_COMUM,
+      PBKDF2_ITER: PBKDF2_ITER,
+      BLOCO_V: BLOCO_V,
+      CODIGO_PORTA_LEN: CODIGO_PORTA_LEN,
+      CODIGO_PESSOAL_LEN: CODIGO_PESSOAL_LEN,
+      EXEMPLO_CODIGO: EXEMPLO_CODIGO,
+      PRAZO_MS: PRAZO_MS,
+      CARTEIRA: CARTEIRA,
+      MAX_CARTEIRA: MAX_CARTEIRA,
+      MAX_CORPO: MAX_CORPO,
+    },
+    TEXTOS: TEXTOS,
+    base64ComoDart: base64ComoDart,
+    normalizar: normalizar,
+    exibir: exibir,
+    lerFragmento: lerFragmento,
+    chavesDoCodigo: chavesDoCodigo,
+    chavesDoComum: chavesDoComum,
+    abrirBloco: abrirBloco,
+    pedidoDoBloco: pedidoDoBloco,
+    lerResposta: lerResposta,
+    abrirPagina: abrirPagina,
+    abrirGuardado: abrirGuardado,
+    minhasSessoes: minhasSessoes,
+    matrizDeBytes: matrizDeBytes,
+    lerMatriz: lerMatriz,
+    escuro: escuro,
+    mapa: mapa,
+    carteiraLer: carteiraLer,
+    carteiraGuardar: carteiraGuardar,
+    carteiraEsquecer: carteiraEsquecer,
+    carteiraAchar: carteiraAchar,
+    carteiraDoEvento: carteiraDoEvento,
+    carteiraAliviar: carteiraAliviar,
+    carteiraTexto: carteiraTexto,
+    idDoDrive: idDoDrive,
+    pedidoDrive: pedidoDrive,
+    lerArquivoDrive: lerArquivoDrive,
+    abrirCrachaDrive: abrirCrachaDrive,
+    tipoDaEntrada: tipoDaEntrada,
+    identificador: identificador,
+    hhmm: hhmm,
+    diaHhmm: diaHhmm,
+    dia: dia,
+    quando: quando,
+    faixa: faixa,
+    linguaDe: linguaDe,
+  };
+})();
+</script>
+
+<script>
+"use strict";
+// A TELA: só desenha o que a lógica (o bloco de cima) respondeu. Texto de fora
+// (o nome, as sessões, os avisos, as células) entra por textContent, nunca como
+// HTML. Nada é escrito no console do navegador.
+(function () {
+  const V = globalThis.SynovaVitrine;
+  const K = V.constantes;
+  const preferidas = navigator.languages && navigator.languages.length
+      ? navigator.languages : [navigator.language || ''];
+  const lingua = V.linguaDe(preferidas);
+  const T = V.TEXTOS[lingua];
+  const $ = function (id) { return document.getElementById(id); };
+
+  document.documentElement.lang = lingua === 'pt' ? 'pt-BR' : 'en';
+  for (const el of document.querySelectorAll('[data-t]')) el.textContent = T[el.dataset.t];
+  $('codigoNovo').placeholder = T.pgExemplo.replace('@@', K.EXEMPLO_CODIGO);
+  $('codigoDrive').placeholder = T.pgExemplo.replace('@@', K.EXEMPLO_CODIGO);
+
+  // A PÁGINA ABRE NA ENTRADA MESMO SEM INTERNET: o service worker (sw.js, que
+  // só cuida da navegação para cá) guarda a última versão desta página, e a
+  // carteira guarda o que ela abriu.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+  }
+
+  // Quanto o pedido do segundo toque espera: o bastante para ler o botão e
+  // tocar de novo, e curto para não deixar um esquecer armado na tela.
+  const ESQUECER_MS = 4000;
+
+  const CARDS = ['esperando', 'erro', 'nota', 'cCodigo', 'cQr', 'cMinhas', 'cProg', 'cAvisos',
+    'cLocal', 'cGuardada', 'cCarteira', 'cIntro', 'dCracha', 'dEu', 'dTabela'];
+
+  // Cada abertura leva um número: a resposta de uma anterior que chega depois
+  // não apaga a de agora.
+  let vez = 0;
+  let eventoDoCodigo = null;
+  let atual = null;
+  let dados = null;
+  let desarmarEsquecer = function () {};
+
+  function mostrar(id, sim) {
+    $(id).classList.toggle('hide', !sim);
+  }
+
+  function limpar() {
+    for (const id of CARDS) mostrar(id, false);
+    for (const id of ['qr', 'minhas', 'prog', 'avisos', 'carteira', 'qrDrive', 'eu', 'tabela']) {
+      $(id).replaceChildren();
+    }
+    for (const id of ['erro', 'nota', 'codigoAviso', 'qrDriveAviso', 'omitidos']) $(id).textContent = '';
+    mostrar('omitidos', false);
+    desarmarEsquecer();
+    atual = null;
+    dados = null;
+  }
+
+  function cabecalho(titulo, sub) {
+    $('titulo').textContent = titulo;
+    $('sub').textContent = sub || '';
+    document.title = titulo ? titulo + ' · Synova' : 'Synova';
+  }
+
+  function erro(texto) {
+    $('erro').textContent = texto;
+    mostrar('erro', !!texto);
+  }
+
+  function nota(texto) {
+    $('nota').textContent = texto;
+    mostrar('nota', !!texto);
+  }
+
+  function esperando(texto) {
+    $('esperandoTexto').textContent = texto || '';
+    mostrar('esperando', !!texto);
+  }
+
+  // ESQUECER PEDE DOIS TOQUES. Ele apaga a cópia que abre SEM internet, e um
+  // toque errado na porta de um evento, sem rede, deixaria a pessoa sem o QR.
+  // O primeiro toque só pede o segundo, e o pedido some sozinho. Sem caixa do
+  // sistema: o navegador embutido de um app de conversa pode não mostrar o
+  // confirm(), e aí esquecer nunca funcionaria. O segundo toque só vale para
+  // a MESMA página do primeiro.
+  function doisToques(botao, rotulo, chave, acao) {
+    let armado = null;
+    let qual = null;
+    function desarmar() {
+      if (armado !== null) clearTimeout(armado);
+      armado = null;
+      qual = null;
+      botao.textContent = rotulo();
+    }
+    botao.addEventListener('click', function () {
+      const k = chave();
+      if (k === null) return desarmar();
+      if (armado === null || qual !== k) {
+        if (armado !== null) clearTimeout(armado);
+        qual = k;
+        botao.textContent = T.pgEsquecerDeNovo;
+        armado = setTimeout(desarmar, ESQUECER_MS);
         return;
       }
-      alvo.append(desenharQr(plano, plano[1]));
-      aviso.textContent = 'Mostre esta tela na entrada. Deixe o brilho no máximo.';
-      // O CÓDIGO FICA GUARDADO NESTE NAVEGADOR, e só nele.
-      //
-      // Na porta pode não haver sinal, e a página busca o arquivo na rede: sem
-      // isto, quem abriu em casa chegaria na fila com uma tela que não carrega.
-      try { localStorage.setItem('synova-codigo-' + (dados.eventId || ''), codigo); } catch (e) {}
-      return;
-    } catch (e) {
-      // Chave errada para ESTE bloco: segue para o próximo. É o caso normal
-      // 249 vezes em 250.
+      desarmar();
+      acao();
+    });
+    return desarmar;
+  }
+
+  function enviar(p) {
+    const ctrl = new AbortController();
+    const prazo = setTimeout(function () { ctrl.abort(); }, K.PRAZO_MS);
+    return fetch(p.url, {
+      method: 'POST',
+      headers: p.headers,
+      body: p.corpo,
+      signal: ctrl.signal,
+      cache: 'no-store',
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer',
+      mode: 'cors',
+    }).then(async function (r) {
+      return { status: r.status, texto: await r.text() };
+    }).finally(function () { clearTimeout(prazo); });
+  }
+
+  // ----------------------------------------------------------- a carteira ----
+
+  // O armazenamento pode faltar (navegação anônima, cota cheia): a carteira
+  // vazia é o pior que acontece, e a página continua abrindo com internet.
+  function lerCarteira() {
+    try {
+      return V.carteiraLer(localStorage.getItem(K.CARTEIRA));
+    } catch (_) {
+      return V.carteiraLer(null);
     }
   }
-  aviso.textContent = 'Este código não abriu nenhum crachá desta vitrine. ' +
-      'Confira se ele é deste evento.';
-}
 
-function minhaPresenca() {
-  const entrada = $('cracha').value;
-  const alvo = document.getElementById('eu');
-  alvo.innerHTML = '';
-  const tipo = tipoDaEntrada(entrada);
-  if (!tipo) return;
-  if (tipo === 'porta') {
-    alvo.textContent = 'Esse é o código de entrada impresso no crachá. Por ' +
-        'segurança ele não funciona nesta página: leia o QR do crachá com a ' +
-        'câmera do celular e cole aqui o texto que aparecer.';
-    return;
-  }
-  if (tipo === 'pessoal') {
-    alvo.textContent = (dados && dados.badges)
-        ? 'Esse parece o seu código pessoal. Use-o no campo "O seu crachá", ' +
-          'acima: ele mostra o seu QR.'
-        : 'Esse parece um código pessoal, mas esta vitrine não traz crachás. ' +
-          'Leia o QR do crachá com a câmera e cole aqui o texto.';
-    return;
+  function gravarCarteira(carteira) {
+    for (let n = 0; n <= carteira.itens.length; n++) {
+      try {
+        localStorage.setItem(K.CARTEIRA, V.carteiraTexto(V.carteiraAliviar(carteira, n)));
+        return true;
+      } catch (_) {
+        // Sem espaço: tenta de novo sem os corpos dos mais antigos.
+      }
+    }
+    return false;
   }
 
-  const id = identificador(entrada);
-  const g = (dados.guests || []).find((x) => x.id === id);
-  if (!g) {
-    alvo.textContent = 'Não achamos este crachá nesta vitrine. Confira se o ' +
-        'texto veio inteiro do QR e se o crachá é deste evento.';
-    return;
-  }
-  const sessoes = Array.isArray(dados.sessions) ? dados.sessions : [];
-  if (!sessoes.length) {
-    alvo.textContent = 'Este evento não tem sessões.';
-    return;
-  }
-  for (const s of sessoes) {
-    const linha = document.createElement('div');
-    linha.className = 'sess';
-    const nome = document.createElement('span');
-    nome.textContent = s.name || '';
-    const marca = document.createElement('span');
-    const veio = Array.isArray(g.at) && g.at.includes(s.id);
-    marca.textContent = veio ? 'compareceu' : '—';
-    marca.className = veio ? 'yes' : 'no';
-    linha.append(nome, marca);
-    alvo.append(linha);
-  }
-}
+  // ------------------------------------------------------------- o desenho ----
 
-// O listener fica FORA do desenho: religá-lo a cada render faria o clique
-// disparar em duplicata (o defeito que a página de convite já teve).
-$('abrir').addEventListener('click', mostrarCracha);
-$('codigo').addEventListener('keydown', (e) => { if (e.key === 'Enter') mostrarCracha(); });
-$('ver').addEventListener('click', minhaPresenca);
-$('cracha').addEventListener('keydown', (e) => { if (e.key === 'Enter') minhaPresenca(); });
+  // A margem clara em volta (quiet zone) NÃO é enfeite: sem ela a câmera não
+  // acha o código. E o fundo é branco SEMPRE, e não a cor do tema: um QR
+  // invertido não é lido.
+  function desenharQr(m) {
+    const quiet = 4;
+    const total = m.lado + quiet * 2;
+    const escala = Math.max(3, Math.floor(280 / total));
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = total * escala;
+    cv.style.width = cv.style.height = (total * escala) + 'px';
+    const ctx = cv.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = '#000000';
+    for (let r = 0; r < m.lado; r++) {
+      for (let c = 0; c < m.lado; c++) {
+        if (V.escuro(m, r, c)) ctx.fillRect((c + quiet) * escala, (r + quiet) * escala, escala, escala);
+      }
+    }
+    return cv;
+  }
 
-// Trocar só o fragmento NÃO recarrega a página — a outra lição da página de
-// convite, onde o segundo link mostrava o código do primeiro.
-window.addEventListener('hashchange', carregar);
-carregar();
+  function texto(v) {
+    return typeof v === 'string' ? v : '';
+  }
+
+  function linha(nome, detalhe, direita, classe) {
+    const l = document.createElement('div');
+    l.className = 'sess';
+    const esq = document.createElement('span');
+    esq.className = 'nome';
+    esq.textContent = nome;
+    if (detalhe) {
+      const d = document.createElement('span');
+      d.className = 'det';
+      d.textContent = detalhe;
+      esq.append(d);
+    }
+    l.append(esq);
+    if (direita) {
+      const dir = document.createElement('span');
+      dir.className = classe || 'when';
+      dir.textContent = direita;
+      l.append(dir);
+    }
+    return l;
+  }
+
+  function sessoesDe(origem) {
+    const s = origem && Array.isArray(origem.sessions) ? origem.sessions : [];
+    return s.filter(function (x) { return x && typeof x === 'object'; });
+  }
+
+  function desenharProgramacao(sessoes) {
+    if (!sessoes.length) return;
+    for (const s of sessoes) {
+      const porta = texto(s.door);
+      $('prog').append(linha(texto(s.name), porta ? T.pgEntrada.replace('@@', porta) : '',
+          V.faixa(s.from, s.to) || ''));
+    }
+    mostrar('cProg', true);
+  }
+
+  function desenharAvisos(avisos, omitidos) {
+    const lista = Array.isArray(avisos) ? avisos.filter(function (a) { return a && typeof a === 'object'; }) : [];
+    if (!lista.length) return;
+    // Do mais novo para o mais velho: quem abre no meio do evento quer o que
+    // acabou de acontecer.
+    for (const a of lista.slice().reverse()) {
+      const bloco = document.createElement('div');
+      bloco.className = 'aviso';
+      const t = document.createElement('span');
+      t.textContent = texto(a.text);
+      const h = document.createElement('span');
+      h.className = 'when';
+      h.textContent = typeof a.at === 'number' ? V.diaHhmm(a.at) : '';
+      bloco.append(t, h);
+      $('avisos').append(bloco);
+    }
+    if (typeof omitidos === 'number' && omitidos > 0) {
+      $('omitidos').textContent = omitidos === 1 ? T.pgOmitido1 : T.pgOmitidos.replace('@@', String(omitidos));
+      mostrar('omitidos', true);
+    }
+    mostrar('cAvisos', true);
+  }
+
+  // ---------------------------------------------------------- o modo novo ----
+
+  function desenharPagina(r, eventId, codigo) {
+    limpar();
+    const p = r.pessoal;
+    const c = r.comum;
+    atual = { eventId: eventId, codigo: codigo, guestId: texto(p.guestId) };
+    cabecalho(texto(p.event) || (c && texto(c.event)) || T.pgTituloPadrao,
+        T.pgDe.replace('@@', texto(p.name)));
+
+    const m = V.lerMatriz(p.badge);
+    if (m) {
+      $('qr').append(desenharQr(m));
+      mostrar('cQr', true);
+    }
+
+    if (c) {
+      const porId = {};
+      for (const s of sessoesDe(c)) if (typeof s.id === 'string') porId[s.id] = s;
+      for (const x of V.minhasSessoes(p, c)) {
+        const s = porId[x.id];
+        let estado = '';
+        let classe = 'estado no';
+        if (x.entrou) {
+          estado = T.pgEntrou;
+          classe = 'estado yes';
+        } else if (x.esperado === true) {
+          estado = T.pgNaLista;
+        } else if (x.esperado === false) {
+          estado = T.pgForaDaLista;
+          classe = 'estado fora';
+        }
+        $('minhas').append(linha(texto(s && s.name), V.faixa(s && s.from, s && s.to) || '', estado, classe));
+      }
+      if ($('minhas').childElementCount) mostrar('cMinhas', true);
+      desenharProgramacao(sessoesDe(c));
+      desenharAvisos(c.announcements, c.omitted);
+      const link = V.mapa(c.venue);
+      if (link) {
+        $('mapa').href = link;
+        mostrar('cLocal', true);
+      }
+    }
+
+    const partes = [];
+    const mudou = Math.max(typeof p.changedAt === 'number' ? p.changedAt : 0,
+        c && typeof c.changedAt === 'number' ? c.changedAt : 0);
+    if (mudou > 0) partes.push(T.pgAtualizada.replace('@@', V.quando(mudou)));
+    if (c && typeof c.until === 'number') partes.push(T.pgAte.replace('@@', V.dia(c.until)));
+    $('privacidade').textContent = [partes.join(' '), T.pgPrivacidade].filter(Boolean).join(' ');
+    mostrar('cGuardada', true);
+  }
+
+  function notaDoComum(r) {
+    if (r.comumGuardado) nota(T.pgComumDaCopia);
+    else if (!r.comum && r.comumEstado !== 'ausente') nota(T.pgComumFalta);
+  }
+
+  function guardar(eventId, codigo, r) {
+    const p = r.pessoal;
+    const carteira = V.carteiraGuardar(lerCarteira(), {
+      e: eventId,
+      g: p.guestId,
+      c: codigo,
+      n: p.name,
+      ev: p.event,
+      em: Date.now(),
+      bp: r.corpoPessoal,
+      bc: r.corpoComum,
+    });
+    gravarCarteira(carteira);
+  }
+
+  async function abrir(eventId, codigo, minha) {
+    const guardadoItem = V.carteiraAchar(lerCarteira(), eventId, codigo);
+    const guardado = guardadoItem ? { pessoal: guardadoItem.bp, comum: guardadoItem.bc } : null;
+    let mostrouCopia = false;
+    // NA ENTRADA, A CÓPIA PRIMEIRO: quem tem a página guardada vê o QR na hora,
+    // e a versão nova chega por cima quando o servidor responder.
+    if (guardadoItem && typeof guardadoItem.bp === 'string') {
+      try {
+        const rg = await V.abrirGuardado(eventId, codigo, guardado);
+        if (minha !== vez) return;
+        if (rg.estado === 'ok') {
+          desenharPagina(rg, eventId, codigo);
+          nota(T.pgAtualizando);
+          mostrouCopia = true;
+        }
+      } catch (_) {
+        // Sem WebCrypto, a resposta de baixo diz.
+      }
+    }
+    if (!mostrouCopia) {
+      cabecalho(T.pgTituloPadrao, '');
+      esperando(T.pgAbrindo);
+    }
+    let r;
+    try {
+      r = await V.abrirPagina(eventId, codigo, enviar, guardado);
+    } catch (_) {
+      r = { estado: 'semConta' };
+    }
+    if (minha !== vez) return;
+    esperando(null);
+    if (r.estado === 'ok') {
+      desenharPagina(r, eventId, codigo);
+      notaDoComum(r);
+      guardar(eventId, codigo, r);
+      return;
+    }
+    // SÓ O QUE O SERVIDOR DIZ DESTA PÁGINA tira a cópia da tela: o código não
+    // abre mais nada (a organização o trocou) ou o prazo acabou. O resto é o
+    // servidor falhando (fora do ar, "ainda não está pronto", um bloco que não
+    // fecha a conta), e a cópia já foi conferida pela cifra quando foi
+    // guardada: na entrada, sem ela, a pessoa ficaria sem o QR por um defeito
+    // que não é dela.
+    if (mostrouCopia && r.estado !== 'nao_achou' && r.estado !== 'venceu') {
+      nota(r.estado === 'novo' ? T.pgNovo : T.pgDaCopia.replace('@@', V.quando(guardadoItem.em)));
+      return;
+    }
+    limpar();
+    cabecalho(T.pgTituloPadrao, '');
+    $('privacidade').textContent = T.pgPrivacidade;
+    const frases = {
+      codigo: T.pgCodigoCurto,
+      nao_achou: T.pgNaoAbre,
+      venceu: T.pgVenceu,
+      nao_pronto: T.pgNaoPronto,
+      servidor: T.pgServidor,
+      offline: T.pgOffline,
+      torto: T.pgTorto,
+      novo: T.pgNovo,
+      semConta: T.pgSemConta,
+    };
+    erro(frases[r.estado] || T.pgServidor);
+    if (r.estado === 'codigo' || r.estado === 'nao_achou') pedirCodigo(eventId, '');
+    if (guardadoItem && (r.estado === 'nao_achou' || r.estado === 'venceu')) {
+      atual = { eventId: eventId, codigo: codigo, guestId: guardadoItem.g };
+      mostrar('cGuardada', true);
+    }
+  }
+
+  function pedirCodigo(eventId, aviso) {
+    eventoDoCodigo = eventId;
+    $('codigoAviso').textContent = aviso || '';
+    mostrar('cCodigo', true);
+  }
+
+  function enviarCodigo() {
+    if (!eventoDoCodigo) return;
+    const bruto = $('codigoNovo').value;
+    // O LINK INTEIRO colado no campo também serve. O endereço desta página
+    // passa a ser o link do EVENTO, sem o código: a página nunca põe o código
+    // no histórico do navegador por conta própria.
+    const corte = bruto.indexOf('#');
+    if (corte >= 0) {
+      const link = V.lerFragmento(bruto.substring(corte));
+      if (link && link.code) {
+        history.replaceState(null, '', '#' + K.MARCA + '.' + link.eventId);
+        const minha = ++vez;
+        limpar();
+        abrir(link.eventId, link.code, minha);
+        return;
+      }
+    }
+    const n = V.normalizar(bruto);
+    if (n !== null && n.length === K.CODIGO_PORTA_LEN) {
+      $('codigoAviso').textContent = T.pgCodigoPorta;
+      return;
+    }
+    if (n === null || n.length !== K.CODIGO_PESSOAL_LEN) {
+      $('codigoAviso').textContent = T.pgCodigoCurto;
+      return;
+    }
+    const minha = ++vez;
+    const eventId = eventoDoCodigo;
+    limpar();
+    abrir(eventId, n, minha);
+  }
+
+  function desenharCarteira(itens, eventoUnico) {
+    $('carteira').replaceChildren();
+    for (const i of itens) {
+      const b = document.createElement('div');
+      b.className = 'item';
+      const nome = document.createElement('div');
+      nome.className = 'forte';
+      nome.textContent = eventoUnico ? i.n : [i.n, i.ev].filter(Boolean).join(' · ');
+      const em = document.createElement('div');
+      em.className = 'when';
+      em.textContent = T.pgCarteiraEm.replace('@@', V.quando(i.em));
+      const acoes = document.createElement('div');
+      acoes.className = 'acoes';
+      const abrirB = document.createElement('button');
+      abrirB.type = 'button';
+      abrirB.textContent = T.pgCarteiraAbrir;
+      abrirB.addEventListener('click', function () {
+        // O endereço passa a ser o link do EVENTO, sem o código: ele não vai
+        // para o histórico do navegador por um toque aqui.
+        history.replaceState(null, '', '#' + K.MARCA + '.' + i.e);
+        const minha = ++vez;
+        limpar();
+        abrir(i.e, i.c, minha);
+      });
+      const esquecerB = document.createElement('button');
+      esquecerB.type = 'button';
+      esquecerB.className = 'leve';
+      esquecerB.textContent = T.pgCarteiraEsquecer;
+      doisToques(esquecerB, function () { return T.pgCarteiraEsquecer; },
+          function () { return i.e + '|' + i.g; }, function () {
+            gravarCarteira(V.carteiraEsquecer(lerCarteira(), i.e, i.g));
+            carregar();
+          });
+      acoes.append(abrirB, esquecerB);
+      b.append(nome, em, acoes);
+      $('carteira').append(b);
+    }
+    mostrar('cCarteira', itens.length > 0);
+  }
+
+  async function modoNovo(link, minha) {
+    $('privacidade').textContent = T.pgPrivacidade;
+    if (link.code) return abrir(link.eventId, link.code, minha);
+    const doEvento = V.carteiraDoEvento(lerCarteira(), link.eventId);
+    // O link do EVENTO com UMA página guardada dele abre direto: é o caso de
+    // quem já abriu o link pessoal aqui e volta pelo do evento.
+    if (!link.codeBroken && doEvento.length === 1) return abrir(link.eventId, doEvento[0].c, minha);
+    cabecalho(T.pgTituloPadrao, '');
+    if (link.codeBroken) erro(T.pgLinkCortado);
+    pedirCodigo(link.eventId, '');
+    desenharCarteira(doEvento, true);
+  }
+
+  function modoCarteira() {
+    cabecalho(T.pgTituloPadrao, '');
+    $('privacidade').textContent = T.pgPrivacidade;
+    const itens = lerCarteira().itens;
+    desenharCarteira(itens, false);
+    mostrar('cIntro', itens.length === 0);
+  }
+
+  // -------------------------------------------------------- o modo do Drive --
+
+  async function modoDrive(id, minha) {
+    cabecalho(T.pgVitrine, T.pgCarregando);
+    $('privacidade').textContent = T.pgDrivePrivacidade;
+    let resposta;
+    try {
+      // O referenciador vai, de propósito: é ele que a chave de API do Drive
+      // confere.
+      const r = await fetch(V.pedidoDrive(id, Date.now()), { cache: 'no-store', credentials: 'omit' });
+      resposta = { status: r.status, texto: await r.text() };
+    } catch (_) {
+      resposta = null;
+    }
+    if (minha !== vez) return;
+    $('sub').textContent = '';
+    if (!resposta) return erro(T.pgDriveOffline);
+    const a = V.lerArquivoDrive(resposta.status, resposta.texto, Date.now());
+    if (a.estado === 'sumiu') return erro(T.pgDriveSumiu);
+    if (a.estado === 'erro') return erro(T.pgDriveErro.replace('@@', String(a.status)));
+    if (a.estado === 'torto') return erro(T.pgDriveTorto);
+    if (a.estado === 'novo') return erro(T.pgDriveNovo);
+    if (a.estado === 'venceu') return erro(T.pgDriveVenceu.replace('@@', V.dia(a.ate)));
+    dados = a.dados;
+    desenharDrive();
+  }
+
+  function desenharDrive() {
+    const nome = texto(dados.event) || T.pgVitrine;
+    cabecalho(nome, typeof dados.publishedAt === 'number'
+        ? T.pgConteudoDe.replace('@@', V.diaHhmm(dados.publishedAt)) : '');
+    const sessoes = sessoesDe(dados);
+    desenharProgramacao(sessoes);
+    desenharAvisos(dados.announcements, 0);
+
+    // O CRACHÁ SÓ APARECE quando o arquivo traz blocos: um campo pedindo
+    // código numa vitrine sem crachás faria a pessoa procurar um código que
+    // ninguém mandou.
+    if (dados.badges && typeof dados.badges === 'object' && Object.keys(dados.badges).length) {
+      mostrar('dCracha', true);
+      // O código volta preenchido de quem já abriu neste navegador.
+      try {
+        const salvo = localStorage.getItem('synova-codigo-' + texto(dados.eventId));
+        if (salvo && !$('codigoDrive').value) $('codigoDrive').value = salvo;
+      } catch (_) {
+        // Sem armazenamento, a pessoa digita.
+      }
+    }
+    mostrar('dEu', true);
+
+    const colunas = Array.isArray(dados.columns) ? dados.columns : [];
+    const convidados = Array.isArray(dados.guests) ? dados.guests : [];
+    if (colunas.length && convidados.length) desenharTabela(colunas, convidados, sessoes);
+  }
+
+  function desenharTabela(colunas, convidados, sessoes) {
+    const t = $('tabela');
+    const cabeca = t.insertRow();
+    for (const c of colunas) {
+      const th = document.createElement('th');
+      th.textContent = texto(c && c.name);
+      cabeca.append(th);
+    }
+    for (const s of sessoes) {
+      const th = document.createElement('th');
+      th.textContent = texto(s.name);
+      cabeca.append(th);
+    }
+    for (const g of convidados) {
+      if (!g || typeof g !== 'object') continue;
+      const l = t.insertRow();
+      for (const c of colunas) {
+        const v = g.cells && c && typeof c.id === 'string' ? g.cells[c.id] : '';
+        l.insertCell().textContent = texto(v);
+      }
+      for (const s of sessoes) {
+        const td = l.insertCell();
+        const veio = Array.isArray(g.at) && g.at.includes(s.id);
+        td.textContent = veio ? '✓' : '·';
+        td.className = veio ? 'yes' : 'no';
+      }
+    }
+    mostrar('dTabela', true);
+  }
+
+  async function mostrarCrachaDrive() {
+    const alvo = $('qrDrive');
+    const aviso = $('qrDriveAviso');
+    alvo.replaceChildren();
+    aviso.textContent = '';
+    if (!dados) return;
+    const bruto = $('codigoDrive').value;
+    if (!V.normalizar(bruto)) return;
+    aviso.textContent = T.pgCrachaAbrindo;
+    let r;
+    try {
+      r = await V.abrirCrachaDrive(bruto, texto(dados.eventId), dados.badges);
+    } catch (_) {
+      aviso.textContent = T.pgCrachaSemConta;
+      return;
+    }
+    if (r.estado === 'ok') {
+      alvo.append(desenharQr(r.matriz));
+      aviso.textContent = T.pgCrachaMostre;
+      // O código fica guardado neste navegador, e só nele: a pessoa não digita
+      // de novo na entrada.
+      try {
+        localStorage.setItem('synova-codigo-' + texto(dados.eventId), V.normalizar(bruto));
+      } catch (_) {
+        // Sem armazenamento, a pessoa digita de novo.
+      }
+      return;
+    }
+    aviso.textContent = r.estado === 'novo' ? T.pgCrachaNovo
+        : r.estado === 'sem_crachas' ? T.pgCrachaSemCrachas : T.pgCrachaNenhum;
+  }
+
+  function minhaPresencaDrive() {
+    const alvo = $('eu');
+    alvo.replaceChildren();
+    if (!dados) return;
+    const entrada = $('cracha').value;
+    const tipo = V.tipoDaEntrada(entrada);
+    if (!tipo) return;
+    if (tipo === 'porta') {
+      alvo.textContent = T.pgEuPorta;
+      return;
+    }
+    if (tipo === 'pessoal') {
+      alvo.textContent = dados.badges ? T.pgEuPessoalComCracha : T.pgEuPessoalSemCracha;
+      return;
+    }
+    const id = V.identificador(entrada);
+    const g = (Array.isArray(dados.guests) ? dados.guests : []).find(function (x) {
+      return x && x.id === id;
+    });
+    if (!g) {
+      alvo.textContent = T.pgEuNaoAchou;
+      return;
+    }
+    const sessoes = sessoesDe(dados);
+    if (!sessoes.length) {
+      alvo.textContent = T.pgEuSemSessoes;
+      return;
+    }
+    for (const s of sessoes) {
+      const veio = Array.isArray(g.at) && g.at.includes(s.id);
+      alvo.append(linha(texto(s.name), '', veio ? T.pgEuCompareceu : '·', veio ? 'yes' : 'no'));
+    }
+  }
+
+  // ---------------------------------------------------------------- o fio ----
+
+  async function carregar() {
+    const minha = ++vez;
+    limpar();
+    eventoDoCodigo = null;
+    const frag = location.hash || '';
+    const link = V.lerFragmento(frag);
+    if (link) return modoNovo(link, minha);
+    // Um link do modo novo cortado antes do evento: um id do Drive nunca tem
+    // ponto, e nunca é só a marca.
+    const cru = V.idDoDrive(frag);
+    if (cru === K.MARCA || cru.startsWith(K.MARCA + '.')) {
+      cabecalho(T.pgTituloPadrao, '');
+      $('privacidade').textContent = T.pgPrivacidade;
+      return erro(T.pgLinkSemEvento);
+    }
+    const id = cru;
+    if (id) return modoDrive(id, minha);
+    if (frag.length > 1) {
+      cabecalho(T.pgVitrine, '');
+      return erro(T.pgDriveIncompleto);
+    }
+    return modoCarteira();
+  }
+
+  // Os listeners ficam FORA do desenho: religá-los a cada abertura faria o
+  // toque disparar em duplicata (o defeito que a página de convite já teve).
+  $('abrirNovo').addEventListener('click', enviarCodigo);
+  $('codigoNovo').addEventListener('keydown', function (e) { if (e.key === 'Enter') enviarCodigo(); });
+  desarmarEsquecer = doisToques($('esquecer'), function () { return T.pgEsquecer; },
+      function () { return atual ? atual.eventId + '|' + atual.guestId : null; }, function () {
+        gravarCarteira(V.carteiraEsquecer(lerCarteira(), atual.eventId, atual.guestId));
+        mostrar('cGuardada', false);
+        nota(T.pgEsquecida);
+      });
+  $('abrirDrive').addEventListener('click', mostrarCrachaDrive);
+  $('codigoDrive').addEventListener('keydown', function (e) { if (e.key === 'Enter') mostrarCrachaDrive(); });
+  $('ver').addEventListener('click', minhaPresencaDrive);
+  $('cracha').addEventListener('keydown', function (e) { if (e.key === 'Enter') minhaPresencaDrive(); });
+
+  // Trocar só o fragmento NÃO recarrega a página: a outra lição da página de
+  // convite, onde o segundo link mostrava o código do primeiro.
+  window.addEventListener('hashchange', carregar);
+  carregar();
+})();
 </script>
 </body>
 </html>

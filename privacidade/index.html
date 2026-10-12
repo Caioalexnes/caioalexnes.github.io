@@ -30,7 +30,7 @@
 <body>
 <main>
   <h1>Política de privacidade do Synova</h1>
-  <p class="sub">Atualizada em 8 de outubro de 2026.</p>
+  <p class="sub">Atualizada em 9 de outubro de 2026.</p>
 
   <div class="card">
     <strong>O resumo:</strong> você pode usar o Synova sem conta, e aí tudo fica no seu aparelho.
@@ -38,8 +38,9 @@
     eventos <strong>cifrados com a chave de cada evento</strong> e não consegue lê-los. A lista de
     convidados nunca chega legível a nós. Algumas coisas mandam dados para fora do aparelho: a
     conta e o servidor, os certificados com QR, a sincronização pelo Google Drive, a vitrine do
-    convidado, a cópia do backup de chave no seu Drive e o assistente de IA. Esta página explica
-    cada uma, o que fica guardado e onde, e como excluir a sua conta.
+    convidado, as páginas dos convidados no servidor, a cópia do backup de chave no seu Drive e o
+    assistente de IA. Esta página explica cada uma, o que fica guardado e onde, e como excluir a
+    sua conta.
   </div>
 
   <h2>O que o aplicativo guarda, e onde</h2>
@@ -196,8 +197,10 @@
     continuam no servidor, porque pertencem ao evento e os outros aparelhos dependem deles. Os
     certificados que a conta emitiu <strong>continuam conferíveis</strong>: saem o nome que a
     conferência mostrava, a ligação com a conta e as autorizações, e ficam o resumo, as datas, a
-    revogação, a chave pública e a instituição e o domínio de cada certificado. O passo a passo, e
-    tudo o que é apagado e o que fica, está em
+    revogação, a chave pública e a instituição e o domínio de cada certificado. As páginas dos
+    convidados no servidor <strong>ficam até o prazo delas</strong>, e ninguém mexe mais nelas
+    depois do pedido: quem quiser tirá-las antes desliga as páginas antes de pedir a exclusão. O
+    passo a passo, e tudo o que é apagado e o que fica, está em
     <a href="/excluir-conta/">Excluir a conta</a>.
   </p>
 
@@ -339,6 +342,61 @@
     registramos quem abriu, quando, nem de onde.
   </p>
 
+  <h2>As páginas dos convidados no servidor do Synova (opcional)</h2>
+  <p>
+    Numa conta, o organizador pode dar a cada convidado uma página só dele, aberta por um link
+    pessoal ou digitando o código pessoal que ele recebeu. Ela nasce <strong>desligada</strong>, e
+    quem a liga é o dono do evento: o pedido de um editor nunca a liga sozinho. A página mostra o
+    nome do convidado, o QR de entrada dele (se o organizador ligar o crachá), as sessões em que
+    ele esteve e as em que ele é esperado, e a parte comum do evento: a programação, os avisos e o
+    local.
+  </p>
+  <p>
+    Cada página vai ao servidor <strong>cifrada com uma chave que sai do código pessoal</strong>
+    daquele convidado, e o servidor nunca recebe o código. A parte comum vai cifrada também, e a
+    chave dela só está dentro das páginas pessoais. O que o servidor vê, em claro:
+  </p>
+  <ul>
+    <li>o identificador do evento e quantas páginas ele tem: uma por convidado, mais a parte
+        comum;</li>
+    <li>o tamanho de cada página, arredondado para múltiplos de 256 bytes, para não dizer o
+        tamanho de um nome nem quantas sessões alguém frequentou, e quando cada uma mudou;</li>
+    <li>até quando as páginas do evento valem;</li>
+    <li>quem pede qual página, e quando, com o endereço de internet (IP) de quem abre, nos
+        registros técnicos do provedor, como em qualquer página da internet.</li>
+  </ul>
+  <p>
+    Ele não vê nome, presença nem código, e não consegue abrir página nenhuma. O endereço de cada
+    página sai do código por uma conta feita para ser lenta, e achar um código a partir do endereço
+    custa o mesmo que abrir a página.
+  </p>
+  <p>
+    <strong>O código pessoal é a chave da página.</strong> Quem tiver o link pessoal de alguém, ou o
+    código, abre a página dessa pessoa e vê o QR de entrada dela, como quem visse o crachá impresso.
+    O link pessoal é mandado pelo organizador (pela planilha de códigos ou pela ficha do convidado),
+    e o organizador pode <strong>trocar o código</strong> de uma pessoa a qualquer momento: o código
+    antigo deixa de abrir a página na publicação seguinte. Trocar o código não muda o QR de
+    entrada, e quem já viu a página viu o QR. Quem abriu a página uma vez também continua
+    conseguindo ler a parte comum (a programação, os avisos e o local) enquanto ela estiver no ar,
+    mesmo depois de o código dele ser trocado.
+  </p>
+  <p>
+    Quem publica é o aparelho do dono do evento, quando ele sincroniza. As páginas saem do ar
+    <strong>30 dias depois do fim da última sessão</strong> do evento (sem nenhuma sessão com
+    horário de fim, 30 dias depois da última publicação), e <strong>quando o organizador as
+    desliga</strong>: na hora, ou na primeira sincronização com internet depois disso.
+  </p>
+  <p>
+    A página que o convidado abre fica no mesmo endereço da vitrine, no GitHub Pages, que vê o
+    endereço de internet de quem a abre, como qualquer site. Ela manda ao servidor do Synova só o
+    endereço calculado do código: o código chega no link depois do sinal <code>#</code>, que o
+    navegador não manda a servidor nenhum, nem ao que hospeda a página. Para abrir na porta sem
+    sinal, a página guarda <strong>no próprio navegador do convidado</strong> as páginas abertas
+    ali: o nome do evento e o da pessoa, o código, e a última cópia da página como ela veio do
+    servidor. Isso não sai do navegador, e quem usar aquele navegador abre a página dali, como com
+    o link. O botão <em>Esquecer</em> apaga.
+  </p>
+
   <h2>Backup de chave (opcional)</h2>
   <p>
     Você pode salvar um arquivo com a identidade deste aparelho no Synova (a chave que assina o que
@@ -453,6 +511,12 @@
     <li><strong>O registro dos certificados:</strong> ele não tem prazo para sair, e continua
         depois da exclusão da conta de quem emitiu, sem o nome escolhido e sem a ligação com a
         conta, para um certificado já entregue a alguém continuar conferível.</li>
+    <li><strong>As páginas dos convidados no servidor:</strong> até 30 dias depois do fim da
+        última sessão do evento (sem sessão com fim, 30 dias depois da última publicação), ou até
+        o organizador desligá-las. Uma limpeza diária apaga as que venceram. Elas não saem quando
+        a conta é excluída: ficam até o prazo delas.</li>
+    <li><strong>No navegador de quem abriu uma página de convidado:</strong> as páginas abertas
+        ali, até a pessoa tocar em <em>Esquecer</em> ou limpar os dados do navegador.</li>
     <li><strong>No seu Google Drive:</strong> até você apagar. O arquivo da vitrine vence 30 dias
         depois da última sessão do evento.</li>
     <li><strong>Registros técnicos de acesso</strong> que o provedor do servidor mantém, como
@@ -500,8 +564,9 @@
   <p>
     Uma lista de convidados contém dados de outras pessoas. Quem organiza o evento é quem responde
     por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. Isso
-    inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de emitir
-    certificados e a quem entregá-los, a de ligar o assistente de IA e a de mandar ao autor uma
+    inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de ligar as
+    páginas dos convidados e de decidir a quem mandar cada link pessoal, a de emitir certificados
+    e a quem entregá-los, a de ligar o assistente de IA e a de mandar ao autor uma
     resposta denunciada que carregue nomes. O autor do aplicativo não tem acesso legível a essa
     lista e não tem como intervir nela.
   </p>
