@@ -30,14 +30,15 @@
 <body>
 <main>
   <h1>Política de privacidade do Synova</h1>
-  <p class="sub">Atualizada em 16 de outubro de 2026.</p>
+  <p class="sub">Atualizada em 17 de outubro de 2026.</p>
 
   <div class="card">
     <strong>O resumo:</strong> você pode usar o Synova sem conta, e aí tudo fica no seu aparelho.
     Com uma conta, os seus aparelhos também sincronizam pelo servidor do Synova, que guarda os
     eventos <strong>cifrados com a chave de cada evento</strong> e não consegue lê-los. A lista de
     convidados nunca chega legível a nós. Algumas coisas mandam dados para fora do aparelho: a
-    conta e o servidor, o nome de usuário e a caixa de entrada, os certificados com QR, a
+    conta e o servidor, o nome de usuário e a caixa de entrada, os pedidos de aluno, os
+    certificados com QR, a
     sincronização pelo Google Drive, a vitrine do convidado, as páginas dos convidados no
     servidor, a cópia do backup de chave no seu Drive e o assistente de IA. Esta página explica
     cada uma, o que fica guardado e onde, e como excluir a sua conta.
@@ -149,16 +150,20 @@
   <h2>O nome de usuário e a caixa de entrada (opcional)</h2>
   <p>
     Numa conta, você pode escolher um <strong>nome de usuário</strong>. É por ele que a equipe de
-    um evento acha a sua conta, para duas coisas: ligá-la ao seu nome na lista de convidados
+    um evento acha a sua conta, para três coisas: ligá-la ao seu nome na lista de convidados
     (feita a ligação, o seu código pessoal daquele evento chega ao aplicativo, em
-    <em>Como convidado</em>) e chamar você para a equipe do evento. As duas passam por uma
+    <em>Como convidado</em>), convidar você a se apresentar como aluno (ver "O pedido de aluno",
+    abaixo) e chamar você para a equipe do evento. As três passam por uma
     <strong>caixa de entrada</strong> no servidor do Synova. É opcional: sem o nome, a conta
-    funciona igual, e ninguém consegue ligar você a uma lista nem chamar você pelo nome. Hoje
-    passam pela caixa:
+    funciona igual, e ninguém consegue ligar você a uma lista, convidar você nem chamar você pelo
+    nome. Hoje passam pela caixa:
   </p>
   <ul>
     <li><strong>o código pessoal de um convidado</strong>, mandado por quem liga (o dono do
         evento, ou um editor que ele autorizou), e um aviso quando a ligação é desfeita;</li>
+    <li><strong>o convite para se apresentar como aluno</strong>, que leva o identificador e o
+        nome do evento e a chave pública dos pedidos dele. Ele não leva segredo nenhum, não abre
+        nada do evento e só deixa você mandar um pedido;</li>
     <li><strong>os três passos do convite para a equipe:</strong> o convite, que não leva a chave
         do evento e só deixa a pessoa pedir para entrar; o pedido, que leva a identidade do
         celular de quem aceitou, o nome e o posto com que ele vai aparecer no evento e a versão
@@ -189,10 +194,10 @@
     digite o seu nome de usuário exato recebe o identificador da sua conta e as chaves públicas
     dos seus celulares, que é o que precisa para mandar a você uma mensagem selada. Não há busca
     por parte do nome nem lista de nomes, e uma conta com a exclusão pedida não é achada nem
-    recebe mensagem. Quem sabe o seu nome também pode chamar você para a equipe de um evento: o
-    convite aparece como um cartão na lista de eventos e não faz nada até você aceitar, e
-    recusar não manda nada a ninguém. Um pedido para entrar só é aceito pelo celular que mandou
-    o convite.
+    recebe mensagem. Quem sabe o seu nome também pode chamar você para a equipe de um evento, ou
+    convidar você a se apresentar como aluno: os dois convites aparecem como um cartão na lista
+    de eventos e não fazem nada até você aceitar, e recusar não manda nada a ninguém. Um pedido
+    para entrar na equipe só é aceito pelo celular que mandou o convite.
   </p>
   <p>
     <strong>O convite para a equipe e a chave do evento.</strong> Aceitar um convite manda o
@@ -231,6 +236,56 @@
     <strong>Desligar</strong> um convidado da conta avisa o celular dela, por cortesia: o que faz
     o código antigo parar de abrir a página é o organizador <strong>trocar o código</strong>, e a
     ficha do convidado oferece as duas coisas juntas.
+  </p>
+
+  <h2>O pedido de aluno (opcional)</h2>
+  <p>
+    Um evento pode deixar os próprios participantes se apresentarem, em vez de a equipe procurar
+    cada um pelo nome de usuário. A equipe (o dono do evento, ou um editor que ele autorizou)
+    convida de dois jeitos: pelo seu nome de usuário, pela caixa de entrada, ou mandando o
+    <strong>link do evento para os alunos</strong>, que pode circular num grupo ou num cartaz. O
+    link não carrega segredo: ele leva o identificador e o nome do evento, que quem tiver o link
+    consegue ler, e a chave pública dos pedidos. Ele não é assinado, então o nome do evento que
+    ele mostra não é conferido; um link montado à mão com outra chave só faz o pedido não chegar a
+    ninguém. Abrir o link no aplicativo guarda o convite neste celular e não manda nada a servidor
+    nenhum.
+  </p>
+  <p>
+    Para se apresentar é preciso uma conta com nome de usuário. Você escreve o seu nome completo,
+    e o <strong>pedido</strong> vai ao evento, no servidor do Synova. Ele leva o nome que você
+    escreveu e o registro do seu celular (as chaves públicas, para a equipe mandar o código
+    depois), assinados pela identidade do celular, e vai <strong>selado para a chave dos pedidos
+    do evento</strong>, que sai da chave do evento: o servidor não o abre. Quem tem o evento no
+    celular consegue abri-lo, e o aplicativo mostra os pedidos só a quem liga convidados, que vê
+    o nome que você escreveu, o seu nome de usuário e as linhas da lista que combinam com ele.
+    Você não vê nada da lista. O pedido é completado até múltiplos de 256 bytes: um nome curto e
+    um médio dão o mesmo tamanho, e um nome comprido, a partir de umas sessenta letras (menos, se
+    ele tiver muitos acentos), deixa o pedido um degrau maior.
+  </p>
+  <p>O que o servidor guarda de cada pedido, em claro:</p>
+  <ul>
+    <li><strong>que a sua conta mandou um pedido àquele evento, e quando</strong>, ao lado do
+        conteúdo selado. A equipe, ao ler os pedidos, recebe também o identificador da sua conta e
+        o seu nome de usuário de agora;</li>
+    <li>até três pedidos de cada conta por evento, e cinco mil por evento. O aplicativo tira o seu
+        pedido anterior antes de mandar outro, então a equipe vê um pedido por pessoa.</li>
+  </ul>
+  <p>
+    O pedido sai do servidor quando a equipe decide, quando você desiste dele ou recusa o
+    convite, e a limpeza diária apaga o que passou de 30 dias sem decisão. Confirmar é ligar a
+    sua conta a uma linha da lista, como na ligação pelo nome de usuário: a ligação entra no
+    registro cifrado do evento, e o seu código pessoal chega pela caixa de entrada, em
+    <em>Como convidado</em>.
+    <strong>Recusar não avisa você:</strong> o pedido só sai do servidor, e o aplicativo
+    continua dizendo que ele espera, até o prazo ou até você desistir.
+  </p>
+  <p>
+    <strong>No seu celular,</strong> os convites para se apresentar ficam no cofre da conta, um
+    por evento, até 50 e até 30 dias desde o último passo: o evento e o nome dele, quem chamou
+    (quando o convite veio pelo nome de usuário) e, depois de você mandar, o nome que escreveu e
+    quando. Um convite sai sozinho quando o código daquele evento chega, e o teto não tira um
+    convite que tem um pedido esperando: com o celular cheio, o convite novo é que fica de fora.
+    Tudo isso fica cifrado com a chave da conta e não sai do aparelho.
   </p>
 
   <h2>Os certificados (opcional)</h2>
@@ -283,9 +338,12 @@
     pedido com a senha do cofre. No fim do prazo, ela é apagada sozinha. Excluir apaga, no servidor,
     o login, a chave da conta, a cópia da conta, os arquivos que os seus celulares trocam entre si,
     o registro das entradas, o nome de usuário, o registro dos seus celulares, as mensagens da
-    caixa de entrada (as recebidas e as que você mandou) e a ligação entre a conta e os eventos
-    que ela registrou; a cópia da conta e os arquivos entre os celulares saem já no pedido, e
-    durante os 30 dias o nome de usuário não é achado por ninguém e a conta não recebe mensagem.
+    caixa de entrada (as recebidas e as que você mandou), os pedidos de aluno que a conta mandou
+    e a ligação entre a conta e os eventos que ela registrou; a cópia da conta e os arquivos entre
+    os celulares saem já no pedido, e durante os 30 dias o nome de usuário não é achado por
+    ninguém, a conta não recebe mensagem e não manda nem tira pedido de aluno. Um pedido de aluno
+    que ela já tinha mandado continua guardado nesse prazo, e a equipe ainda o vê, mas não
+    consegue ligar a conta a uma linha por ele.
     Os registros cifrados dos eventos
     continuam no servidor, porque pertencem ao evento e os outros aparelhos dependem deles. Os
     certificados que a conta emitiu <strong>continuam conferíveis</strong>: saem o nome que a
@@ -603,10 +661,13 @@
     <li><strong>O nome de usuário e o registro dos seus celulares:</strong> o nome, até você
         tirá-lo ou excluir a conta; o registro, até você excluir a conta. <strong>As mensagens da
         caixa de entrada:</strong> cada cópia sai quando o celular a lê, e o que ninguém leu sai
-        14 dias depois de mandado. Os três saem com a conta, no fim dos 30 dias. <strong>Os
+        14 dias depois de mandado. <strong>Os pedidos de aluno:</strong> até a equipe decidir,
+        você desistir, ou 30 dias depois de mandados. Os quatro saem com a conta, no fim dos 30
+        dias. <strong>Os
         códigos e as páginas de convidado que o aplicativo guardou no seu celular:</strong> até
         você excluir a conta ou desinstalar o aplicativo. <strong>Os convites para a equipe e os
-        pedidos guardados no seu celular:</strong> até sete dias cada; as identidades dos
+        pedidos guardados no seu celular:</strong> até sete dias cada; os convites para se
+        apresentar como aluno, até 30 dias desde o último passo; as identidades dos
         celulares com que você trocou um convite, até você excluir a conta ou desinstalar o
         aplicativo.</li>
     <li><strong>A cópia da conta e os arquivos entre os seus celulares:</strong> até você pedir a
@@ -672,7 +733,8 @@
     por eles: por como foram obtidos, por como são usados e por quanto tempo são guardados. Isso
     inclui a decisão de ligar a vitrine, a de escolher quais colunas ela publica, a de ligar as
     páginas dos convidados e de decidir a quem mandar cada link pessoal, a de ligar um convidado
-    a uma conta pelo nome de usuário, a de chamar alguém para a equipe e aprovar o pedido, que
+    a uma conta pelo nome de usuário, a de convidar alunos a se apresentarem e a de confirmar a
+    linha de cada um, a de chamar alguém para a equipe e aprovar o pedido, que
     entrega a chave do evento ao celular de quem pediu, a de emitir certificados e a quem
     entregá-los, a de ligar o
     assistente de IA e a de mandar ao autor uma resposta denunciada que carregue nomes. O autor
